@@ -1,0 +1,18 @@
+{
+  harnessIntegrations:
+    [
+      {
+          harness: claude-code,
+          mode: narrow,
+          method: mcp,
+          accessCeiling: { store: write, project: write, hostConfig: none }
+        },
+      {
+          harness: codex,
+          mode: narrow,
+          method: mcp,
+          accessCeiling: { store: write, project: write, hostConfig: none }
+        }
+    ],
+  projectId: ca26b07b-5b6f-4368-bd41-8642eeeca9e4
+}
