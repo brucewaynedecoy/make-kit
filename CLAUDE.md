@@ -22,6 +22,7 @@ Temporary workarounds. Each one is a planned deferred obligation in the root PRD
 2. Run `make-docs` commands for a kit from inside the kit folder, or pass the kit folder with `--repo-root` or `--target-root`. (O-002)
 3. Pass the kit folder as `targetRoot` on every Make Docs MCP call for a kit. (O-003)
 4. Links between a kit's docs and the root docs use `../` paths. Make Docs does not check those links, so check them by hand during validation. (O-004)
+5. Once the repository has git history, `make-docs run work backlog snapshot` for a kit and the Make Docs MCP tool `backlog_snapshot` fail with `operation-error` and "Last-updated evidence must stay inside the work record directory." This is not a backlog problem. The cause is git history at the repository root, above the kit. Until the fix, check a kit's backlog from the repository root with `GIT_DIR=/dev/null make-docs run work backlog snapshot --target-root kits/<kit>`. A valid backlog exits 0, and its only diagnostic is the information code `BACKLOG-VAL-010`. The MCP tool has no workaround, so use the CLI. (O-005)
 
 <!-- make-docs:begin -->
 # Agent Instructions

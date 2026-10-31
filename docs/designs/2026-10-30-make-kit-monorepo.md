@@ -56,7 +56,7 @@ Evidence required:
 - A routing check: agents started at the repository root with kit tasks and repo-wide tasks land in the right docs. The results become the baseline that a future monorepo setup option needs.
 - An install test of `make-kit setup` with two kits that confirms the shared choices are read and written.
 - A Make Docs release from this repository's CI that publishes the same package name, followed by an install check from npm.
-- The root register lists O-001 to O-004 as open until each matching Make Docs fix ships.
+- The root register lists O-001 to O-005 as open until each matching Make Docs fix ships.
 
 ## Performance Evidence Candidates
 
@@ -135,6 +135,9 @@ Each workaround is a deferred obligation (owed work with a stable `O-###` number
 | O-002 | Run kit commands from the kit folder, or pass `--repo-root` or `--target-root` | Every command resolves the nearest project from the working folder |
 | O-003 | Pass the kit folder as `targetRoot` on every Make Docs MCP call for a kit | The MCP server resolves the project from a path argument or the nearest project config |
 | O-004 | Check `../` links between projects by hand during validation | The link checks validate links that leave a project and land in another known project |
+| O-005 | Check a kit's backlog with `GIT_DIR=/dev/null make-docs run work backlog snapshot --target-root kits/<kit>`, because the snapshot and the `backlog_snapshot` MCP tool fail with `operation-error` once the repository has git history | The snapshot takes a work record's last-updated time from git history when the git root sits above the project. This fix comes after Make Docs moves into `kits/make-docs/`. |
+
+Cleanup when a fix ships: the numbered list in the root `AGENTS.md` and `CLAUDE.md` names each workaround by its number, and this table holds the records until the root register exists. When the root register is created, it takes O-001 to O-005 from this table, with the owner, trigger and exit criteria above. The Make Docs work item for each fix links its number, deletes the matching item from both root files, and marks the obligation `Fulfilled`. O-005 is fulfilled when `make-docs run work backlog snapshot --target-root kits/make-blueprint` exits 0 from the repository root without `GIT_DIR`.
 
 ### 10. Monorepo as a setup option
 
@@ -171,7 +174,7 @@ Turning "single project or monorepo" into a setup option for Make Kit, Make Docs
 
 - Step 0 grows. It now includes copying Make Docs, rebuilding its CI and release flow here, and the switch point. A broken release at the switch point would hurt live Make Docs users, so the switch needs a dry-run publish and an install check first.
 - Make Docs tests or scripts that assume they run at the repository root may need changes to run from `kits/make-docs/`.
-- The nested-project weak spots stay until Make Docs fixes them. The workarounds are tracked as O-001 to O-004 so they do not become permanent.
+- The nested-project weak spots stay until Make Docs fixes them. The workarounds are tracked as O-001 to O-005 so they do not become permanent.
 - The repository-root `README.md` still describes BuildOS. It needs a rewrite as the monorepo README.
 - Agents may still pick the wrong project in a repository with several docs roots. The routing check exists to find out.
 
