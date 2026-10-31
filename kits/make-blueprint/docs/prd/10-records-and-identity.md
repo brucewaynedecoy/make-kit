@@ -128,6 +128,7 @@ Every record has these front matter fields. Field names use snake_case. The Mark
 | `owners` | Optional | A list of `maintainer` slugs from `.make/personas.yaml` | The people, teams, organizations or agents responsible for the record. One owner is a list of one. Each slug names a `maintainer` entry. See [People and Role Slugs](#people-and-role-slugs). | A person or agent |
 | `stakeholders` | Optional | A list of `maintainer` slugs from `.make/personas.yaml` | The people, teams, organizations or agents who have a stake in the record but do not own it. Never holds a slug that `owners` holds on the same record. See [People and Role Slugs](#people-and-role-slugs). | A person or agent |
 | `tags` | Optional | A list of short lowercase words | Letters, digits and hyphens. Free classification, unlike facets. | A person or agent |
+| `origin` | Only on a record from a system package (v2.1) | A mapping with `package`, `version`, `id` and `hash` | Marks a record that came from a system package, so a new version finds it. Only `run package add` writes it. See [20 System Packages](20-system-packages.md#the-origin-stamp). v2.0 reserves the name: it reads and keeps the field and never writes it. | `run package add` |
 | `schema_version` | Required | A whole number | The schema version of this record's type (see [09 Storage and Indexing](09-storage-and-indexing.md)) | The CLI |
 | `created_at` | Required | UTC timestamp, such as `2026-11-02T14:05:11Z` | Never changes | The CLI |
 | `updated_at` | Required | UTC timestamp | Changes on every write | The CLI |
@@ -245,6 +246,7 @@ Requirements:
 - An alias is never repeated within one record and never equals the record's own `ref`. Two records may share an alias.
 - Aliases are kept for good. `ref` minting never reuses a number that an alias holds.
 - Every command that takes a record name accepts an `id`, a `ref` or an alias, and ignores letter case.
+- In v2.1, a record from a system package keeps its upstream ref as an alias with the package name and a dot in front, such as `acme-erp.CAP-118` (see [20 System Packages](20-system-packages.md#identity)).
 
 A name finds records in this order:
 
@@ -408,6 +410,8 @@ Record files and form:
 | `parse-error` | Missing or unreadable YAML front matter | Error | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | `not-canonical` | A valid file that is not in the serializer's form, so the next write will reformat it | Information | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | `unknown-field` | A front matter field that the type does not define | Warning | [11 Record Types Reference](11-record-types-reference.md) |
+| `origin-unknown-package` | v2.1: a record whose `origin` names no `package` record | Error | [20 System Packages](20-system-packages.md) |
+| `origin-withdrawn` | v2.1: a record from a system package that the package's last version no longer holds, which stayed `active` because the team changed it or another record links to it | Warning | [20 System Packages](20-system-packages.md) |
 | `missing-field` | A required field is missing or empty | Error | This PRD, [11 Record Types Reference](11-record-types-reference.md) |
 | `bad-value` | A value of the wrong kind, or outside its allowed values | Error | This PRD, [11 Record Types Reference](11-record-types-reference.md) |
 | `schema-old` | A record on an older schema version. Names `make-blueprint setup` as the command to run. | Information | [09 Storage and Indexing](09-storage-and-indexing.md) |

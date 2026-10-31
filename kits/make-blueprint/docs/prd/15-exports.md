@@ -40,7 +40,7 @@ Covered elsewhere:
 - The `run export` commands, their options and the export MCP tool: [08 CLI and MCP](08-cli-and-mcp.md).
 - The `blueprint-report` skill, which drafts export prose into records and runs the exports: [16 Workflow and Skills](16-workflow-and-skills.md).
 - Backlog exports, such as the Azure Boards export, belong to Make Docs: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
-- Viewing, sorting and filtering fit-gap records in the v2.1 web app and MCP App views: [18 Local Server and UI](18-local-server-and-ui.md).
+- Viewing, sorting and filtering fit-gap records in the v2.2 web app and MCP App views: [18 Local Server and UI](18-local-server-and-ui.md).
 
 Not in the v2.0 export set:
 
@@ -529,7 +529,7 @@ Code anchors:
 | CLI and MCP | The `run export` commands and options, the export MCP tool, `allowWrite`, and the filter queries whose counts the summaries match | [08 CLI and MCP](08-cli-and-mcp.md) |
 | Installation and distribution | The CSV, Markdown and xlsx writers ship inside the npm package and the signed single file, with no Python and no outside tool | [07 Installation and Distribution](07-installation-and-distribution.md) |
 | Skills | The `blueprint-report` skill drafts the prose that exports read from records, with a checklist that matches the export layout, and runs the exports. The compare and place skills do not run exports. | [16 Workflow and Skills](16-workflow-and-skills.md) |
-| Local server and UI | v2.1 fit-gap views use the same row and count definitions, so a view's totals match the summaries | [18 Local Server and UI](18-local-server-and-ui.md) |
+| Local server and UI | v2.2 fit-gap views use the same row and count definitions, so a view's totals match the summaries | [18 Local Server and UI](18-local-server-and-ui.md) |
 | Make Docs | Owns backlog exports, such as the Azure Boards export. Make Blueprint exports no backlog. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 
 Code anchors:

@@ -23,7 +23,7 @@ This PRD covers:
 
 - the `run import v1` command, with its dry run and its write
 - how each v1 shape maps to v2.0 records, refs, evidence and links
-- what happens to v1 items that do not map, including the types that arrive in v2.2
+- what happens to v1 items that do not map, including the types that arrive in v2.3
 - how the import treats the files of the old bulk-extract skill in `extractions/`
 - the fixtures the import is tested on, and the end-to-end check of an imported project
 
@@ -45,7 +45,7 @@ Not in scope:
 
 - Ongoing sync between a v1 project and a Make Blueprint project. The import is one-way and runs once.
 - Importing into a project that already holds Make Blueprint records.
-- Test case, run, result and playbook records in v2.0. Those types arrive with v2.2. See [Items That Do Not Map](#items-that-do-not-map).
+- Test case, run, result and playbook records in v2.0. Those types arrive with v2.3. See [Items That Do Not Map](#items-that-do-not-map).
 - v1 skills, scripts, contracts and templates. `setup` installs Make Blueprint's own skills. See [07 Installation and Distribution](07-installation-and-distribution.md).
 - The v1 Azure Boards export. It belongs to Make Docs, which owns the backlog. See [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
 
@@ -106,7 +106,7 @@ The import serves these human outcomes, under the [Human Experience Contract](ma
 
 - A person who knew a record as `REQ-014` in v1 finds the same record as `REQ-014` after the import, by `ref`, in every command and export.
 - A person who knew a source as `REF-012` in v1 finds its source record by that name, because every v1 reference ID becomes an alias of its source record.
-- The dry-run report starts with one summary that says whether the write can run, how many items import cleanly, how many import with a follow-up, how many wait for v2.2 and how many do not import. It ends with the next useful action. Detail for every item is in the same report and in JSON output with the same meaning.
+- The dry-run report starts with one summary that says whether the write can run, how many items import cleanly, how many import with a follow-up, how many wait for v2.3 and how many do not import. It ends with the next useful action. Detail for every item is in the same report and in JSON output with the same meaning.
 - The report names every v1 item that does not import cleanly by its v1 ID or path, with the reason and the step that settles it. No item is left out of the report.
 - After the write, `project status` shows the imported sources, their extraction progress and the drafts waiting for review, so the person picks up the workflow where v1 left off.
 
@@ -130,8 +130,8 @@ Code anchors:
 | `assets/<source-slug>/` | Converted twins (v1 converted text files with YAML front matter) and side files such as images | Converted text of source records |
 | The original file named by each reference entry's `source` path | Original source files | Copied into `blueprint/sources/` |
 | `workspace/findings/<FIND-NNN>/` | Qualified finding folders, each with `finding.md` and `qualification.md` | Finding records |
-| `workspace/runs/<RUN-NNN>/` | Run folders with `run.md`, `evidence/` and `raw-findings.md` | Wait for v2.2 |
-| `playbooks/` and `.os/indexes/playbooks.json` | Playbooks and their index | Wait for v2.2 |
+| `workspace/runs/<RUN-NNN>/` | Run folders with `run.md`, `evidence/` and `raw-findings.md` | Wait for v2.3 |
+| `playbooks/` and `.os/indexes/playbooks.json` | Playbooks and their index | Wait for v2.3 |
 | `extractions/` | Per-source review files and staged candidate rows from the bulk-extract skill | See [Bulk-Extract Files](#bulk-extract-files) |
 | `.os/indexes/entity-resolution.json` and other generated indexes | Data derived from the JSONL files | Not imported. Make Blueprint builds its own index. |
 | `workspace/datasets/` | Tables that people or agents produced, such as CSV files | Not imported as records. The report lists them so a person can add them as sources with `run source add`. |
@@ -149,7 +149,7 @@ v1 IDs have the form `<PREFIX>-NNN`. v2.0 keeps the v1 prefixes `REQ`, `CAP`, `P
 | A system slug in `instance.yaml` | The next `SYS-NNN`, in config order | A new `SYS-` `id` | The v1 slug |
 | All `REF-NNN` entries that share one original file | The next `SRC-NNN`, in order of each source's lowest `REF` number | A new `SRC-` `id` | Every `REF-NNN` of that source |
 | A staged candidate with no v1 ID | The next free `ref` of its type, after the imported ones | A new random `id` | None |
-| `TC-NNN`, `RUN-NNN`, `RES-NNN`, `PB-NNN` | Not written in v2.0. v2.2 keeps these v1 IDs as refs when it adds the types. | None | None |
+| `TC-NNN`, `RUN-NNN`, `RES-NNN`, `PB-NNN` | Not written in v2.0. v2.3 keeps these v1 IDs as refs when it adds the types. | None | None |
 
 Requirements:
 
@@ -164,7 +164,7 @@ Requirements:
 
 | v1 shape | v2.0 result | Notes |
 | --- | --- | --- |
-| Requirement row | Requirement record | `statement` and `rationale` become body sections. `capability` is the one capability whose v1 `supports` list names the requirement. With no such capability, or with several, `capability` stays empty, the candidates become general record links, and the report lists a follow-up. `kind` stays empty, because v1 has none. `acceptance_refs` entries that name findings become links. Entries that name test cases or results stay as text until v2.2. `docs/` paths become Make Docs doc links. |
+| Requirement row | Requirement record | `statement` and `rationale` become body sections. `capability` is the one capability whose v1 `supports` list names the requirement. With no such capability, or with several, `capability` stays empty, the candidates become general record links, and the report lists a follow-up. `kind` stays empty, because v1 has none. `acceptance_refs` entries that name findings become links. Entries that name test cases or results stay as text until v2.3. `docs/` paths become Make Docs doc links. |
 | Capability row | Capability record | `description` and `limits` become body sections. `system` comes from the row's v1 `systems` list when it names exactly one system, or from `defaults.systems` when the row names none and the default names exactly one. Otherwise `system` stays empty, the named systems become general record links, and the report lists a follow-up. `parent`, `domain` and `capability_status` stay empty for the model stage. `supports` sets each named requirement's `capability`. |
 | Persona row | Persona record | The v1 `systems` list becomes the persona's `systems` links. `description`, `goals` and `needs` become body sections. The v1 `identity` key and its reviewer-approved alternate names go to the body, because they are role names, not refs. Each persona record gets a `slug` that names its `user` entry in `.make/personas.yaml`. The slug is made from the persona's title; when two persona records would get the same slug, the later one in v1 ID order also carries its v1 ID, such as `billing-clerk-per-014`. The core writes the entry for an `active` persona record during the import, and for a `draft` one when review approves it, as for any persona record (see [11 Record Types Reference](11-record-types-reference.md) and [13 Extraction and Review](13-extraction-and-review.md)). The report lists each slug. |
 | Finding row, finding folder, or both | One finding record for each `FIND` ID | Row fields fill the front matter. `finding.md` becomes the body, and `qualification.md` becomes a "Qualification" body section. `observed` becomes the summary when the row has none, and a body section otherwise. `implications` maps to `implications`. `kind` is `observation`, because a v1 finding is an empirical observation; the report gives the count so a reviewer can change it. `confidence`, `polarity`, `origin_run` and `raw_anchor` go to the body. When a row and a folder disagree, the row wins, the folder's value goes to the body, and the report lists the difference. |
@@ -218,7 +218,7 @@ Requirements:
 | `archived` | `archived` |
 | Finding `qualified` | `active` |
 | Finding folder `designed` | `active`. The finding's design links become Make Docs doc links. |
-| Run `running`, `closed` or `aborted` | Waits for v2.2 with the runs |
+| Run `running`, `closed` or `aborted` | Waits for v2.3 with the runs |
 
 No v1 status maps to `rejected`.
 
@@ -236,7 +236,7 @@ Requirements:
 - The v1 twin status maps to the nearest conversion status that [12 Source Intake and Conversion](12-source-intake-and-conversion.md) defines. The report lists every twin whose v1 status was `candidate` or `rejected`.
 - Make Blueprint assigns its anchors to the kept text with the anchor algorithm of [12 Source Intake and Conversion](12-source-intake-and-conversion.md). Each v1 `source_anchor`, of the form `assets/<source-slug>/<asset-slug>.<ext>#<anchor>`, resolves to the v2 anchor of the same heading, paragraph or row in the same part. The evidence link then has the form `SRC-<code>#<anchor>`. A v1 row anchor in a sheet that became a table CSV file maps to that row's position in the table, such as `SRC-<code>#t-001:r-0012`, where rows count from the first data row and the header row is not counted.
 - When a v1 anchor matches no v2 anchor, or more than one, the evidence link points to the source with no anchor, the v1 anchor text stays in the body, and the report lists a follow-up. [10 Records and Identity](10-records-and-identity.md) owns whether a link with no anchor passes `project check`.
-- Entries in `source_refs` and `basis_refs` of the form `path#anchor` follow the same rules. Entries that name a record become links. Entries that name a run, test case, result or playbook stay as text in the body until v2.2.
+- Entries in `source_refs` and `basis_refs` of the form `path#anchor` follow the same rules. Entries that name a record become links. Entries that name a run, test case, result or playbook stay as text in the body until v2.3.
 
 ### Bulk-Extract Files
 
@@ -264,7 +264,7 @@ Every v1 item gets exactly one outcome in the report.
 | --- | --- | --- |
 | Imported | The item maps with no change of meaning. | Yes |
 | Imported with a follow-up | The item imports with no data lost, and a person finishes it in v2. Examples: an empty field to fill, an evidence link to check, a link to a shared v1 ID to settle. `project check` or `project status` also shows each one. | Yes |
-| Waits for v2.2 | Test case, run and result rows, run folders, and playbooks. The import leaves them in the v1 project untouched. Links to them stay as text in the body of the records that hold them. | No |
+| Waits for v2.3 | Test case, run and result rows, run folders, and playbooks. The import leaves them in the v1 project untouched. Links to them stay as text in the body of the records that hold them. | No |
 | Not imported | Derived indexes, v1 tooling, datasets, placeholder config and default scope. The report gives the reason for each. | No |
 | Blocking problem | The write cannot run until the person clears it. | No |
 
@@ -276,7 +276,7 @@ The blocking problems are:
 - A v1 file the import must read cannot be parsed, such as a bad JSONL line or bad YAML. The report names the file and line.
 - A bulk-extract publication is pending.
 
-Importing the four v2.2 types into a project that was imported in v2.0 is planned scope for v2.2. How that pass runs is deferred to v2.2 planning (see [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md)). Because the import never changes a v1 file, the v1 files stay in place, and in git history after the person deletes them, for that pass.
+Importing the four v2.3 types into a project that was imported in v2.0 is planned scope for v2.3. How that pass runs is deferred to v2.3 planning (see [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md)). Because the import never changes a v1 file, the v1 files stay in place, and in git history after the person deletes them, for that pass.
 
 ### Dry-Run Report
 
@@ -298,7 +298,7 @@ Example of the summary, with synthetic numbers:
 ```text
 v1 import dry run: ready to write
   412 items read
-  371 import, 29 import with a follow-up, 8 wait for v2.2, 4 not imported
+  371 import, 29 import with a follow-up, 8 wait for v2.3, 4 not imported
   Refs: REQ-001 to REQ-188 kept; 24 sources become SRC-001 to SRC-024
   Evidence: 336 links reach an anchor, 7 point to a source only
 Next: run the import with the write option, then review the 12 imported drafts.
@@ -348,7 +348,7 @@ Requirements:
 
 - Import tests use only synthetic or scrubbed fixtures. No client data, client names, client system names or client source files enter this repository, and no fixture is copied from a client project.
 - A fresh-project fixture is shaped like client-c-implementation. It has a starter `instance.yaml` with placeholder values, eight empty JSONL files, playbook category folders, empty runs, findings and datasets folders, a `.agents/skills/` folder and a Make Docs config. Its import writes no records. Its report lists the placeholders and the tooling as not imported.
-- A bulk-extract fixture is shaped like client-b-v3. It has several systems, sources with several converted parts (such as a workbook with several sheets and a document with images), rows of every v2.0 type, older and outcome-aware extraction rows, superseded rows with and without `redirect`, qualified finding folders, rows and folders for the four v2.2 types, and review files in each state: published, unresolved, held and staged. It is smaller than the real project but keeps its shape.
+- A bulk-extract fixture is shaped like client-b-v3. It has several systems, sources with several converted parts (such as a workbook with several sheets and a document with images), rows of every v2.0 type, older and outcome-aware extraction rows, superseded rows with and without `redirect`, qualified finding folders, rows and folders for the four v2.3 types, and review files in each state: published, unresolved, held and staged. It is smaller than the real project but keeps its shape.
 - Edge-case fixtures cover duplicate v1 IDs, links to IDs with no row, missing originals, an original that git does not track, an original whose hash changed, an unparseable JSONL line, a pending publication, unknown fields and an unknown file.
 - Each fixture carries its expected JSON report and expected record set, so a test compares exact results apart from the random `id` values.
 
@@ -378,7 +378,7 @@ This check runs in the clean container with no Python and no Node, as part of th
 - **Treating persona alternate names as ref aliases.** v1 persona aliases are role names. Ref aliases are old refs.
 - **Porting the bulk-extract script.** The import reads the script's files. It does not run or port the script, which ships Python.
 - **Writing record by record.** A crash then leaves half an import. The write is one journaled change.
-- **Touching the v1 tree.** Moving originals or editing v1 rows breaks the v2.2 pass and the person's ability to compare.
+- **Touching the v1 tree.** Moving originals or editing v1 rows breaks the v2.3 pass and the person's ability to compare.
 - **Dropping unknown fields.** v1 treats unknown fields as part of the canonical row, so the import keeps them in the body.
 
 Code anchors:
@@ -387,6 +387,10 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/09-v1-import-and-release.md` (Testing Decisions; Exit Criteria)
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Human Experience Intent: evidence required; Consequences: Client C on v1)
 - `<user-home>/Developer/Source/Tyler/Projects/build-os/toolkits/buildos-intake/internal/intake/index.go`
+
+### Shared Plan and Write Steps
+
+Keep the import plan and its write steps apart from the v1 reader. In v2.1, `run package add` takes in system packages with the same steps: it builds one plan, shows it as a dry run, and writes it in one journaled change, with the same `id` and `ref` mapping and the same writes through the core. Only its reader differs. See [20 System Packages](20-system-packages.md).
 
 ## Source Anchors
 

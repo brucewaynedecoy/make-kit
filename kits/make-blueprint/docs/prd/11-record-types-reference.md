@@ -11,7 +11,7 @@ source:
 
 ## Purpose
 
-This reference lists every Make Blueprint record type: its `id` prefix, its folder, its purpose, every field with whether it is required, the allowed values, and the relations it stores with their cardinality. It covers the 12 v2.0 types and marks the four v2.2 types as later.
+This reference lists every Make Blueprint record type: its `id` prefix, its folder, its purpose, every field with whether it is required, the allowed values, and the relations it stores with their cardinality. It covers the 12 v2.0 types and marks the four v2.3 types as later.
 
 It stays separate from the subsystem PRDs so that people and agents can look up one field fast. The rules shared by every type, such as common fields, statuses, `id` and `ref`, facets, evidence links and relation rules, live in [10 Records and Identity](10-records-and-identity.md). How each type is used lives in the stage PRDs that this reference links to.
 
@@ -33,10 +33,11 @@ It stays separate from the subsystem PRDs so that people and agents can look up 
 | `fit-gap` | `FIT` | `blueprint/records/fit-gap/` | One baseline capability scored against the target system | v2.0 | [14 Fit-Gap and Placement](14-fit-gap-and-placement.md) |
 | `placement` | `PLC` | `blueprint/records/placement/` | Which system owns a capability and how it is delivered | v2.0 | [14 Fit-Gap and Placement](14-fit-gap-and-placement.md) |
 | `integration` | `INT` | `blueprint/records/integration/` | One flow of data or events from one system to another, in one direction | v2.0 | [19 System Integrations](19-system-integrations.md) |
-| `test-case` | `TC` | `blueprint/records/test-case/` | A test that checks requirements or capabilities | v2.2, later | Not yet assigned |
-| `run` | `RUN` | `blueprint/records/run/` | One run of tests or of a playbook | v2.2, later | Not yet assigned |
-| `result` | `RES` | `blueprint/records/result/` | The outcome of one test case in one run | v2.2, later | Not yet assigned |
-| `playbook` | `PB` | `blueprint/records/playbook/` | A reusable procedure | v2.2, later | Not yet assigned |
+| `package` | `PKG` | `blueprint/records/package/` | One system package that the project took in | v2.1 | [20 System Packages](20-system-packages.md) |
+| `test-case` | `TC` | `blueprint/records/test-case/` | A test that checks requirements or capabilities | v2.3, later | Not yet assigned |
+| `run` | `RUN` | `blueprint/records/run/` | One run of tests or of a playbook | v2.3, later | Not yet assigned |
+| `result` | `RES` | `blueprint/records/result/` | The outcome of one test case in one run | v2.3, later | Not yet assigned |
+| `playbook` | `PB` | `blueprint/records/playbook/` | A reusable procedure | v2.3, later | Not yet assigned |
 
 Each record file is `<folder><id>.md`, such as `blueprint/records/fit-gap/FIT-6pq2z7k2.md` (see [09 Storage and Indexing](09-storage-and-indexing.md)). There are no custom record types in v2.0. A project extends records with facets (see [10 Records and Identity](10-records-and-identity.md)).
 
@@ -77,7 +78,7 @@ Every type has the common fields that [10 Records and Identity](10-records-and-i
 
 1. `id`, `ref`, `type`, `title`, `status`, `summary`
 2. The type's own fields, in the order of its table below
-3. `evidence`, `evidence_versions`, `facets`, `related`, `work_items`, `docs`, `superseded_by`, `aliases`, `owners`, `stakeholders`, `tags`
+3. `evidence`, `evidence_versions`, `facets`, `related`, `work_items`, `docs`, `superseded_by`, `aliases`, `owners`, `stakeholders`, `tags`, `origin` (v2.1)
 4. `schema_version`, `created_at`, `updated_at`
 5. Any field that Make Blueprint does not know, in the order found
 
@@ -471,6 +472,22 @@ updated_at: 2026-11-06T10:04:51Z
 ---
 ```
 
+### Package (v2.1)
+
+One system package that the project took in. Only `run package add` creates and writes it, `active` and with no review. A new version of the package writes the same record. See [20 System Packages](20-system-packages.md).
+
+| Field | Need | Value | Rules |
+| --- | --- | --- | --- |
+| `name` | Required | The package name from the manifest, such as `acme-erp` | Lowercase letters, digits and hyphens. Unique among `package` records. |
+| `version` | Required | `MAJOR.MINOR.PATCH`, such as `2.3.0` | The version that the project holds |
+| `publisher` | Required | Text | The publisher from the manifest |
+| `systems` | Required | List of `SYS id`, one or more | The systems that the package brought into the project |
+| `bundle_sha256` | Required | 64 lowercase hexadecimal characters | SHA-256 of the manifest of the version that the project holds |
+| `made_at` | Required | UTC timestamp | When the maker wrote the bundle |
+| `made_with` | Required | Text | The Make Blueprint version that wrote the bundle |
+
+Relations stored here: `systems`. Linked from: the `origin` stamp of each record from the package, which names this record's `id`.
+
 ### Relation Summary
 
 | From | Field | To | This side | Other side |
@@ -501,14 +518,15 @@ updated_at: 2026-11-06T10:04:51Z
 | integration | `from_capabilities` | capability of `from_system` | Zero or more | Zero or more integrations per capability |
 | integration | `to_capabilities` | capability of `to_system` | Zero or more | Zero or more integrations per capability |
 | integration | `replaces` | `current` integration | Zero or more, only on a `planned` integration | Zero or more planned integrations per current integration |
+| package | `systems` | system | One or more | Zero or more packages per system |
 | any type | `related` | any type | Zero or more | Zero or more |
 | any type | `superseded_by` | the same type | Exactly one when `superseded`, otherwise none | Zero or more superseded records per record |
 
 `owners`, `stakeholders`, `audience` and a persona record's `slug` hold slugs from `.make/personas.yaml`, an extraction record's `extracted_by` and `reviewer` hold a `maintainer` slug or free text, and `work_items` and `docs` hold Make Docs links. None of them is a relation field, so none appears in this table.
 
-### Later Types (v2.2)
+### Later Types (v2.3)
 
-Test case, run, result and playbook records come in v2.2. Their prefixes are fixed now, and they match the v1 prefixes, so the v1 import keeps v1 IDs of these types as refs (see [17 v1 Import](17-v1-import.md)). v2.0 does not create, read or check records of these types. Their fields are fixed when v2.2 is planned. The relations below come from v1 and show the expected shape only.
+Test case, run, result and playbook records come in v2.3. Their prefixes are fixed now, and they match the v1 prefixes, so the v1 import keeps v1 IDs of these types as refs (see [17 v1 Import](17-v1-import.md)). v2.0 does not create, read or check records of these types. Their fields are fixed when v2.3 is planned. The relations below come from v1 and show the expected shape only.
 
 | Type | Prefix | Purpose | Expected relations, from v1 |
 | --- | --- | --- | --- |
@@ -517,7 +535,7 @@ Test case, run, result and playbook records come in v2.2. Their prefixes are fix
 | `result` | `RES` | The outcome of one test case in one run | Names one test case and one run |
 | `playbook` | `PB` | A reusable procedure, kept in `blueprint/playbooks/` | Used by runs |
 
-The folders `blueprint/runs/` and `blueprint/playbooks/` arrive with v2.2 (see [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md)).
+The folders `blueprint/runs/` and `blueprint/playbooks/` arrive with v2.3 (see [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md)).
 
 Code anchors:
 

@@ -155,7 +155,7 @@ Requirements:
 - `setup` upgrades each record whose schema version is older than the installed version, following the rules in [09 Storage and Indexing](09-storage-and-indexing.md). Each upgraded record shows in git as a change to its own file.
 - The output reports how many records were upgraded for each record type, and names any record it could not upgrade and why.
 - Running `setup` twice with no change in between changes no file on the second run.
-- `setup` of a v2.2 release in a v2.0 project creates the v2.2 folders and routers (`blueprint/runs/` and `blueprint/playbooks/`).
+- `setup` of a v2.3 release in a v2.0 project creates the v2.3 folders and routers (`blueprint/runs/` and `blueprint/playbooks/`).
 
 Code anchors:
 

@@ -73,7 +73,7 @@ Each row is `update-existing` unless it says `none`. Copy section headings exact
 | Q-032 | 08 | `run record`; `run review`; Project Status | A fact change on an active record is a pending change. The review verbs list, approve and reject pending changes; the exact command shape is set before work phase 06 ends. Status counts waiting pending changes. |
 | Q-034 | 08 | `run review` | Review groups drafts by extraction, and analysis drafts by comparison. |
 | Q-041 | 08 | `run review`; MCP Server and Profiles | `review_approve` and `review_reject` also sit in `analyze`. Pending-change review sits wherever review sits. |
-| Q-049 | 08 | The `serve` Command (v2.1) | Replace the options with the decision: a top-level `serve` beside `mcp`, outside the operation catalog, reserved in the core. |
+| Q-049 | 08 | The `serve` Command (v2.2) | Replace the options with the decision: a top-level `serve` beside `mcp`, outside the operation catalog, reserved in the core. |
 | Q-060, D-011 | 08 | Lifecycle Commands; Project Status | `--agent` defaults to the `.make/config.yaml` choices. The project section shows the optional `name`. |
 | Q-061 | 08 | `run source`; Filter Syntax; Filter Grammar | `links:` and `run source show` accept table positions such as `#t-001:r-0012:c-003`, and the grammar allows `:` inside that value. |
 | Q-058, Q-062, Q-069, Q-073 | 08 | `run export` | `export fit-gap` adds the comparison data dictionary and the fit-gap requirements, placements and integrations CSV files. `export system` adds the capability model document and data dictionary. |

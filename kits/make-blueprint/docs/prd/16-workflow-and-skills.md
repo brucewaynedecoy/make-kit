@@ -193,8 +193,8 @@ Evidence planned for these rules: automated skill lint tests that fail on any sc
 | Release | Workflow and skills |
 | --- | --- |
 | v2.0 | The seven stages and nine skills: the seven stage skills, `blueprint-convert` and `blueprint-report` |
-| v2.1 | No new skill. The web app and MCP App views are optional, and no skill needs them (see [18 Local Server and UI](18-local-server-and-ui.md)). |
-| v2.2 | Test case, run, result and playbook records arrive (see [11 Record Types Reference](11-record-types-reference.md)). Any stage or skill for them is designed with that release. |
+| v2.2 | No new skill. The web app and MCP App views are optional, and no skill needs them (see [18 Local Server and UI](18-local-server-and-ui.md)). |
+| v2.3 | Test case, run, result and playbook records arrive (see [11 Record Types Reference](11-record-types-reference.md)). Any stage or skill for them is designed with that release. |
 | v3 | No change to stage jobs. Setup C changes where data lives, below the CLI and MCP surface. |
 
 Code anchors:
@@ -316,10 +316,10 @@ The BuildOS v1 skills are input only. A fresh v1 project carried 19 skills, 18 o
 | `buildos-docs-handoff` | Route knowledge into Make Docs documents | Hand-off skill for links; writing docs is a Make Docs job |
 | `buildos-design-planning` | Turn qualified findings into designs and plans | Hand-off skill for links; designs and plans are Make Docs jobs |
 | `buildos-export-azure-boards` | Turn a backlog into Azure Boards import files | Make Docs, which owns the backlog |
-| `buildos-discovery` | Record discovery runs and their findings | Run and result records in v2.2 |
-| `buildos-discovery-qualification` | Qualify findings with run evidence | Run and result records in v2.2; findings are v2.0 records |
-| `buildos-browser-to-playwright` | Browser discovery and test drafting | Test case, run and result records in v2.2 |
-| `buildos-playbook-drafting` | Draft playbooks | Playbook records in v2.2 |
+| `buildos-discovery` | Record discovery runs and their findings | Run and result records in v2.3 |
+| `buildos-discovery-qualification` | Qualify findings with run evidence | Run and result records in v2.3; findings are v2.0 records |
+| `buildos-browser-to-playwright` | Browser discovery and test drafting | Test case, run and result records in v2.3 |
+| `buildos-playbook-drafting` | Draft playbooks | Playbook records in v2.3 |
 
 Code anchors:
 

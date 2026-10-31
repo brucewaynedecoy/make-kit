@@ -62,7 +62,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 - [08 CLI and MCP](../../prd/08-cli-and-mcp.md), for the filter syntax, read-only SQL and the `project` commands
 - [07 Installation and Distribution](../../prd/07-installation-and-distribution.md), for the record upgrade in the project update
 - [05 Ecosystem and Shared Core](../../prd/05-ecosystem-and-shared-core.md), for the journaled write to `.make/personas.yaml`
-- [18 Local Server and UI](../../prd/18-local-server-and-ui.md), for the one write lock shared with the v2.1 local server
+- [18 Local Server and UI](../../prd/18-local-server-and-ui.md), for the one write lock shared with the v2.2 local server
 
 ## Source Obligations, Scenarios, And Findings
 
@@ -178,7 +178,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 
 ### Tasks
 
-- [ ] t20: Build one write lock for each checkout (Q-020) in the machine Store next to its index. Every process that writes records or updates the index for that checkout takes it: CLI commands, the MCP server, and in v2.1 the local server. A process holds it only while it mints refs, writes the files of one change and updates the index, never while it waits for a person or an agent, and a lock never crosses checkouts ([09 Storage and Indexing](../../prd/09-storage-and-indexing.md#write-lock)).
+- [ ] t20: Build one write lock for each checkout (Q-020) in the machine Store next to its index. Every process that writes records or updates the index for that checkout takes it: CLI commands, the MCP server, and in v2.2 the local server. A process holds it only while it mints refs, writes the files of one change and updates the index, never while it waits for a person or an agent, and a lock never crosses checkouts ([09 Storage and Indexing](../../prd/09-storage-and-indexing.md#write-lock)).
 - [ ] t21: Make a process that finds the lock held wait a short, bounded time, then return `blocked` with code `busy`, name the process that holds it, and change nothing ([09 Storage and Indexing](../../prd/09-storage-and-indexing.md#write-lock)).
 - [ ] t22: Clear a stale lock, one whose holding process no longer runs: the next process takes it over with no step by a person and notes it in diagnostic output ([09 Storage and Indexing](../../prd/09-storage-and-indexing.md#write-lock)).
 - [ ] t23: Make `modify` and `apply` refuse with `conflict` and write nothing when the stored record version of any record differs from the version the caller passed ([09 Storage and Indexing](../../prd/09-storage-and-indexing.md#storage-interface)).

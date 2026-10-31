@@ -26,7 +26,8 @@ This PRD covers:
 - the `resource` surface and the `make-blueprint://system/<type>/<path>` URI scheme;
 - `project status`, the owner of the plan promise that one status command shows project state and the next useful action;
 - the names of the lifecycle commands `setup`, `setup remove`, `update`, `uninstall` and `mcp`, and their main flags;
-- where the `serve` command (v2.1) sits in the grammar, and the names of view-model calls (v2.1).
+- the names in the `run package` domain (v2.1);
+- where the `serve` command (v2.2) sits in the grammar, and the names of view-model calls (v2.2).
 
 Covered elsewhere:
 
@@ -630,25 +631,45 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/08-mcp-skills-and-status.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/docs/prd/39-cli-command-model-and-operation-registry.md` (Installation State Commands)
 
-### The `serve` Command (v2.1)
+### System Package Commands (v2.1)
 
-In v2.1, a person starts the local server for setup B, and later setup C, with the `serve` command. [18 Local Server and UI](18-local-server-and-ui.md) owns what the server does.
+In v2.1, the `run package` domain makes and takes in system packages. [20 System Packages](20-system-packages.md) owns what the commands do.
+
+| Command | What it does | Kind | MCP tool | Profile |
+| --- | --- | --- | --- | --- |
+| `run package make <name> --system <system>... --version <version> [--title <text>] [--publisher <text>] [--facet <facet>]... [--tags] [--out <folder>] [--apply]` | Writes one bundle file from the named systems. Without `--apply`, a dry run that lists every source that will go out. | write | `package_make` | `analyze` |
+| `run package add <bundle> [--apply]` | Takes a package in, or a new version of one. Without `--apply`, a dry run that shows the plan. | write | `package_add` | `intake` |
+| `run package list` | Lists the packages that the project holds, with version, publisher and systems | read | `package_list` | `core` |
+| `run package show <package>` | Shows one package: its records by type, and the records that the team changed | read | `package_show` | `core` |
+
+Requirements:
+
+- v2.0 has no `package` domain. The name is reserved: `make-blueprint run package` in v2.0 returns `failed` and says system packages come in v2.1.
+- `package_make` and `package_add` are dry runs by default. A write needs both `apply: true` and `allowWrite`, as `import_v1` does.
+
+Code anchors:
+
+- `docs/designs/2026-10-31-system-packages.md` (Decision)
+
+### The `serve` Command (v2.2)
+
+In v2.2, a person starts the local server for setup B, and later setup C, with the `serve` command. [18 Local Server and UI](18-local-server-and-ui.md) owns what the server does.
 
 `make-blueprint serve` is a top-level lifecycle command beside `mcp`. Like `mcp`, it starts a long-running process, and a per-user server in setups B and C is not tied to one project folder. It sits outside the operation catalog and has no MCP tool. The shared core reserves the name `serve` for both tools, so the seven shared groups keep their Make Docs meaning, and Make Docs can take the same command from the core if it ever needs a server (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)).
 
 Requirements:
 
-- v2.0 has no `serve` command, option or MCP tool. `make-blueprint serve` in v2.0 returns `failed` and says the local server comes in v2.1.
-- In v2.1, `serve` starts a server that listens only on the user's own machine and asks for no login, as [18 Local Server and UI](18-local-server-and-ui.md) defines.
+- v2.0 has no `serve` command, option or MCP tool. `make-blueprint serve` in v2.0 returns `failed` and says the local server comes in v2.2.
+- In v2.2, `serve` starts a server that listens only on the user's own machine and asks for no login, as [18 Local Server and UI](18-local-server-and-ui.md) defines.
 
 Code anchors:
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Decision, section 2: setups; section 7: CLI and MCP; section 14: UI; section 16: Q-049)
 - `docs/prd/02-architecture-overview.md` (Topology)
 
-### View-Model Calls (v2.1)
+### View-Model Calls (v2.2)
 
-In v2.1, each UI view gets its data from one view-model read call. [18 Local Server and UI](18-local-server-and-ui.md) owns the list of views and the shape of a view model. The calls form a tenth `run` domain, `view`:
+In v2.2, each UI view gets its data from one view-model read call. [18 Local Server and UI](18-local-server-and-ui.md) owns the list of views and the shape of a view model. The calls form one more `run` domain, `view`:
 
 | Form | Pattern | Example |
 | --- | --- | --- |
@@ -660,7 +681,7 @@ In v2.1, each UI view gets its data from one view-model read call. [18 Local Ser
 Requirements:
 
 - v2.0 has no `view` domain.
-- In v2.1, every view-model call is a `read` operation in the `core` profile and needs no `allowWrite`.
+- In v2.2, every view-model call is a `read` operation in the `core` profile and needs no `allowWrite`.
 - A view-model call takes the shared filter syntax, and the CLI, the MCP tool and the local server return the same result object for the same input.
 
 Code anchors:
@@ -785,8 +806,8 @@ Code anchors:
 | Workflow PRDs | Each `run` domain's verbs behave as their subject PRD defines: [12 Source Intake and Conversion](12-source-intake-and-conversion.md), [13 Extraction and Review](13-extraction-and-review.md), [14 Fit-Gap and Placement](14-fit-gap-and-placement.md), [15 Exports](15-exports.md) and [17 v1 Import](17-v1-import.md). |
 | Stage skills | Each stage skill starts from `project status`, calls the commands of its stage, and points to resources by URI. Skills ship no scripts. See [16 Workflow and Skills](16-workflow-and-skills.md). |
 | Make Docs | `project check` confirms work item IDs and doc paths through one Make Docs read command, as [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) defines. Until that command ships, and whenever `make-docs` is not installed, it skips Make Docs links and reports how many it skipped. The skip is temporary and is tracked as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). Creating or changing work items stays a Make Docs job. Both servers can sit in one agent tool, and some tool names, such as `project_status` and `resource_read`, exist on both; tool titles and the server name tell them apart. |
-| Local server and UI (v2.1) | `serve` starts the local server. Each view gets its data from one `run view` call (see [View-Model Calls (v2.1)](#view-model-calls-v21)), and [18 Local Server and UI](18-local-server-and-ui.md) names the views. MCP App views are served as `ui://make-blueprint/` resources by the same MCP server. |
-| Later record types (v2.2) | Test case, run, result and playbook records use the `run record` verbs. Any stage verbs they need join this catalog with the v2.2 design. |
+| Local server and UI (v2.2) | `serve` starts the local server. Each view gets its data from one `run view` call (see [View-Model Calls (v2.2)](#view-model-calls-v22)), and [18 Local Server and UI](18-local-server-and-ui.md) names the views. MCP App views are served as `ui://make-blueprint/` resources by the same MCP server. |
+| Later record types (v2.3) | Test case, run, result and playbook records use the `run record` verbs. Any stage verbs they need join this catalog with the v2.3 design. |
 
 Code anchors:
 

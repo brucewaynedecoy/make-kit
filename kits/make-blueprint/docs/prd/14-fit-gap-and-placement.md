@@ -43,7 +43,7 @@ Covered elsewhere:
 - The Make Docs link format and how `project check` confirms those links: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
 - Integration records, current and planned, and how analysis uses them: [19 System Integrations](19-system-integrations.md).
 - The skills for the model, compare, place and hand-off stages: [16 Workflow and Skills](16-workflow-and-skills.md).
-- Views of comparisons, fit-gap and placement records in v2.1: [18 Local Server and UI](18-local-server-and-ui.md).
+- Views of comparisons, fit-gap and placement records in v2.2: [18 Local Server and UI](18-local-server-and-ui.md).
 
 Code anchors:
 
@@ -66,7 +66,7 @@ In this PRD, a current record is a record whose status is `draft` or `active`. R
 | Placement | Place | Record the owning system and the delivery value for one fit-gap record, and the integration records of an `integrate` placement | placement | v2.0 |
 | Hand-off links | Hand off | Store Make Docs work item IDs and doc paths on placement records | placement | v2.0 |
 | Integration records | Extract, Compare, Place | Record current and planned flows between systems. [19 System Integrations](19-system-integrations.md) owns their behavior. | integration | v2.0 |
-| Analysis views | Any stage | View, sort and filter comparisons, fit-gap records and placements in the web app and MCP App views | read only | v2.1, see [18 Local Server and UI](18-local-server-and-ui.md) |
+| Analysis views | Any stage | View, sort and filter comparisons, fit-gap records and placements in the web app and MCP App views | read only | v2.2, see [18 Local Server and UI](18-local-server-and-ui.md) |
 
 The model, compare and place commands sit in the `run model`, `run compare` and `run place` domains, and their MCP tools sit in the `analyze` profile. Every analysis write tool needs `allowWrite`. [08 CLI and MCP](08-cli-and-mcp.md) owns the verbs and tool names. Commands accept a record's `ref`, `id` or alias, and human output names records by `ref` and title.
 
@@ -514,7 +514,7 @@ Code anchors:
 | Skills | One skill each for the model, compare, place and hand-off stages. The compare skill follows the fit-gap method. The hand-off skill sends the agent to Make Docs to create work items. | [16 Workflow and Skills](16-workflow-and-skills.md) |
 | v1 import | BuildOS v1 has no comparison, fit-gap or placement records. Imported systems and capabilities need the model stage, such as status lists and domains, before a comparison. | [17 v1 Import](17-v1-import.md) |
 | Make Docs | Owns work items in `docs/work/` and the docs they point to. Make Blueprint stores only their IDs and paths. `project check` skips them and reports how many until the Make Docs read command ships (obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
-| Local server and UI | v2.1 views of comparisons, fit-gap and placement records, each fed by one view-model read call | [18 Local Server and UI](18-local-server-and-ui.md) |
+| Local server and UI | v2.2 views of comparisons, fit-gap and placement records, each fed by one view-model read call | [18 Local Server and UI](18-local-server-and-ui.md) |
 
 Code anchors:
 

@@ -88,6 +88,7 @@ An agent conversion of a complex PDF is not ready while its `conversion_status` 
 Requirements:
 
 - `run extract next` hands out only sources whose `conversion_status` is `converted`, also when the caller names one.
+- In v2.1, `run extract next` never hands out a source that came in from a system package, because the package already holds its records (see [20 System Packages](20-system-packages.md)).
 - `run extract next` hands out exactly one due source, in this order: first sources that have never been extracted, then partly extracted sources, then sources that changed since their latest extraction. Within each group, the oldest source comes first, by `created_at` and then by `id`.
 - When a partly extracted source is handed out again at the same hash, each part that the earlier extraction covered in full starts with that coverage and outcome, and its note names the earlier extraction. The finish check accepts such a carried part on the strength of the earlier extraction's records.
 - The shared filter syntax narrows the pool, for example to sources with one facet value or under one folder of `blueprint/sources/`.
@@ -251,7 +252,7 @@ Requirements:
 
 ### Release Scope
 
-Everything in this PRD is v2.0. The v2.1 web app can show drafts and extraction progress for viewing, sorting and filtering. Approving or rejecting drafts in the web app is editing, which comes after the first UI version (see [18 Local Server and UI](18-local-server-and-ui.md)).
+Everything in this PRD is v2.0. The v2.2 web app can show drafts and extraction progress for viewing, sorting and filtering. Approving or rejecting drafts in the web app is editing, which comes after the first UI version (see [18 Local Server and UI](18-local-server-and-ui.md)).
 
 Code anchors:
 
@@ -340,7 +341,7 @@ Code anchors:
 | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) | Owns `.make/personas.yaml`. The shared core adds a persona record's entry to it when review approves the record. |
 | [16 Workflow and Skills](16-workflow-and-skills.md) | The extract skill and the review skill guide people and agents through this subsystem. |
 | [17 v1 Import](17-v1-import.md) | Decides how v1 extraction rows and old bulk-extract files become extraction records, drafts and pending changes. |
-| [18 Local Server and UI](18-local-server-and-ui.md) | Shows extraction progress and drafts in v2.1 views. |
+| [18 Local Server and UI](18-local-server-and-ui.md) | Shows extraction progress and drafts in v2.2 views. |
 
 Code anchors:
 

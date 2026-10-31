@@ -147,8 +147,8 @@ Each register item gets one decision. The phase files hold the section-level row
 | Q-048 persona records | `update-existing` | 01, 04, 11, 13, 17 | Linked to Personas through slugs (with Q-072). |
 | Q-049 `serve` | `update-existing` | 04, 05, 08, 18 | Still stated as open. |
 | Q-050, Q-052, Q-053, Q-054, Q-056, Q-059 | `none` | — | Deferred; the text already matches. |
-| Q-051 first v2.1 views | `update-existing` | 18 | Deferral wording and the updated view list. |
-| Q-055 v2.2 types in the import | `update-existing` | 17 | Deferral wording. |
+| Q-051 first v2.2 views | `update-existing` | 18 | Deferral wording and the updated view list. |
+| Q-055 v2.3 types in the import | `update-existing` | 17 | Deferral wording. |
 | Q-057 `integrate` placements | `update-existing` | 11, 14, 16 | `integrations` field; no `partner_systems`. |
 | Q-058 placement export | `update-existing` | 01, 02, 08, 15 | Now in v2.0. |
 | Q-060 shared setup choices | `update-existing` | 02, 05, 06, 07, 08 | `.make/config.yaml`. |
@@ -177,6 +177,7 @@ Each register item gets one decision. The phase files hold the section-level row
 | Q-083 git level changes | `update-existing` | 08, 12 | `run source add --git-level` and `run source set-level`. |
 | Q-084 small defaults | `update-existing` | 05, 08, 10, 12, 13, 14, 15, 16 | Eight command and status defaults. |
 | D-012 backlog fixes | `update-existing` | 06, 07, 08, 09, 10, 12, 13 | Seven fixes found while writing the work backlog. |
+| Q-085 to Q-095 system packages | `update-existing` | 00, 01, 02, 04, 06, 08, 10, 11, 12, 13, 17, 18 | System packages are v2.1 and belong to the new wave `W2 R0`, with the new PRD 20 and the [W2 R0 plan](../2026-10-31-w2-r0-system-packages/00-overview.md). In place, with no new revision, `W1 R1` reserves the `run package` domain and the `origin` field, moves the release labels (the server and UI to v2.2, test records to v2.3), and keeps the v1 import steps reusable. |
 
 Items Q-076 to Q-079, Q-081 to Q-084, D-012 and R-024 were raised during execution. The owner decided them on 2026-10-30.
 

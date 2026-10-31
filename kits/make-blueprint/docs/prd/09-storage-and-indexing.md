@@ -359,7 +359,7 @@ Code anchors:
 | Setup | Truth | Who writes | Index | Lock and journal | Release |
 | --- | --- | --- | --- | --- | --- |
 | A | Record files in git | CLI commands and the MCP server process, each through the file backend | One for each checkout, in the machine Store | One lock and one journal for each checkout, shared by every process | v2.0 |
-| B | Record files in git | The setup A writers and the local server for each user | As in setup A. The server keeps it fresh with the same freshness check before each read. | The CLI, the MCP server and the local server share one write lock for each checkout. | v2.1 |
+| B | Record files in git | The setup A writers and the local server for each user | As in setup A. The server keeps it fresh with the same freshness check before each read. | The CLI, the MCP server and the local server share one write lock for each checkout. | v2.2 |
 | C | A shared database | The local server for each user, through the database backend | Designed in v3 | Designed in v3 | v3 |
 
 Requirements:

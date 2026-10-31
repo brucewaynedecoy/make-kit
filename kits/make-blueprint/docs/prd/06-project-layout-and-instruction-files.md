@@ -50,7 +50,7 @@ Code anchors:
 
 | Component | What it does | Release | Detail owner |
 | --- | --- | --- | --- |
-| Project tree | One project folder holds everything for a project in file mode | v2.0, with `runs/` and `playbooks/` in v2.2 | This document |
+| Project tree | One project folder holds everything for a project in file mode | v2.0, with `runs/` and `playbooks/` in v2.3 | This document |
 | Machine tree | Keeps operational state outside the project, in the tool's own folder under `~/.make/` | v2.0 | This document; Store contents in [09 Storage and Indexing](09-storage-and-indexing.md) |
 | System docs | Contracts, templates, references and prompts, served by the CLI, with an optional local copy | v2.0 | This document; surface in [08 CLI and MCP](08-cli-and-mcp.md) |
 | Routers | Short guidance files in the root, `.make/`, `.make/blueprint/`, `blueprint/` and its top sub-folders | v2.0 | This document |
@@ -83,8 +83,8 @@ Code anchors:
       .gitattributes            managed: Git LFS rules for large originals
     records/<type>/<id>.md      one Markdown file per record
     exports/                    generated files, tracked by git, never the truth
-    runs/                       run notes and evidence files (v2.2)
-    playbooks/                  playbooks (v2.2)
+    runs/                       run notes and evidence files (v2.3)
+    playbooks/                  playbooks (v2.3)
   docs/                         Make Docs content (Make Docs owns)
   <agent-tool files>            project-scope skill folders and MCP config (see 07)
 ```
@@ -103,9 +103,10 @@ Code anchors:
 | `blueprint/` | All Make Blueprint project knowledge | `setup` | v2.0 | Make Blueprint |
 | `blueprint/sources/` | Original files and their converted text, plus the Blueprint-managed `.gitignore`, which lists the source files that their git level keeps out of git, and `.gitattributes`, which holds the Git LFS rules for large originals | `setup` | v2.0 | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | `blueprint/records/` | One Markdown file per record at `blueprint/records/<type>/<id>.md` | `setup`; each `<type>/` folder when its first record is written | v2.0 | [09 Storage and Indexing](09-storage-and-indexing.md) |
+| `blueprint/sources/packages/` | The converted text of sources from system packages, in one folder for each package `name` | `run package add`, when it first writes a source from a package | v2.1 | [20 System Packages](20-system-packages.md) |
 | `blueprint/exports/` | Generated CSV files, Markdown documents and the xlsx workbook. Git tracks them. | `setup` | v2.0 | [15 Exports](15-exports.md) |
-| `blueprint/runs/` | Run notes and evidence files | `setup` of a v2.2 release | v2.2 | [11 Record Types Reference](11-record-types-reference.md) |
-| `blueprint/playbooks/` | Playbooks | `setup` of a v2.2 release | v2.2 | [11 Record Types Reference](11-record-types-reference.md) |
+| `blueprint/runs/` | Run notes and evidence files | `setup` of a v2.3 release | v2.3 | [11 Record Types Reference](11-record-types-reference.md) |
+| `blueprint/playbooks/` | Playbooks | `setup` of a v2.3 release | v2.3 | [11 Record Types Reference](11-record-types-reference.md) |
 | `docs/` | Designs, plans, PRDs and the work backlog | Make Docs | Make Docs release | Make Docs |
 
 The project tree serves Northstar principle 3 (one folder). In file mode, a fresh clone of the project holds every record, every project setting, and each source's files at its source git level (the rule for which source files git tracks): the original and its converted text at `all`, the default; the converted text only at `converted`; neither at `none`.
@@ -113,7 +114,7 @@ The project tree serves Northstar principle 3 (one folder). In file mode, a fres
 Requirements:
 
 - v2.0 `setup` creates `.make/`, `.make/blueprint/` with its `config.yaml`, `blueprint/`, `blueprint/sources/`, `blueprint/records/` and `blueprint/exports/`, and the routers listed in [Routers](#routers). Through the shared core, it also writes the setup choices to `.make/config.yaml`.
-- v2.0 `setup` creates no `blueprint/runs/` or `blueprint/playbooks/` folder. Those arrive with v2.2.
+- v2.0 `setup` creates no `blueprint/runs/` or `blueprint/playbooks/` folder. Those arrive with v2.3.
 - Every folder that `setup` creates holds at least its router, so git keeps the folder in a fresh clone.
 - `.make/` and `.make/blueprint/` hold no operational state: no block hashes, locks, journals, receipts, installation records or index files.
 - Only the shared core writes `.make/config.yaml` and `.make/personas.yaml`. Make Blueprint reads them and never writes them itself.
@@ -200,8 +201,8 @@ Make Blueprint writes routers in the project root, in `.make/`, in `.make/bluepr
 | `blueprint/sources/` | v2.0 | That sources are added and converted through Make Blueprint commands, and that originals and converted text sit side by side |
 | `blueprint/records/` | v2.0 | That each record is one file named by `id`, that writes go through the CLI or MCP, and that a hand edit is followed by the `project check` command (see [08 CLI and MCP](08-cli-and-mcp.md)) |
 | `blueprint/exports/` | v2.0 | That exports are generated, are never the truth, and can be made again at any time |
-| `blueprint/runs/` | v2.2 | What run notes and evidence files hold |
-| `blueprint/playbooks/` | v2.2 | What playbooks hold |
+| `blueprint/runs/` | v2.3 | What run notes and evidence files hold |
+| `blueprint/playbooks/` | v2.3 | What playbooks hold |
 
 Each router location gets the instruction files for the agent tools selected at `setup`, which `.make/config.yaml` keeps for every kit: `CLAUDE.md` for Claude Code, and `AGENTS.md` for Codex and GitHub Copilot CLI, as in Make Docs. When both files exist in one location, Make Blueprint's block is the same in both.
 

@@ -97,6 +97,8 @@ Two limits apply. First, `converted` keeps the original's bytes out of git, but 
 
 On a machine that does not hold a file kept out of git, the source shows as "missing". This is a normal state, not an error, because the same project can be cloned to machines that do and do not hold the file.
 
+A source that came in from a system package (v2.1) has no original in the project. It takes the level `converted`, or keeps `none`, so it shows as missing like any absent file kept out of git, and the message names the package. See [20 System Packages](20-system-packages.md#sources-and-evidence).
+
 A person or agent sets a source's own level when the source is registered, with `run source add --git-level <level>`, and changes it later with `run source set-level <source>... <level>`. A level change takes effect at once and does not wait for review. A git level is a storage setting, not a claim from evidence, which is the same reason source records skip review. So a file meant for the level `none`, such as a secret original, is kept out of git as soon as its level is set.
 
 Requirements:

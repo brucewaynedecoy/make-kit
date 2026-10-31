@@ -43,7 +43,7 @@ The skill work ships nine skills inside the CLI: `blueprint-intake`, `blueprint-
 | Automated Implementation Testing | active | Catalog and tool list parity tests, profile membership tests, tool metadata tests, status fixtures for every next-action rule, status and check count agreement tests, skill lint tests and the automated skill walk-through. The acceptance criteria in each stage below are the decision record. |
 | Performance Testing | active | This phase adds no performance candidate and no profile. It runs only the status read model workload of the index characterization profile that [Phase 3](03-storage-and-identity.md) creates, because that workload needs `project status`, which this phase builds. That baseline sets no status target. Stage 3 holds the run. |
 | Guided Progress Review | active | A reviewer runs all nine skills end to end with an agent on a synthetic sample project, as [16 Workflow and Skills](../../prd/16-workflow-and-skills.md#skill-rules) plans. Stage 6 holds the review. |
-| Unassisted Goal Testing | not-needed-now | No PRD needs it in v2.0. The Guided Progress Review and the Human Experience Review answer the current decisions. Revisit before v2.1, when the web app adds a new human path. |
+| Unassisted Goal Testing | not-needed-now | No PRD needs it in v2.0. The Guided Progress Review and the Human Experience Review answer the current decisions. Revisit before v2.2, when the web app adds a new human path. |
 
 - Base maintenance action: `none`
 - Performance applicability: `characterize-now`, for the status read model workload of the Phase 3 index profile only

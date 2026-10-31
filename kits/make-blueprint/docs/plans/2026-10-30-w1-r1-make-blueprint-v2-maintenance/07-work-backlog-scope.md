@@ -20,6 +20,8 @@ No Make Blueprint work backlog exists yet. This phase fixes what the first backl
 
 ## Phase Map for the Backlog
 
+System packages (Q-085 to Q-095) add three small items in place: phase `02-cli-and-packaging` reserves the `run package` domain beside `serve`, phase `04-record-types` registers the reserved `origin` field, and phase `09-v1-import-and-release` keeps the import planner and writer apart from the v1 reader. The rest of the package work belongs to `W2 R0` ([plan](../2026-10-31-w2-r0-system-packages/00-overview.md)).
+
 The backlog keeps the `W1 R0` phase numbers, because the register and the PRDs name work phases by those numbers. For each phase, take the deliverables, testing decisions and exit criteria from the matching `W1 R0` phase file as changed by this table; the PRDs win wherever they differ. The backlog now exists at [2026-10-30-w1-r1-make-blueprint-v2](../../work/2026-10-30-w1-r1-make-blueprint-v2/00-index.md), and the `W1 R0` plan is archived at `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/`. Phase 01 changes subject: Step 0 is now repo-wide work in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design, so this backlog only adopts the published core.
 
 | Phase | Scope in `W1 R0` | Scope changes from the owner's decisions |
@@ -36,7 +38,7 @@ The backlog keeps the `W1 R0` phase numbers, because the register and the PRDs n
 
 ## Deferred Scope
 
-The backlog leaves out the ten deferred register items (Q-050 to Q-056, Q-059, Q-074 and Q-075) and v2.1, v2.2 and v3 scope. It keeps obligation O-001 open until Make Docs ships its link-check read command.
+The backlog leaves out the ten deferred register items (Q-050 to Q-056, Q-059, Q-074 and Q-075) and v2.2, v2.3 and v3 scope. It keeps obligation O-001 open until Make Docs ships its link-check read command.
 
 ## Exit Criteria
 

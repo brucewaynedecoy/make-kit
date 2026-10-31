@@ -478,11 +478,11 @@ Questions are in the order they block the work backlog. Items near the top block
 | --- | --- | --- |
 | Closed | Accepted as recommended | Done in W1 R1. |
 
-**Question**: The design puts a router in "each top sub-folder" of `blueprint/`. Does v2.0 create `blueprint/runs/` and `blueprint/playbooks/`, which hold v2.2 content?
+**Question**: The design puts a router in "each top sub-folder" of `blueprint/`. Does v2.0 create `blueprint/runs/` and `blueprint/playbooks/`, which hold v2.3 content?
 
 **Why it matters**: Empty folders for later releases confuse people and agents, and their routers would describe content that does not exist yet.
 
-**Recommendation**: The coordinator interpretation: v2.0 creates `blueprint/sources/`, `blueprint/records/` and `blueprint/exports/` with routers. `blueprint/runs/` and `blueprint/playbooks/` arrive with v2.2.
+**Recommendation**: The coordinator interpretation: v2.0 creates `blueprint/sources/`, `blueprint/records/` and `blueprint/exports/` with routers. `blueprint/runs/` and `blueprint/playbooks/` arrive with v2.3.
 
 **To close**: The owner confirms.
 
@@ -562,7 +562,7 @@ Questions are in the order they block the work backlog. Items near the top block
 
 **Question**: Is setup B setup A plus the `serve` command, and how do the CLI, the MCP server and the local server avoid writing at the same moment?
 
-**Why it matters**: The lock built in phase 03 must already serve a third process in v2.1.
+**Why it matters**: The lock built in phase 03 must already serve a third process in v2.2.
 
 **Recommendation**: The coordinator interpretation: setup B is setup A plus one local server, and in setup B the CLI, the MCP server and the local server share one write lock for each checkout. The server never holds the lock between requests.
 
@@ -1044,7 +1044,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 | --- | --- | --- |
 | Closed | A top-level `serve` command beside `mcp`, reserved in the core for both tools | Owner: [08 CLI and MCP](08-cli-and-mcp.md) and [18 Local Server and UI](18-local-server-and-ui.md). Done in W1 R1. |
 
-**Question**: The design fixes seven top-level groups that match Make Docs, but also names `make-blueprint serve`. Where does the `serve` command (v2.1) sit?
+**Question**: The design fixes seven top-level groups that match Make Docs, but also names `make-blueprint serve`. Where does the `serve` command (v2.2) sit?
 
 **Why it matters**: v2.0 reserves the name and returns `failed` for it. The core may need to reserve it for both tools.
 
@@ -1070,19 +1070,19 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
-### Q-051 First v2.1 Views
+### Q-051 First v2.2 Views
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Deferred | Deferred to v2.1 planning | Owner: [18 Local Server and UI](18-local-server-and-ui.md). |
+| Deferred | Deferred to v2.2 planning | Owner: [18 Local Server and UI](18-local-server-and-ui.md). |
 
-**Question**: The design leaves the list of v2.1 views to planning. Which views come first?
+**Question**: The design leaves the list of v2.2 views to planning. Which views come first?
 
 **Why it matters**: Each view needs a view-model call in 08 and data from its owning PRD.
 
 **Recommendation**: Source status, extraction progress, review queue (with flagged records first, as [Q-065](#q-065-fixed-fit-gap-method) asks) and the fit-gap table with its requirement marks, then a record browser and a check view.
 
-**To close**: v2.1 planning fixes the list in 18.
+**To close**: v2.2 planning fixes the list in 18.
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
@@ -1090,7 +1090,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Deferred | Deferred to v2.1 planning | Owner: [18 Local Server and UI](18-local-server-and-ui.md), with wording in [02 Architecture Overview](02-architecture-overview.md). |
+| Deferred | Deferred to v2.2 planning | Owner: [18 Local Server and UI](18-local-server-and-ui.md), with wording in [02 Architecture Overview](02-architecture-overview.md). |
 
 **Question**: "A local server for each user" could mean one server per user or one per project folder.
 
@@ -1098,7 +1098,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Recommendation**: One server per project folder in setup B.
 
-**To close**: v2.1 planning decides, and 02 and 18 use the same wording.
+**To close**: v2.2 planning decides, and 02 and 18 use the same wording.
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
@@ -1106,7 +1106,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Deferred | Deferred to v2.1 | Owner: [18 Local Server and UI](18-local-server-and-ui.md). |
+| Deferred | Deferred to v2.2 | Owner: [18 Local Server and UI](18-local-server-and-ui.md). |
 
 **Question**: Do Codex and GitHub Copilot CLI show MCP App views?
 
@@ -1114,7 +1114,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Recommendation**: Fall back to the plain view-model tool where an agent tool cannot show the view, as 18 states.
 
-**To close**: v2.1 tests each agent tool.
+**To close**: v2.2 tests each agent tool.
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
@@ -1134,35 +1134,35 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
-### Q-055 v2.2 Types in the v1 Import
+### Q-055 v2.3 Types in the v1 Import
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Deferred | Deferred to v2.2 | Owner: [17 v1 Import](17-v1-import.md). |
+| Deferred | Deferred to v2.3 | Owner: [17 v1 Import](17-v1-import.md). |
 
 **Question**: How are v1 test cases, runs, results and playbooks imported into a project imported in v2.0?
 
 **Why it matters**: v1 projects keep this data, and the v2.0 import leaves it in place.
 
-**Recommendation**: A v2.2 pass of `run import v1` for only these types, matched by ref.
+**Recommendation**: A v2.3 pass of `run import v1` for only these types, matched by ref.
 
-**To close**: v2.2 planning decides.
+**To close**: v2.3 planning decides.
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
-### Q-056 v2.2 Verbs and Profile
+### Q-056 v2.3 Verbs and Profile
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Deferred | Deferred to v2.2 | Owner: [08 CLI and MCP](08-cli-and-mcp.md), with fields in [11 Record Types Reference](11-record-types-reference.md). |
+| Deferred | Deferred to v2.3 | Owner: [08 CLI and MCP](08-cli-and-mcp.md), with fields in [11 Record Types Reference](11-record-types-reference.md). |
 
 **Question**: Which verbs and which MCP profile serve test case, run, result and playbook records?
 
 **Why it matters**: The command grammar and profiles must leave room for them.
 
-**Recommendation**: Decide in v2.2 planning, within the existing grammar.
+**Recommendation**: Decide in v2.3 planning, within the existing grammar.
 
-**To close**: v2.2 planning decides.
+**To close**: v2.3 planning decides.
 
 **Deferral confirmed**: The owner confirmed on 2026-10-30 that this stays deferred.
 
@@ -1196,7 +1196,7 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Recommendation**: Setting options are covered: [Q-064](#q-064-capability-and-requirement-detail-fields) adds `option_values`, `option_default` and `option_scope` columns. Add `<comparison-ref>-placements.csv` and a matching workbook sheet to v2.0, because placement records exist in v2.0 and the export code is shared.
 
-**To close**: v2.1 planning decides.
+**To close**: v2.2 planning decides.
 
 **Resolution**: Owner accepted on 2026-10-30.
 
@@ -1698,6 +1698,182 @@ Also: `source-unregistered` skips files that converted text links to, such as th
 
 **Resolution**: Owner accepted all eight defaults and the `source-unregistered` note on 2026-10-30.
 
+### Q-085 What a System Package Holds
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | A system package holds the model of its systems, and only `active` records | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: A team that builds a product models it as one or more systems in its own Make Blueprint project. Other teams want that model as a baseline in their own projects, so they do not start from nothing. A system package is a versioned bundle of one or more systems and their data, which one project makes and other projects take in. Which records does a package hold?
+
+**Why it matters**: Too little, and the other team rebuilds the model by hand. Too much, and the package carries the maker's own analysis and internal notes into other teams' projects.
+
+**Recommendation**: A package holds the model only, and only `active` records: the chosen systems, their capabilities and requirements, the domains those capabilities use, the persona records for those systems, and the integrations whose two ends are both in the package. Findings, extractions, comparisons, fit-gap records and placements stay in the maker's project. `draft`, `rejected`, `superseded` and `archived` records also stay. The other choice takes every record that links to the systems, analysis too. The analysis states the maker's own decisions, and the other team makes its own comparisons.
+
+**To close**: The system packages PRD lists the record types and statuses that a package holds.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-086 Sources and Evidence in a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Source records and their converted text travel; original files never do | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: Records in a package keep their evidence links, and each link names a source and an anchor in its converted text. What does a package carry for sources?
+
+**Why it matters**: Without the converted text, the other project cannot check evidence links. Originals can be large, and they can hold more than the maker wants to share.
+
+**Recommendation**: A package carries the source record and the converted text of each source that its records' evidence names. It never carries an original file. A source at the git level `none` travels as a source record with no text, and its evidence links stay. Before the package is made, the maker sees every source that will go out and confirms the list. The other choice carries the originals too.
+
+**To close**: The system packages PRD states what a package carries for each git level, and 12 states how a source from a package shows in the other project.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31. Note: no new check code is needed. In the other project, each source from a package takes the git level `converted`, or keeps `none`. The original is then a file kept out of git that is absent, which is the normal "missing" state in [12 Source Intake and Conversion](12-source-intake-and-conversion.md#source-git-levels-and-the-missing-state).
+
+### Q-087 System Package Format
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | One versioned bundle file that holds a plain folder; no live pull from another project | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: Does a package travel as one bundle file or as a folder of files? Can a project also pull systems straight from another project's folder?
+
+**Why it matters**: Packages go to other machines and other companies. A pull from a live project takes half-done work and gives later versions nothing to compare against.
+
+**Recommendation**: A package is one versioned bundle file, such as `acme-erp-2.3.0.blueprint.zip`. Inside is a plain folder: a `manifest.yaml`, the record files in the same format as `blueprint/records/`, and the converted text. The step that takes a package in also reads the unzipped folder, so a team can keep packages in git or on a shared drive. No command pulls straight from another project's live folder. A version is a fixed snapshot that the maker chose to release. The other choice is a live pull from the other project's folder.
+
+**To close**: The system packages PRD states the bundle layout, the manifest fields and the file name.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-088 Changes to Records From a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | The taking project owns editable copies with an `origin` stamp; a new version reaches changed copies as pending changes | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: After a project takes in a package, can its team change those records? What happens when the maker releases a new version?
+
+**Why it matters**: Teams must fix and tune a baseline for their own needs. A new version must not wipe out their changes, and it must not need a review of every record.
+
+**Recommendation**: Yes. Each record from a package is `active`, and it is an ordinary record that the team can change. It carries an `origin` stamp that names the package, the version and the upstream `id`. With a new version, a record that the team did not change takes the new version at once. A record that the team did change gets the upstream change as a pending change for review (see [Q-032](#q-032-correcting-evidence-on-active-records)). The team's own records, such as new capabilities and requirements under a system from the package, are never touched. A change to tags, facets or owners does not count as a change. The other choice locks records from a package, so the team can only put its own records around them.
+
+**To close**: The system packages PRD states the `origin` stamp and the rules for a new version, and 10 lists `origin` with the common fields.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-089 Ids and Refs of Records From a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Keep the upstream `id` when it is free; mint a new local `ref`; keep the upstream ref as an alias with the package name in front | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: Records from a package already have an `id` and a `ref` from the maker's project. Which ones do they keep in the taking project?
+
+**Why it matters**: Refs are numbers that each project mints, so `CAP-118` can name a different record in each project. A changed `id` would force every relation field and evidence link to be written again.
+
+**Recommendation**: A record keeps its upstream `id` when no record in the taking project uses it. Otherwise it gets a new `id`. The `origin` stamp always keeps the upstream `id`, so a new version finds its records through the stamp. Each record gets a new local `ref` from the project's own counters. Its upstream ref becomes an alias with the package name and a dot in front, such as `acme-erp.CAP-118`, which the alias rules in [10 Records and Identity](10-records-and-identity.md#aliases-and-name-lookup) allow. The other choice mints a new `id` for every record.
+
+**To close**: The system packages PRD states the rules, and 10 states that a package alias is kept for good like any alias.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-090 Shared Lists and People From a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Lists merge by code; `audience` slugs get `user` entries; upstream owners and stakeholders are dropped | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: A package uses lists and names that the taking project also has: domains, `lists.*` codes, facets, tags and slugs from `.make/personas.yaml`. How do they merge?
+
+**Why it matters**: Teams compare systems by domain. Separate lists for each package break those comparisons. Upstream owner slugs name people in another team or company.
+
+**Recommendation**: Lists merge by code. A domain from the package joins the local domain with the same code, or is created when no local domain has that code. Codes that the project does not list go into the `lists.*` settings in `.make/blueprint/config.yaml`. Each `audience` slug gets a `user` entry in `.make/personas.yaml`, written through the core, as in the v1 import. Upstream `owners` and `stakeholders` are dropped. Facets and tags stay in the maker's project unless the maker names them when the package is made. The plan shows every merge, and a code that has a different name on each side gives a Warning. The other choice keeps each package's lists apart with a prefix, such as the domain `ACME-BIL`.
+
+**To close**: The system packages PRD states the merge rules and the Warning code.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-091 Record That Tracks a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | A new record type `package`, prefix `PKG` | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: A taking project must know which packages it holds, at which version, and which records came from each. Where does it keep that?
+
+**Why it matters**: A new version needs the old version to compare against. A person needs to see in git when a package changed.
+
+**Recommendation**: A new record type `package`, with the prefix `PKG`, in `blueprint/records/package/`. It holds one record for each package that the project took in, with the package `name`, the `version`, the `publisher`, the systems it brought and the bundle's SHA-256 hash. A new version writes the same record, so the git diff shows the change. The `origin` stamp of each record from the package names the `PKG` id. The other choice is a `packages:` list in `.make/blueprint/config.yaml`. Config holds settings that a person chooses, not data that the tool writes.
+
+**To close**: The owner confirms, and the system packages PRD and 11 state the type.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-092 A New Version of a System Package
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Show a plan, then write it in one journaled change; review only what the team changed | Owner: a system packages PRD, which does not exist yet. [Q-093](#q-093-where-system-package-work-goes) places the work, and [Q-095](#q-095-documents-written-now-for-system-packages) sets when the PRD is written. |
+
+**Question**: What happens when a project takes in a new version of a package that it already holds?
+
+**Why it matters**: A new version can change hundreds of records. A review of each one buries the person, but changes that touch the team's own work must not go through silently.
+
+**Recommendation**: The command shows a plan first and then writes it in one journaled change, as the v1 import does. A record that is new upstream arrives `active`. A record that changed upstream and that the team did not change is written at once; the person's approval of the plan is its review. A record that the team changed gets the upstream change as a pending change. A record that is gone upstream becomes `archived` when the team did not change it and no local record links to it. Otherwise it stays `active` with a Warning, and the person decides. Fit-gap marks on changed requirements show through the current `marks-out-of-date` Warning. The command refuses a version that is the same as or lower than the one the project holds. The `origin` stamp keeps a hash of the fields that the package carries, so the command can tell what the team changed. The other choice sends every upstream change through review.
+
+**To close**: The owner confirms, and the system packages PRD states the rules.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-093 Where System Package Work Goes
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | A new wave, `W2 R0`; `W1 R1` takes only a small change in place | Owner: [01 Product Overview](01-product-overview.md#release-scope), with [08 CLI and MCP](08-cli-and-mcp.md), [10 Records and Identity](10-records-and-identity.md) and [17 v1 Import](17-v1-import.md). |
+
+**Question**: Do system packages join the `W1 R1` work, so v2.0 ships with them, or do they start a new wave?
+
+**Why it matters**: A new phase in `W1 R1` holds back v2.0. A new wave must not miss anything that v2.0 has to build first.
+
+**Recommendation**: System packages start a new wave, `W2 R0`. The Make Docs wave model starts a new wave for a new end-to-end piece of work. v2.0 needs no rebuild for packages: ids are random, so they stay safe across projects; each record is one file, so it copies cleanly; the content version ([Q-076](#q-076-version-that-requirement-marks-keep)) shows changes in meaning; pending changes give a new version a review path; and the v1 import already shows a plan before it writes. `W1 R1` takes a small change in place, with no new revision: a planned-scope row in [01 Product Overview](01-product-overview.md#release-scope), the reserved `run package` command group in [08 CLI and MCP](08-cli-and-mcp.md), which answers that it is planned, the way `serve` does, the reserved `origin` field name, and a rebuild note in [17 v1 Import](17-v1-import.md) that keeps the import plan and write steps apart from the v1 reader so that the package import can use them. The other choice is a new phase in `W1 R1`.
+
+**To close**: The owner confirms, and 01, 08, 10 and 17 state the reserved names and the planned scope.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-094 Release That Carries System Packages
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | System packages are v2.1; the local server and UI move to v2.2, and test records move to v2.3 | Owner: [01 Product Overview](01-product-overview.md#release-scope), with every PRD that names a release. |
+
+**Question**: Releases v2.1 (local server and UI) and v2.2 (test records) are already planned. Which release carries system packages?
+
+**Why it matters**: Packages are the main reason for v2. They need only the CLI and the MCP server, which v2.0 builds, so they can ship sooner than a server and a web app.
+
+**Recommendation**: System packages are v2.1. The local server, the web app and MCP App views move to v2.2. Test case, run, result and playbook records move to v2.3. Setup C stays v3. Every release label in the PRD set and this register moves with them. The other choice keeps the current numbers and makes packages v2.3.
+
+**To close**: The owner confirms, and every PRD shows the new release labels.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
+### Q-095 Documents Written Now for System Packages
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Now: the design, the PRD and the `W2 R0` plan; the `W2 R0` work backlog when v2.0 ships | Owner: the system packages design and the `W2 R0` plan, which do not exist yet. |
+
+**Question**: Which documents for system packages are written now, and which wait?
+
+**Why it matters**: Decisions that live only in a chat are lost. A work backlog written long before the code it builds on tends to go out of date.
+
+**Recommendation**: Now: a design at `docs/designs/2026-10-31-system-packages.md`, a new PRD `20-system-packages.md` that states the planned v2.1 scope, the small `W1 R1` change from [Q-093](#q-093-where-system-package-work-goes), and the `W2 R0` plan under `docs/plans/`. When v2.0 ships: the `W2 R0` work backlog, written from the PRD as it then stands. The other choice also writes the `W2 R0` work backlog now.
+
+**To close**: The owner confirms, and each document exists at its path.
+
+**Resolution**: Owner accepted the recommendation on 2026-10-31.
+
 ## Rebuild Risks
 
 ### R-001 Core Release Friction
@@ -1998,7 +2174,7 @@ Also: `source-unregistered` skips files that converted text links to, such as th
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Owner: [18 Local Server and UI](18-local-server-and-ui.md). v2.1. |
+| Open | None yet | Owner: [18 Local Server and UI](18-local-server-and-ui.md). v2.2. |
 
 **Issue**: The local server needs no login. Other users on the same machine can reach a loopback port.
 
@@ -2006,7 +2182,7 @@ Also: `source-unregistered` skips files that converted text links to, such as th
 
 **Recommendation**: Print a URL that carries a random token, and refuse requests without it.
 
-**To close**: 18 states the rule for v2.1.
+**To close**: 18 states the rule for v2.2.
 
 ### R-023 Mods API Changes
 

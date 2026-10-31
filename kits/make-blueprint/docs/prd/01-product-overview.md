@@ -17,7 +17,7 @@ Make Blueprint is the product formerly named BuildOS. Its command-line tool is `
 
 Every record is one Markdown file in the project folder. Every extracted fact links back to an exact place in its source and forward to planned work. People review and merge record changes in git like any other file.
 
-This PRD set describes the whole product. v2.0 is the current release scope. Capabilities for v2.1, v2.2 and v3 appear as planned scope or as current limitations, so each one already has its owning PRD. The source design is [Make Blueprint v2 Architecture](../designs/2026-10-29-make-blueprint-v2-architecture.md), and the plan is [Make Blueprint v2 Owner Decision Maintenance Plan](../plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md). [02 Architecture Overview](02-architecture-overview.md) shows how the product is built.
+This PRD set describes the whole product. v2.0 is the current release scope. Capabilities for v2.1, v2.2, v2.3 and v3 appear as planned scope or as current limitations, so each one already has its owning PRD. The source design is [Make Blueprint v2 Architecture](../designs/2026-10-29-make-blueprint-v2-architecture.md), and the plan is [Make Blueprint v2 Owner Decision Maintenance Plan](../plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md). [02 Architecture Overview](02-architecture-overview.md) shows how the product is built.
 
 ### Northstar Principles
 
@@ -116,11 +116,12 @@ Make Blueprint organizes work into seven stages. Each stage has one skill. Two m
 | CLI, MCP and status | One command shape, one MCP server with profiles, write tools gated by `allowWrite`, one filter syntax, read-only SQL, and the `project status` command | v2.0 | [08 CLI and MCP](08-cli-and-mcp.md) |
 | Storage and indexing | Record files as the truth, a derived local index, safe writes and crash recovery | v2.0 (file backend), v3 (database backend) | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | Records and identity | Two IDs per record, aliases, facets, evidence links, the `project check` command and a ref-fix command | v2.0 | [10 Records and Identity](10-records-and-identity.md) |
-| Record types | Twelve record types in v2.0, and four more planned | v2.0, v2.2 | [11 Record Types Reference](11-record-types-reference.md) |
+| Record types | Twelve record types in v2.0, the `package` type in v2.1, and four more planned | v2.0, v2.1, v2.3 | [11 Record Types Reference](11-record-types-reference.md) |
 | System integrations | One `integration` record for each flow of data or events from one system to another. Current integrations come from extraction, and planned ones come from analysis as drafts. Comparisons, placements and the hand-off use them. | v2.0 | [19 System Integrations](19-system-integrations.md) |
 | Exports | For each system: capability and requirement CSV files, a capability model document and a data dictionary. For each comparison: a fit-gap detail CSV, summaries by verdict and by domain, the fit-gap requirements, placements and integrations CSV files, a data dictionary, and one xlsx workbook with all of the comparison's tables | v2.0 | [15 Exports](15-exports.md) |
 | v1 import | A one-time import of BuildOS v1 projects, where v1 IDs become `ref` values | v2.0 | [17 v1 Import](17-v1-import.md) |
-| Local server and UI | A local server, a Svelte web app for viewing, sorting and filtering, then MCP App views | v2.1 | [18 Local Server and UI](18-local-server-and-ui.md) |
+| System packages | Make a versioned bundle of one or more systems and their records, and take one in as a baseline. Each step shows a plan before it writes, and a new version keeps the team's own changes. | v2.1 | [20 System Packages](20-system-packages.md) |
+| Local server and UI | A local server, a Svelte web app for viewing, sorting and filtering, then MCP App views | v2.2 | [18 Local Server and UI](18-local-server-and-ui.md) |
 
 ### Setups
 
@@ -129,7 +130,7 @@ A setup is a way to run Make Blueprint. It decides whether a server runs and whe
 | Setup | Server | Where data lives | Release |
 | --- | --- | --- | --- |
 | A | None. The CLI and MCP server work directly on files. | Files in git | v2.0 |
-| B | A small local server for each user | Files in git | v2.1 |
+| B | A small local server for each user | Files in git | v2.2 |
 | C | A local server for each user | A shared database | v3, designed later |
 
 - Setup A is the most common setup. In file mode the server is optional, and a person starts it only for the UI or for setup C.
@@ -143,8 +144,9 @@ A setup is a way to run Make Blueprint. It decides whether a server runs and whe
 | --- | --- | --- |
 | Step 0 | Repo-wide work in the make-kit monorepo: copy Make Docs into `kits/make-docs/`, pull the shared core out into `packages/core/`, and pass the switch point (the moment Make Docs releases start to come from the monorepo). The `make-kit` setup tool follows. The core carries managed blocks that take each tool's own tags, and the uninstall fix. | Prerequisite for v2.0. Repo-wide work, planned in the repo-wide plan; it is not a Make Docs release |
 | v2.0 | Setup A (file mode), the CLI, the MCP server, nine skills (the seven stage skills, `blueprint-report` and `blueprint-convert`), conversion with the guided agent route for complex PDFs, extraction and review, the twelve v2.0 record types, `project status`, `project check`, exports and the v1 import | Current release scope |
-| v2.1 | Setup B (local server), the web app, then MCP App views | Planned scope |
-| v2.2 | Test case, run, result and playbook records | Planned scope |
+| v2.1 | System packages: a team makes a versioned bundle of one or more systems and their records, and other projects take it in as a baseline | Planned scope |
+| v2.2 | Setup B (local server), the web app, then MCP App views | Planned scope |
+| v2.3 | Test case, run, result and playbook records | Planned scope |
 | v3 | Setup C (shared database). Its database type, logins, permissions and file storage are designed at that time. | Planned scope, not yet designed |
 
 BuildOS v1 receives bug fixes only and gets no new features. v1 projects move to Make Blueprint through the v2.0 import. See [17 v1 Import](17-v1-import.md).
@@ -192,8 +194,9 @@ Code anchors:
 ## Current Limitations
 
 - **Setup C is not designed.** v2.0 ships only the file backend. The database backend, its database type, logins, permissions and file storage come with setup C in v3. See [09 Storage and Indexing](09-storage-and-indexing.md).
-- **No server and no UI in v2.0.** The local server and web app come in v2.1, then MCP App views. The first UI views, sorts and filters records; editing in the UI comes later. See [18 Local Server and UI](18-local-server-and-ui.md).
-- **No test records in v2.0.** Test case, run, result and playbook records, with the `blueprint/runs/` and `blueprint/playbooks/` folders, come in v2.2. See [11 Record Types Reference](11-record-types-reference.md).
+- **No system packages in v2.0.** A project cannot yet make a bundle of its systems or take one in from another project. System packages come in v2.1. v2.0 reserves the `run package` domain and the `origin` field. See [20 System Packages](20-system-packages.md).
+- **No server and no UI in v2.0.** The local server and web app come in v2.2, then MCP App views. The first UI views, sorts and filters records; editing in the UI comes later. See [18 Local Server and UI](18-local-server-and-ui.md).
+- **No test records in v2.0.** Test case, run, result and playbook records, with the `blueprint/runs/` and `blueprint/playbooks/` folders, come in v2.3. See [11 Record Types Reference](11-record-types-reference.md).
 - **No custom record types.** A project extends records with facets (named value lists such as legal entity, release or scope), not with new types. See [10 Records and Identity](10-records-and-identity.md).
 - **Converted text is not secret.** At the `converted` git level the original stays out of git, but its converted text holds the same words and git tracks it. Secret content needs the `none` level. A change of level never takes a file that git already tracks out of git history. See [12 Source Intake and Conversion](12-source-intake-and-conversion.md).
 - **Built-in conversion covers seven file types.** The CLI converts docx, xlsx, pptx, pdf, csv, md and txt. Other file types need an agent or a manual step. Built-in pdf and pptx conversion may lose detail compared with outside tools. A complex pdf can take the guided agent route instead, and a person reviews its text before extraction. See [12 Source Intake and Conversion](12-source-intake-and-conversion.md).
@@ -212,6 +215,16 @@ Code anchors:
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Decision, sections 8, 10, 14 and 15; Consequences: trade-offs and risks)
 - `blueprint/runs/`
 - `blueprint/playbooks/`
+
+## Requirement History
+
+### 2026-10-31 — W1 R1
+
+- Affected requirement or section: `Release Scope`
+- Previous contract: v2.1 carried setup B (local server), the web app and MCP App views, and v2.2 carried test case, run, result and playbook records.
+- Replacement contract: v2.1 carries system packages. Setup B, the web app and MCP App views move to v2.2, and the test records move to v2.3. Setup C stays v3.
+- Rationale: System packages are the main reason for v2, and they need only the CLI and the MCP server that v2.0 builds, so they ship before the server and the web app.
+- Source: [Q-094 Release That Carries System Packages](03-open-questions-and-risk-register.md#q-094-release-that-carries-system-packages)
 
 ## Source Anchors
 

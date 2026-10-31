@@ -63,10 +63,10 @@ In setup A (v2.0), nothing else runs. The CLI and MCP server read and write proj
   them with a count until that command ships (O-001).
 ```
 
-In setup B (v2.1), each user can also start a small local server with `make-blueprint serve`. It serves the Svelte web app to a browser on the same machine. The MCP server serves the same views as MCP App views (HTML views that the MCP server serves and the agent tool shows). Both kinds of view get their data from view-model read calls: one CLI or MCP read call for each view that returns the rows and totals the view shows. Files stay the truth.
+In setup B (v2.2), each user can also start a small local server with `make-blueprint serve`. It serves the Svelte web app to a browser on the same machine. The MCP server serves the same views as MCP App views (HTML views that the MCP server serves and the agent tool shows). Both kinds of view get their data from view-model read calls: one CLI or MCP read call for each view that returns the rows and totals the view shows. Files stay the truth.
 
 ```text
-  Setup B (v2.1)
+  Setup B (v2.2)
 
   Browser ------ localhost ----> make-blueprint serve --+
                                                         |
@@ -87,7 +87,7 @@ In setup C (v3), the local server for each user reaches a shared database throug
 | Setup | Processes | Truth | Release | Owner |
 | --- | --- | --- | --- | --- |
 | A | CLI calls and the stdio MCP server, started by the agent tool | Record files in git | v2.0 | [09 Storage and Indexing](09-storage-and-indexing.md) |
-| B | Setup A plus one local server for each user | Record files in git | v2.1 | [18 Local Server and UI](18-local-server-and-ui.md) |
+| B | Setup A plus one local server for each user | Record files in git | v2.2 | [18 Local Server and UI](18-local-server-and-ui.md) |
 | C | A local server for each user, using the database backend | A shared database | v3 | [09 Storage and Indexing](09-storage-and-indexing.md) |
 
 Requirements:
@@ -141,7 +141,7 @@ These modules live in this repository.
 | Index | The derived local SQLite index, which answers filters and read-only SQL | v2.0 | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | Filter syntax and read-only SQL | The filter syntax that the CLI and MCP share, and the read-only SQL command, which the index backs | v2.0 | [08 CLI and MCP](08-cli-and-mcp.md) |
 | Records | Common fields, statuses, `id` and `ref`, aliases, facets, evidence links, the `project check` command and ref fixes | v2.0 | [10 Records and Identity](10-records-and-identity.md) |
-| Record types | Fields and links for each record type | v2.0, v2.2 | [11 Record Types Reference](11-record-types-reference.md) |
+| Record types | Fields and links for each record type | v2.0, v2.1, v2.3 | [11 Record Types Reference](11-record-types-reference.md) |
 | Make Docs links | Work item IDs and doc paths on records, and their check through `make-docs` | v2.0 | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | Intake and conversion | Source records, source git levels, built-in converters, anchors, and the guided agent route for complex PDFs, in which an agent writes the text a few pages at a time and the CLI adds the anchors and checks each page | v2.0 | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | Extraction and review | `run extract next`, coverage, duplicate hints, drafts and review | v2.0 | [13 Extraction and Review](13-extraction-and-review.md) |
@@ -149,8 +149,9 @@ These modules live in this repository.
 | Exports | CSV files, Markdown documents (capability model documents and data dictionaries) and the xlsx workbook in `blueprint/exports/` | v2.0 | [15 Exports](15-exports.md) |
 | Skills | Nine skills, shipped inside the CLI package: one for each of the seven stages, `blueprint-report` for export prose and exports, and `blueprint-convert`, which serves the intake stage and guides the agent route for complex PDFs | v2.0 | [16 Workflow and Skills](16-workflow-and-skills.md) |
 | v1 import | The one-time import of BuildOS v1 projects | v2.0 | [17 v1 Import](17-v1-import.md) |
-| Local server | `make-blueprint serve` for setups B and C | v2.1 | [18 Local Server and UI](18-local-server-and-ui.md) |
-| UI and view models | The Svelte web app, MCP App views built from the same Svelte view code, and one view-model read call for each view | v2.1 | [18 Local Server and UI](18-local-server-and-ui.md) |
+| System packages | `run package make` and `run package add`: versioned bundles of systems and their records, which other projects take in as baselines | v2.1 | [20 System Packages](20-system-packages.md) |
+| Local server | `make-blueprint serve` for setups B and C | v2.2 | [18 Local Server and UI](18-local-server-and-ui.md) |
+| UI and view models | The Svelte web app, MCP App views built from the same Svelte view code, and one view-model read call for each view | v2.2 | [18 Local Server and UI](18-local-server-and-ui.md) |
 | Database backend | A second backend behind the storage interface for setup C | v3 | [09 Storage and Indexing](09-storage-and-indexing.md) |
 
 Requirements:

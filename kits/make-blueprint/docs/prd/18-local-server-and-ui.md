@@ -11,22 +11,22 @@ source:
 
 ## Purpose
 
-This PRD owns the optional local server and user interface of Make Blueprint. They are planned scope for v2.1, which delivers setup B. v2.0 has no server and no UI, and that is a current limitation, not a gap in any v2.0 task.
+This PRD owns the optional local server and user interface of Make Blueprint. They are planned scope for v2.2, which delivers setup B. v2.0 has no server and no UI, and that is a current limitation, not a gap in any v2.0 task.
 
-In setup B, each user can start a small local server with the `serve` command (v2.1). It listens only on the user's own machine, needs no login, and serves a Svelte web app to a browser on that machine. After the web app, the same Svelte view code ships as MCP App views (HTML views that the MCP server serves and the agent tool shows). Every view gets its data from its view model: one CLI or MCP read call that returns the rows and totals the view shows. The first version is for viewing, sorting and filtering. Editing comes later.
+In setup B, each user can start a small local server with the `serve` command (v2.2). It listens only on the user's own machine, needs no login, and serves a Svelte web app to a browser on that machine. After the web app, the same Svelte view code ships as MCP App views (HTML views that the MCP server serves and the agent tool shows). Every view gets its data from its view model: one CLI or MCP read call that returns the rows and totals the view shows. The first version is for viewing, sorting and filtering. Editing comes later.
 
 The UI is optional. The fourth Northstar principle says no task needs it, and this PRD keeps that true. See [01 Product Overview](01-product-overview.md).
 
 ## Scope
 
-This PRD covers, as v2.1 planned scope:
+This PRD covers, as v2.2 planned scope:
 
 - the local server for setup B, its network boundary and its share of the write lock
 - the Svelte web app, which comes first
 - MCP App views, which come next and use the same view code
 - view models, and the rule that every client reads through them
 - the read-only first version, and the line to later editing
-- a proposed first list of views, which v2.1 planning fixes
+- a proposed first list of views, which v2.2 planning fixes
 - the position on Claude Code mods
 
 Other PRDs own related parts:
@@ -49,7 +49,7 @@ Not in scope:
 Code anchors:
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Decision, section 1: Northstar principles; section 2: setups; section 14: UI; section 15: release plan)
-- `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md` (Scope & Phasing: v2.1 is a later wave that maintains the same PRD owners)
+- `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md` (Scope & Phasing: the server release is a later wave that maintains the same PRD owners)
 
 ## Component and Capability Map
 
@@ -58,7 +58,7 @@ Code anchors:
         |                                         |
         | loopback only, no login                 | stdio MCP
         v                                         v
-  make-blueprint serve (v2.1)            make-blueprint mcp
+  make-blueprint serve (v2.2)            make-blueprint mcp
   serves the web app                     serves MCP App views (after the web app)
         |                                         |
         +------------------+----------------------+
@@ -73,11 +73,11 @@ Code anchors:
 
 | Component | What it does | Release |
 | --- | --- | --- |
-| Local server | Started by the `serve` command (v2.1). Listens only on the user's machine, needs no login, serves the web app, and answers view-model calls for it. | v2.1 |
-| Web app | The Svelte views in a browser on the same machine | v2.1, first |
-| MCP App views | The same Svelte views, served by the MCP server as HTML resources and shown inside the agent tool | v2.1, after the web app |
-| View models | One read call for each view that returns its rows and totals, available through the CLI and the MCP server | v2.1 |
-| Shared Svelte view code | One set of view components, built once for the web app and once as MCP App resources | v2.1 |
+| Local server | Started by the `serve` command (v2.2). Listens only on the user's machine, needs no login, serves the web app, and answers view-model calls for it. | v2.2 |
+| Web app | The Svelte views in a browser on the same machine | v2.2, first |
+| MCP App views | The same Svelte views, served by the MCP server as HTML resources and shown inside the agent tool | v2.2, after the web app |
+| View models | One read call for each view that returns its rows and totals, available through the CLI and the MCP server | v2.2 |
+| Shared Svelte view code | One set of view components, built once for the web app and once as MCP App resources | v2.2 |
 | Future mod | A Claude Code mod that draws its own elements from the same view models | Out of the release plan |
 
 ### UI Optional
@@ -85,7 +85,7 @@ Code anchors:
 Requirements:
 
 - Every task in the seven workflow stages completes with no server and no UI running.
-- No v2.0 command needs the server, and no command starts it except the `serve` command (v2.1).
+- No v2.0 command needs the server, and no command starts it except the `serve` command (v2.2).
 - Every row and total a view shows is also available from its view-model read call in the CLI and the MCP server.
 - In setup A, nothing listens on a network port. See [02 Architecture Overview](02-architecture-overview.md).
 
@@ -159,7 +159,7 @@ Requirements:
 
 ### Proposed First Views
 
-The first list of views is deferred to v2.1 planning, which fixes it in this PRD (see [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md)). This is the proposed list:
+The first list of views is deferred to v2.2 planning, which fixes it in this PRD (see [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md)). This is the proposed list:
 
 | View | Rows | Totals | Main filters | Data owner |
 | --- | --- | --- | --- | --- |
@@ -187,7 +187,7 @@ A future mod would draw its own elements and get its data from the same view-mod
 
 Code anchors:
 
-- `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Decision, section 7: CLI and MCP; section 14: UI; Context: other constraints; Alternatives Considered: build mods from the Svelte views; Consequences: mods API; Left for planning: the list of views for v2.1)
+- `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Decision, section 7: CLI and MCP; section 14: UI; Context: other constraints; Alternatives Considered: build mods from the Svelte views; Consequences: mods API; Left for planning: the list of views for v2.2)
 - [Claude Code mods overview](https://code.claude.com/docs/en/plugins/mods/overview.md)
 - `blueprint/records/<type>/<id>.md`
 
@@ -214,7 +214,7 @@ Code anchors:
 - **Keep view models out of the view code.** If the Svelte code queries or totals records itself, the CLI, the MCP tools and a future mod drift apart. Parity tests compare the CLI JSON, the MCP result and the server answer for the same input.
 - **Bind to loopback, and check the host.** Binding to all addresses, or skipping the `Host` header check, exposes project data to other machines or to other web pages.
 - **Release the lock between requests.** A server that holds the lock while idle blocks every CLI and MCP write.
-- **Keep setup A free of the server.** No v2.0 feature may wait for v2.1. Every task stays possible with no server running.
+- **Keep setup A free of the server.** No v2.0 feature may wait for v2.2. Every task stays possible with no server running.
 - **Build the views once.** Separate web and MCP App versions of the same view drift. One component set with a thin host layer stays in step.
 - **Ship the compiled files.** Loading scripts, styles or fonts from the internet breaks offline use and locked-down machines.
 - **Compute totals over the filtered set.** Totals over one page mislead a person who reads them as project counts.
@@ -224,6 +224,16 @@ Code anchors:
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Consequences: trade-offs and risks)
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md` (Acceptance Criteria Guidance: non-functional requirements)
+
+## Requirement History
+
+### 2026-10-31 — W1 R1
+
+- Affected requirement or section: `Purpose and Scope`
+- Previous contract: The local server, the web app and MCP App views were planned scope for v2.1.
+- Replacement contract: They are planned scope for v2.2. v2.1 carries system packages (see [20 System Packages](20-system-packages.md)).
+- Rationale: System packages are the main reason for v2, and they need only the CLI and the MCP server that v2.0 builds, so they ship before the server and the web app.
+- Source: [Q-094 Release That Carries System Packages](03-open-questions-and-risk-register.md#q-094-release-that-carries-system-packages)
 
 ## Source Anchors
 

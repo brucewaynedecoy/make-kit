@@ -21,7 +21,7 @@ This backlog is the implementation queue for all v2.0 scope in the Make Blueprin
 
 The PRDs are the authority. The plan fixed the scope and the phase map, but it is not a requirement source. Where a phase file and a PRD differ, the PRD wins, and the gap goes to the [open questions and risk register](../../prd/03-open-questions-and-risk-register.md) through the Make Docs PRD change process.
 
-Out of scope: the ten deferred register items Q-050 to Q-056, Q-059, Q-074 and Q-075, and all v2.1, v2.2 and v3 scope. PRD 18 enters v2.0 only through the shared write lock in [Phase 3](03-storage-and-identity.md) and the reserved `serve` command in [Phase 2](02-cli-and-packaging.md).
+Out of scope: the ten deferred register items Q-050 to Q-056, Q-059, Q-074 and Q-075, and all v2.2, v2.3 and v3 scope. PRD 18 enters v2.0 only through the shared write lock in [Phase 3](03-storage-and-identity.md) and the reserved `serve` command in [Phase 2](02-cli-and-packaging.md).
 
 Phase 01 depends on repo-wide work outside this backlog: Step 0 and the `make-kit` setup tool work in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design. That work pulls the shared core into `packages/core/` and builds the shared `.make/config.yaml` and `.make/personas.yaml` support that this backlog adopts.
 

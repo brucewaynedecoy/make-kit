@@ -383,6 +383,7 @@ The owner settled these items from the PRD risk register. They update the sectio
 - **Q-083 git level changes.** A source's git level changes at once, not through review: `run source add --git-level <level>` and `run source set-level <source>... <level>` write the record and the managed `.gitignore` in one journaled change.
 - **Q-084 small defaults.** `run model move --top`, `--map-status` on merges and status list changes, `--include-drafts` on exports, `run compare create` makes an `active` comparison, `run record create` refuses types that have their own create command, `run place link` also links integration records, a missing handoff line points to the Make Docs update and `setup` again, and bare `make-blueprint` never offers setup.
 - **D-012 backlog fixes.** Seven PRD disagreements found while writing the work backlog are fixed, as the register lists.
+- **Q-085 to Q-095 system packages (2026-10-31).** One project can make a versioned bundle of one or more systems and their `active` records, and other projects take it in as a baseline. The [System Packages design](2026-10-31-system-packages.md) records the decisions. System packages are v2.1 and the new wave `W2 R0`. So the release labels in section 15 move: the local server, the web app and MCP App views are v2.2, and test records are v2.3. v2.0 reserves the `run package` domain and the `origin` field name.
 
 ## Alternatives Considered
 
