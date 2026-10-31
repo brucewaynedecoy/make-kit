@@ -175,7 +175,6 @@ Turning "single project or monorepo" into a setup option for Make Kit, Make Docs
 - Step 0 grows. It now includes copying Make Docs, rebuilding its CI and release flow here, and the switch point. A broken release at the switch point would hurt live Make Docs users, so the switch needs a dry-run publish and an install check first.
 - Make Docs tests or scripts that assume they run at the repository root may need changes to run from `kits/make-docs/`.
 - The nested-project weak spots stay until Make Docs fixes them. The workarounds are tracked as O-001 to O-005 so they do not become permanent.
-- The repository-root `README.md` still describes BuildOS. It needs a rewrite as the monorepo README.
 - Agents may still pick the wrong project in a repository with several docs roots. The routing check exists to find out.
 
 ### Left for planning
@@ -183,6 +182,7 @@ Turning "single project or monorepo" into a setup option for Make Kit, Make Docs
 - The exact Step 0 sequence, including how the Make Docs CI moves and how the switch point is tested.
 - The npm workspace setup at the repository root.
 - The repo-wide PRD set: which parts of the Make Blueprint PRDs on the shared core, the setup tool and the `.make/` rules move up to repo-wide PRDs.
+- A repo-wide Kit Conventions PRD: the rules every kit follows, written from the Make Docs code during Step 0. It covers the CLI shape (the seven top-level groups, `run <domain> <verb>`, outcomes and exit codes, `--json` and `--dry-run`), the MCP server, its profiles and `allowWrite`, system resources served by URI compared with project records, routers and managed blocks with progressive disclosure, the shared `.make/` files compared with each kit's `.make/<kit>/` config, the `~/.make/<kit>/` machine folders with a `MAKE_<KIT>_HOME` setting for each kit, and the rule that project knowledge lives in git while the Store holds only operational state. The Make Blueprint PRDs that state these rules today, 05 to 09, then link to it.
 - The routing check method and where its results are recorded.
 - The Make Docs Persona move: how the entry format holds the Make Docs label, description, built-in entries and reserved slugs, and how a project that keeps Personas in `.make-docs/config.yaml` moves to `.make/personas.yaml`.
 

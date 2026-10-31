@@ -1,21 +1,42 @@
-# BuildOS
+# Make Kit
 
-Clean-room approach for implementing BuildOS v2.
+Make Kit is a small family of command-line tools for working on a project with AI agents. Each tool is called a kit. A kit runs as a CLI and as an MCP server that your agent tool starts, and it adds its own block to the agent instruction files, such as `AGENTS.md` and `CLAUDE.md`, so agents know how to use it. Every kit installs and runs on its own, and kits installed together will share one core library and a couple of project settings files.
 
-## Background
+This repository holds the kits, the shared core and the setup tool. Most of it is still on paper. Nothing here installs yet.
 
-I started a project called `build-os` a while back (which you can find in `<user-home>/Developer/Source/Tyler/Projects/build-os`).  The idea was to have a folder-based system for humans and agents to collaborate in, where we could collect and process sources (files, notes, transcripts, etc.) into a maintained and well-structured set of tables/data specifically and purpose-built for building a complete understanding of a system or systems -- but especially for building understanding of a system or systems' **current** and **desired/planned future** states.  This data could be read and reasoned over by agents, with capabilities and requirements mapped back to originating sources...and also mapped *forward* to actual planned work/backlogs.
+## The kits
 
-This worked really well for one of my clients (Client A) and we test-drove BuildOS to help us qualify and quantify a new first-party Microsoft Dynamics 365 FO solution and compare it against a custom solution we were already building in Microsoft Dynamics 365 CE (which you can find in `<client-a-project>`).  We were able to drop in documentation from Microsoft on the FO solution, plus architectural documents and the backlog for the custom CE solution, and the agent was able to provide excellent intelligence/insight on their separate features/capabilities, where things overlapped, and where the gaps were.
+**Make Docs** keeps a project's designs, plans, PRDs and work backlog under `docs/`, and gives agents one path from an idea to finished, recorded work. It's a live product, published on npm as `@brucewaynedecoy/make-docs`. For now it's built in its own repository, and it moves into `kits/make-docs/` during Step 0.
 
-I started another experiment with another consulting client (Client B) which was a significantly more complex set of systems, legal entities, project scopes, etc. (which you can find in `<client-b-project>`).  What I discovered in this instance was that BuildOS could benefit from a more-guided bulk-extraction process that would help ensure the quality, rigor, and fidelity of the data being extracted, especially when dealing with very large or dense sources, and also especially when working within projects and/or organizations that have a lot of complexity.  Unfortunately, the agents helping me build, test, and iterate on the bulk-extraction capabilities for BuildOS introduced significant scope-creep and a lot of unnecessary complexity into the bulk-extraction strategy and solution; I believe I was able to get this mostly turned around, but not enough that I fully trust bringing the `buildos-bulk-extract` skill into the base BuildOS project/source.
+**Make Blueprint** turns a pile of client sources, such as documents, spreadsheets, slide decks, notes and meeting transcripts, into records about the systems a client runs today and the ones it plans to run. Every fact links back to the exact place in its source. From those records it compares systems capability by capability, records which system should own each capability and how it gets delivered, and links that decision to planned work in Make Docs. Each record is one Markdown file, so changes get reviewed in git like code.
 
-Finally, about a week ago, I started another engagement with a client (Client C) where I'm looking to leverage BuildOS:  The client is a Client A dealership who has been very reluctant to implement Client A's custom dealer operations system -- specifically the SMO (Sales and Marketing Ops) module (which is a set of custom solutions for Microsoft Dynamics 365 CE and a customized version of Microsoft's first-party Sales and Marketing app in CE).  The client has agreed to let us use BuildOS to evaluate and compare SMO against the client's existing systems so that we can produce a comprehensive fit-gap analysis with recommended roadmap and an initial feature-level backlog.  This work hasn't really started yet, but I have the project repo set up in a clean initial state (which you can find in `<client-c-project>`).  I think this initialized project can show you what a new project that's been initialized with BuildOS should look like (at least as of today).
+Make Blueprint used to be called BuildOS. Version 2.0 is designed and planned in `kits/make-blueprint/`, down to a phased work backlog, but no code is written yet. BuildOS v1 stays in its own `build-os` repository and only gets bug fixes. A one-time import in 2.0 brings v1 projects across.
 
-While I am confident I can leverage BuildOS to do delivery for the Client C "Vendor Implementation" project, I feel like the "cracks" are starting to show, and I am seeing things that should maybe be changed and/or done differently in order to take it from the purely folder-based system that we currently have to the scalable, maintainable, and performant system that I think it can become.
+## Layout
 
-## Possible changes for brainstorming or the grill-me skill
+```text
+AGENTS.md, CLAUDE.md    map of the repo for agents, plus the Make Docs block
+docs/                   repo-wide docs: the core, the setup tool, rules shared by kits
+kits/make-blueprint/    Make Blueprint, with its own docs/
+kits/make-docs/         Make Docs (arrives in Step 0)
+packages/core/          the shared core (planned)
+packages/kit/           the make-kit setup tool (planned)
+```
 
-1. Unified CLI:  This is already captured as a future wave in the source BuildOS project, but I think the need for this is becoming more urgent.  If you take a look at the separate Make Docs project (in `<user-home>/Developer/Source/Tyler/Projects/make-docs`), you can see that we recently completed work in that project to sub-section the Make Docs CLI so that it can handle setups separately from Store operations and MCP server operations; and the MCP server is actually sub-divided into individual servers for the different types of functions/commands (so that it isn't required to configure clients with a single MCP server with a large number of tools).  Furthermore, as we've begun creating additional skills for BuildOS, some of those skills have been created with their own scripts (e.g., Python files, etc.) which can potentially be problematic if run on a controlled enterprise system which might not allow arbitrary Python code to be run.
-2. Better (but still **optional**) UI/UX:  BuildOS's design philosophy is to enable multiple types of contributors (include architects, non-technical product owners, stakeholders, agents, etc.) to do as much as possible from a single repo/project folder.  Another key design philosophy is that agent harnesses should be the primary "interface" for working with the system.  Those will continue to be core philosophies for BuildOS, but I am realizing that BuildOS might an optional control surface to simplify certain tasks; statuses and states; sources and information about sources; extracted data that can be sorted, filtered, and queried in a UI
-3. Data storage, querying, and retrieval:  Currently, BuildOS saves data in multiple formats (JSON/JSONL, CSV, SQLite) in multiple places (`.os/data`, `.os/indexes`, `workspace/datasets`, etc.).
+Each kit folder is its own Make Docs project, with its own `docs/` folder and config. The root `docs/` is only for work that crosses kits.
+
+## What comes next
+
+The [monorepo design](docs/designs/2026-10-30-make-kit-monorepo.md) sets the order:
+
+1. **Step 0.** Copy Make Docs into `kits/make-docs/` without its git history, move its CI here, and pull the shared core out into `packages/core/` as `@brucewaynedecoy/make-core`. At the switch point, Make Docs releases start coming from this repository. The npm package name and the install commands stay the same.
+2. **The setup tool.** `make-kit setup` asks which kits and agent tools you want, once, then runs each kit's own setup. Kits read those choices from `.make/config.yaml`, and people and roles from `.make/personas.yaml`.
+3. **Make Blueprint 2.0.** It supports Claude Code, Codex and GitHub Copilot CLI, and the setup tool ships with it.
+
+Make Blueprint's later releases are planned too. In 2.1, one project can bundle a system and hand it to another project as a baseline. A local server and web app follow in 2.2, and test records in 2.3. A shared-database setup is planned for v3, with no design yet.
+
+## Finding your way around
+
+Agents should start with the root `AGENTS.md` or `CLAUDE.md`. It says which project a task belongs to and lists the temporary workarounds, O-001 to O-005, that nested Make Docs projects need until Make Docs fixes them.
+
+For the reasoning behind all of this, read the [monorepo design](docs/designs/2026-10-30-make-kit-monorepo.md) first. Then go to Make Blueprint's [PRD index](kits/make-blueprint/docs/prd/00-index.md) and its [architecture design](kits/make-blueprint/docs/designs/2026-10-29-make-blueprint-v2-architecture.md).
