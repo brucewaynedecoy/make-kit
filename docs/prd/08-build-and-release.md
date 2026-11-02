@@ -243,8 +243,8 @@ Two steps before the public step are done. On 2026-11-01 the `make-kit` commits 
 Requirements:
 
 - Before the repository goes public, a scan of every tracked file and every commit in the git history finds no secret, no client data, no local home-folder path and no work email address.
-- Before the repository goes public, each of the 6 commit IDs from before the email rewrite still returns "No commit found" on GitHub.
-- Commits in this repository use the owner's personal email.
+- Before the repository goes public, each of the 14 old commit IDs still returns "No commit found" on GitHub: the 6 from before the email rewrite ([Q-026 Old Commit IDs on GitHub](03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040 Client Names in the Committed History](03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
+- Commits in this repository use the owner's personal email, or a GitHub noreply or bot address, such as the address that GitHub uses for web merges or the Dependabot address ([Q-041 Dependabot Pull Requests Before the Public Step](03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step)). No commit uses the work email ([Q-022 Work Email in Commit History](03-open-questions-and-risk-register.md#q-022-work-email-in-commit-history)).
 - The repository stays public from the public step on.
 
 Exposed history is a tracked risk ([R-004 Exposed History in the Public Repository](03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)).

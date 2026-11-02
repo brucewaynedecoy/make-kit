@@ -85,14 +85,14 @@ Human Experience Review stays separate. In this phase the agent opens the public
 - [x] t1: Add an MIT `LICENSE` at the repository root for the whole Make Kit stack, with the same license text as `kits/make-docs/LICENSE`. Keep `kits/make-docs/LICENSE` in place ([Q-018](../../prd/03-open-questions-and-risk-register.md#q-018-license), [08 Build and Release, License](../../prd/08-build-and-release.md#license)).
 - [x] t2: Add `.github/CODEOWNERS` with the single line `* @brucewaynedecoy` ([Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-code-owners), [08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)).
 - [x] t3: Add `.github/dependabot.yml` that watches the root `package-lock.json` through the npm ecosystem at the folder `/`. Keep the old schedule (weekly on Monday at 09:00 America/Chicago) and the old limit of 5 open pull requests, unless the owner chooses other values ([08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)). On 2026-11-02, the owner kept the old values.
-- [x] t4: Check the commit email. `git log --all --format='%ae%n%ce' | sort -u` must show only the owner's personal email and the GitHub noreply address that GitHub uses for web merges ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository), [Q-022](../../prd/03-open-questions-and-risk-register.md#q-022-work-email-in-commit-history)).
+- [x] t4: Check the commit email. `git log --all --format='%ae%n%ce' | sort -u` must show only the owner's personal email, the GitHub noreply address that GitHub uses for web merges, and GitHub bot addresses on `users.noreply.github.com`, such as the Dependabot address ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository), [Q-022](../../prd/03-open-questions-and-risk-register.md#q-022-work-email-in-commit-history), [Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step)).
 
 ### Acceptance criteria
 
 - A201: `LICENSE` at the root holds the MIT license text, and `kits/make-docs/LICENSE` is unchanged from `v2.0.6`.
 - A202: `.github/CODEOWNERS` holds exactly one rule, `* @brucewaynedecoy`.
 - A203: `.github/dependabot.yml` has one `npm` update entry with `directory: "/"`.
-- A204: The commit-email check prints no address other than the owner's personal email and the GitHub noreply address.
+- A204: The commit-email check prints no address other than the owner's personal email, the GitHub noreply address and GitHub bot addresses on `users.noreply.github.com`, such as the Dependabot address ([Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step)).
 
 ### Dependencies
 
@@ -117,7 +117,7 @@ Human Experience Review stays separate. In this phase the agent opens the public
 - [x] t7: Run `make-docs project surface ensure assets --target-root .`, then write the scan report at `docs/assets/maintainer/public-scan/<date>-scan.md`. The report states the scanned commit (`git rev-parse main`), the tools and their versions, each check with its result and its count of findings, and the 14 old commit ID results. The Stage 3 change after the public step adds the t10 result to the report. The report holds no secret, no email address and no client term.
 - [x] t8: Fix each finding in a file with a normal commit on the phase branch, then scan again. On 2026-11-02, the scan found no finding to fix.
 - [ ] t9: Owner gate: the owner's clear yes in chat before any history rewrite or force push to `main`. A finding in an earlier commit needs a history rewrite. After a rewrite, GitHub still opens the commits from before the rewrite by their IDs until the owner chooses how to drop them, as in [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github). Stop the phase until the owner decides. On 2026-11-02, no history rewrite is needed.
-- [ ] t10: After the phase pull request merges, run the scan of t6 again on the merged `main`, just before the public step. Make sure that no other commit lands on `main` between this scan and Stage 3.
+- [ ] t10: After the phase pull request merges, run the scan of t6 again on the merged `main`, just before the public step. Before the scan, fetch every branch and every pull request ref on GitHub, with the Dependabot branches, so that the scan covers every ref that goes public ([Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step)). Make sure that no other commit lands on `main` between this scan and Stage 3.
 
 ### Acceptance criteria
 

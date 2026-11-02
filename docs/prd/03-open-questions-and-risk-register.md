@@ -1257,6 +1257,22 @@ Code anchors:
 
 **Resolution**: The owner chose option A on 2026-11-02, and a test rewrite on a scratch copy found 0 hits in all 8 commits. The same day, `git-filter-repo` rewrote every commit and branch, with neutral labels such as "Client A", `<client-b-project>` and `<user-home>` in place of the client names, client folder paths and the owner's home-folder path. The rewrite changed 14 `kits/make-blueprint/` files and the old root `README.md` in the first 5 commits, and every rewritten commit and every commit message holds 0 hits. The owner deleted the GitHub repository, and the agent created it again as private, with the wiki off, and pushed only the new `main` at commit `a5ebdfb`. Each of the 8 old commit IDs returns "No commit found" on GitHub, and the Phase 1 branch is not pushed.
 
+### Q-041 Dependabot Pull Requests Before the Public Step
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option B: the 5 Dependabot pull requests stay open, and none of them merges before the Phase 3 CI can test it. The commit-email check also allows GitHub bot addresses on `users.noreply.github.com`. | Owner: [08 Build and Release, Rulesets and Ownership](08-build-and-release.md#rulesets-and-ownership). Related: [Q-022](#q-022-work-email-in-commit-history), [R-004](#r-004-exposed-history-in-the-public-repository). Step 0 work phases [02 Go Public](../work/2026-11-01-w1-r0-make-kit-monorepo/02-go-public.md) and [03 CI](../work/2026-11-01-w1-r0-make-kit-monorepo/03-ci.md). |
+
+**Question**: When `.github/dependabot.yml` reached `main` on 2026-11-02, Dependabot opened 5 pull requests, numbers 3 to 7: `@types/node` 24.12.0 to 26.6.6, `tsx` 4.21.0 to 4.23.15, `yaml` 2.9.0 to 2.9.1, `tsup` 8.5.1 to 9.0.0 and `typescript` 5.9.3 to 7.0.2. Each one has 1 commit on top of `main` that changes only `package-lock.json` and `kits/make-docs/packages/cli/package.json`. The author of each commit is the Dependabot bot address on `users.noreply.github.com`, and the committer is the GitHub noreply address. Close the 5 pull requests now, so that Dependabot skips these versions until newer versions come out (option A)? Or leave them open, merge none of them until the Phase 3 CI can test them, and allow GitHub bot addresses in the commit-email check (option B)?
+
+**Why it matters**: The commit-email check of Phase 2 allows only the owner's personal email and the GitHub noreply address ([Q-022](#q-022-work-email-in-commit-history)). The Dependabot branches go public with the repository, so a scan of every ref reports the bot address. 3 of the 5 updates are major version jumps, and the CI comes only in Phase 3, so no check tests them now. The bot commits hold no private data ([R-004](#r-004-exposed-history-in-the-public-repository)).
+
+**Recommendation**: Option B. The updates stay ready for the Phase 3 CI, and the bot address is not private data.
+
+**To close**: The owner chooses, and the Phase 2 and Phase 3 work records state the choice.
+
+**Resolution**: The owner chose option B, the recommendation, on 2026-11-02. The 5 pull requests stay open, and none of them merges before the Phase 3 CI tests it. The commit-email check of Phase 2 (t4 and A204) also allows GitHub bot addresses on `users.noreply.github.com`, such as the Dependabot address. Before the final scan (t10), the agent fetches every branch and every pull request ref on GitHub, with the Dependabot branches, so that the scan covers every ref that goes public. Stage 1 of Phase 3 lets the CI run on each open Dependabot pull request, then merges each one that passes or closes it.
+
 ## Rebuild Risks
 
 Each item is a place where Step 0 or a later rebuild can go wrong. R-001 and R-002 came from the Make Blueprint register. The other items come from the design trade-offs and from the PRD workers.

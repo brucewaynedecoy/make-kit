@@ -467,7 +467,8 @@ Tasks t1 to t4 are done. The stage adds 3 files: `LICENSE`, `.github/CODEOWNERS`
 
 #### A204 Commit Email Check
 
-- Claim: the commit-email check prints no address other than the owner's personal email and the GitHub noreply address.
+- Claim: the commit-email check prints no address other than the owner's personal email, the GitHub noreply address and GitHub bot addresses on `users.noreply.github.com`, such as the Dependabot address.
+- Rule change: on 2026-11-02, after Dependabot opened 5 pull requests, [Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step) added the GitHub bot addresses to the rule. The facts below are from before those pull requests.
 - Result: pass.
 - Commands: `git log --all --format='%ae%n%ce' | sort -u`. The coordinating agent ran this command on 2026-11-02, after the ref prune (see [Before the Stage 2 Scan](#before-the-stage-2-scan)). The agent that wrote this section did not run it again. This report does not record the address.
 - Facts: after the ref prune, the command printed 1 address, over all 10 commits on all refs. That address is the owner's personal email, the same as `user.email` in the git config. The command printed no other address.
