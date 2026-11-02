@@ -12,6 +12,8 @@ Phase 1 (Copy Day) is complete on 2026-11-02. 15 of its 15 acceptance cases pass
 - A113 passes with one recorded exception: 6 code anchors link to GitHub, not into `kits/make-docs/`.
 - A104 passes. The scan found 344 home-folder paths in one test fixture archive, and one evidence screenshot also showed a home path. The client-term scan found a 4th client name in 27 kit files and 7 file names, and 13 external-drive paths in 9 kit files. The owner accepted all fixes on 2026-11-02, and the rescan finds 0 hits. Client names in already committed files and earlier commits are outside this commit ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
 
+Phase 2 (Go Public) Stage 1 is closed on 2026-11-02. 4 of its 4 acceptance cases pass: A201 to A204 all pass. Stage 2 is open: A205 passes, A206 has the phase-branch scan with 0 findings and waits for the t10 scan, and A207 waits for the public step.
+
 ## Phase 1: Copy Day
 
 Phase file: [01 Copy Day](01-copy-day.md).
@@ -418,3 +420,90 @@ None for this phase. The PRD edits change copy-day facts, methods and code-ancho
 ### Follow-Up
 
 A separate session drafted the Make Docs work item [W28 R0 Portable Paths](../../../kits/make-docs/docs/work/2026-11-02-w28-r0-portable-paths/00-index.md). It is the permanent fix for home-folder paths: a guard that rejects home paths before a commit, and path writers that record project-relative paths. It follows up the home-path cleanup in A104. It is a draft and is not part of W1 R0 P1.
+
+## Phase 2: Go Public
+
+Phase file: [02 Go Public](02-go-public.md).
+
+### Test Environment
+
+- Date: 2026-11-02.
+- Machine: the maintainer machine, macOS on arm64.
+- Tools: Stage 1 used git, Node v24.19.0 and the `yaml` package 2.9.0 from the root `node_modules/`. Stage 2 used gitleaks 8.30.1 from Homebrew, git 2.55.0, Python 3.14.7, gh 2.103.3 and make-docs 2.0.6. `trufflehog` is not installed.
+- Tested revision: branch `w1-r0-p2-go-public` at commit `ee6b3c0`, plus the uncommitted working tree of Stage 1. The Stage 1 files are not committed, so no commit ID identifies the tested tree. `main` is at the same commit.
+- Place names: `<repo>` is the repository root. All commands run from `<repo>`. `../make-docs` is the old local clone. The checks use it read-only, with `git show` only.
+- Reviewer: the implementing coding agents. The owner made the decisions that the entries name.
+- Retained captures: this report holds the facts. It keeps no raw command output. The Stage 2 scan results are in the [scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md).
+
+### Stage 1 - Repository Files Before the Public Step
+
+Tasks t1 to t4 are done. The stage adds 3 files: `LICENSE`, `.github/CODEOWNERS` and `.github/dependabot.yml`. No file under `kits/` changed.
+
+- t1: `cp kits/make-docs/LICENSE LICENSE`. The root `LICENSE` is a byte-for-byte copy, and `kits/make-docs/LICENSE` stays in place.
+- t2: `.github/CODEOWNERS` holds the one line `* @brucewaynedecoy` and a final newline.
+- t3: `.github/dependabot.yml` has the same content as `kits/make-docs/.github/dependabot.yml`, with one difference: it writes the folder as `directory: "/"`, not `directory: /`. Both forms parse to the same value `/`. On 2026-11-02, the owner kept the old schedule (weekly on Monday at 09:00 America/Chicago) and the old limit of 5 open pull requests.
+- t4: A204 records the check.
+
+#### A201 Root License
+
+- Claim: `LICENSE` at the root holds the MIT license text, and `kits/make-docs/LICENSE` is unchanged from `v2.0.6`.
+- Result: pass.
+- Commands: `cmp LICENSE kits/make-docs/LICENSE`. `git -C ../make-docs show v2.0.6:LICENSE | cmp - kits/make-docs/LICENSE`. `git diff --quiet -- kits/make-docs/LICENSE`.
+- Facts: each `cmp` exited 0 with no output, so the root `LICENSE`, `kits/make-docs/LICENSE` and `v2.0.6:LICENSE` have the same bytes. Each file has 1070 bytes, and its first line is `MIT License`. `git diff --quiet` exited 0, so the tracked `kits/make-docs/LICENSE` has no change.
+
+#### A202 Code Owners
+
+- Claim: `.github/CODEOWNERS` holds exactly one rule, `* @brucewaynedecoy`.
+- Result: pass.
+- Commands: `wc -l .github/CODEOWNERS`. `od -c .github/CODEOWNERS`. `grep -cv '^\s*\(#\|$\)' .github/CODEOWNERS`.
+- Facts: the file has 19 bytes in 1 line: `* @brucewaynedecoy` and a final newline. The `grep` count of lines that are not empty and not comments is 1.
+
+#### A203 Dependabot Config
+
+- Claim: `.github/dependabot.yml` has one `npm` update entry with `directory: "/"`.
+- Result: pass.
+- Commands: a `node -e` check that parses the file with the `yaml` package and exits 0 only when `version` is 2, `updates` has 1 entry, that entry has `package-ecosystem` `npm`, and its `directory` is `/` (exit 0). `diff kits/make-docs/.github/dependabot.yml .github/dependabot.yml`. `git -C ../make-docs show v2.0.6:.github/dependabot.yml | diff - kits/make-docs/.github/dependabot.yml`.
+- Facts: the check printed `version 2 updates 1 npm 1 dir "/"`, the schedule `{"interval":"weekly","day":"monday","time":"09:00","timezone":"America/Chicago"}` and `limit 5`. The first `diff` shows only line 4: `directory: /` in the kit file and `directory: "/"` in the root file. The second `diff` printed nothing, so the kit file has the same content as at the `v2.0.6` tag.
+
+#### A204 Commit Email Check
+
+- Claim: the commit-email check prints no address other than the owner's personal email and the GitHub noreply address.
+- Result: pass.
+- Commands: `git log --all --format='%ae%n%ce' | sort -u`. The coordinating agent ran this command on 2026-11-02, after the ref prune (see [Before the Stage 2 Scan](#before-the-stage-2-scan)). The agent that wrote this section did not run it again. This report does not record the address.
+- Facts: after the ref prune, the command printed 1 address, over all 10 commits on all refs. That address is the owner's personal email, the same as `user.email` in the git config. The command printed no other address.
+
+### Before the Stage 2 Scan
+
+- On 2026-11-02, the owner chose to delete 2 local refs under `refs/codex/turn-diffs/`. After the deletion, `git reflog expire --expire=now --all` and `git gc --prune=now` pruned their objects.
+- The 2 refs were tree snapshots that a coding tool made before the Phase 1 client-data fix, and they held client data. They were never on GitHub.
+- After the prune, the repository has only the refs `main`, `w1-r0-p2-go-public` and the `origin` remote-tracking refs. On 2026-11-02, `git for-each-ref --format='%(refname)'` listed only `refs/heads/main`, `refs/heads/w1-r0-p2-go-public`, `refs/remotes/origin/HEAD` and `refs/remotes/origin/main`, and `git rev-list --all --count` printed 10.
+
+When this note was written, `gitleaks` was not installed: `command -v gitleaks` exited 1. Later on 2026-11-02, Stage 2 ran its scan with `gitleaks` 8.30.1 from Homebrew (see [Stage 2 - History Scan and Old Commit IDs](#stage-2---history-scan-and-old-commit-ids)).
+
+### Stage 2 - History Scan and Old Commit IDs
+
+Tasks t5 to t8 are done. t9 is not needed, because no history rewrite is needed. t10 waits for the merge of the phase pull request. The scan report is [2026-11-02 Public Scan Report](../../assets/maintainer/public-scan/2026-11-02-scan.md).
+
+- t5: the coordinating agent ran `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each of the 14 old commit IDs from the owner. The scan report lists each ID with its group and its result.
+- t6: the coordinating agent ran the scan on 2026-11-02. The scan covered every blob, file name, commit message, author name and committer name on every ref, the files inside `.tgz` and `.gz` archives, and 5 uncommitted files: the 3 Stage 1 files and the changed `02-go-public.md` and `evidence.md`. The repository has 0 tags. The owner gave the client terms as local inputs, and no repository file holds them.
+- t7: `make-docs project surface ensure assets --target-root .` reported `State: applied`. It created `docs/assets/` and the asset router files `docs/assets/AGENTS.md` and `docs/assets/CLAUDE.md`, and it kept all other router files. The scan report is at `docs/assets/maintainer/public-scan/2026-11-02-scan.md`.
+- t8: the scan found 0 real findings, so no file needed a fix.
+
+#### A205 Old Commit IDs on GitHub
+
+- Claim: each of the 14 old commit IDs returns "No commit found" on GitHub, and the scan report lists each ID with its result.
+- Result: pass, 14 of 14.
+- Commands: `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each ID, with gh 2.103.3. The coordinating agent ran the commands on 2026-11-02.
+- Facts: all 14 calls returned "No commit found": the 6 IDs of [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github) and the 8 IDs of [Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history). [Check 7 of the scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md#check-7-old-commit-ids-t5) lists each ID, its group and its result.
+
+#### A206 Zero Findings on the Merged main
+
+- Claim: the t10 result in the scan report names the commit of the merged `main` and reports zero findings for secrets, local home-folder paths, the work email and client data.
+- Result: pending. The phase-branch scan has 0 findings. The final scan (t10) has not run.
+- Facts: the phase-branch scan covered `main` at `ee6b3c01feb7bfbd8ed2662075baabbf523f3d61`, the same commit as the phase branch, plus the 5 uncommitted files. It had 304 raw `gitleaks` hits and 30 raw path hits, and 0 raw hits in the other checks. The triage shows that each `gitleaks` hit is the same digest value in a `projectKey` field, and each path hit is a made-up placeholder in a test or a doc example. So the real findings are 0. The [scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md) has the details.
+- Limits: the phase commit also adds the scan report, the 2 asset router files and the Stage 2 changes to `02-go-public.md` and `evidence.md`. Before the commit, the coordinating agent scanned all 8 files of the commit with checks 2, 4, 5 and 6 of the scan report, with 0 hits. The t10 scan reads them again on the merged `main`.
+
+#### A207 Scanned Commit at the Public Step
+
+- Claim: `git rev-parse main` at the time of the public step equals the commit that the t10 scan names.
+- Result: pending. It waits for the t10 scan and the public step in Stage 3.

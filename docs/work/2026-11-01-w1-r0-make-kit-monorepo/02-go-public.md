@@ -82,10 +82,10 @@ Human Experience Review stays separate. In this phase the agent opens the public
 
 ### Tasks
 
-- [ ] t1: Add an MIT `LICENSE` at the repository root for the whole Make Kit stack, with the same license text as `kits/make-docs/LICENSE`. Keep `kits/make-docs/LICENSE` in place ([Q-018](../../prd/03-open-questions-and-risk-register.md#q-018-license), [08 Build and Release, License](../../prd/08-build-and-release.md#license)).
-- [ ] t2: Add `.github/CODEOWNERS` with the single line `* @brucewaynedecoy` ([Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-code-owners), [08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)).
-- [ ] t3: Add `.github/dependabot.yml` that watches the root `package-lock.json` through the npm ecosystem at the folder `/`. Keep the old schedule (weekly on Monday at 09:00 America/Chicago) and the old limit of 5 open pull requests, unless the owner chooses other values ([08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)).
-- [ ] t4: Check the commit email. `git log --all --format='%ae%n%ce' | sort -u` must show only the owner's personal email and the GitHub noreply address that GitHub uses for web merges ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository), [Q-022](../../prd/03-open-questions-and-risk-register.md#q-022-work-email-in-commit-history)).
+- [x] t1: Add an MIT `LICENSE` at the repository root for the whole Make Kit stack, with the same license text as `kits/make-docs/LICENSE`. Keep `kits/make-docs/LICENSE` in place ([Q-018](../../prd/03-open-questions-and-risk-register.md#q-018-license), [08 Build and Release, License](../../prd/08-build-and-release.md#license)).
+- [x] t2: Add `.github/CODEOWNERS` with the single line `* @brucewaynedecoy` ([Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-code-owners), [08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)).
+- [x] t3: Add `.github/dependabot.yml` that watches the root `package-lock.json` through the npm ecosystem at the folder `/`. Keep the old schedule (weekly on Monday at 09:00 America/Chicago) and the old limit of 5 open pull requests, unless the owner chooses other values ([08 Build and Release, Rulesets and Ownership](../../prd/08-build-and-release.md#rulesets-and-ownership)). On 2026-11-02, the owner kept the old values.
+- [x] t4: Check the commit email. `git log --all --format='%ae%n%ce' | sort -u` must show only the owner's personal email and the GitHub noreply address that GitHub uses for web merges ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository), [Q-022](../../prd/03-open-questions-and-risk-register.md#q-022-work-email-in-commit-history)).
 
 ### Acceptance criteria
 
@@ -105,30 +105,30 @@ Human Experience Review stays separate. In this phase the agent opens the public
 - Human Experience Review: not applicable to this stage.
 - Optional experience handoff: not applicable.
 - Explicit human acceptance gate: none.
-- Evidence report: the `A201` to `A204` section of `evidence.md`. To be recorded at closeout.
-- Phase / capability status: to be recorded at closeout. Planned: the stage closes when `A201` to `A204` pass.
+- Evidence report: the `A201` to `A204` section of `evidence.md`, [Stage 1 - Repository Files Before the Public Step](evidence.md#stage-1---repository-files-before-the-public-step).
+- Phase / capability status: Stage 1 is closed on 2026-11-02, because `A201` to `A204` pass.
 
 ## Stage 2 - History Scan and Old Commit IDs
 
 ### Tasks
 
-- [ ] t5: Check again that each of the 14 old commit IDs returns "No commit found" on GitHub, for example with `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each ID. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)). This is a read-only check, because both items are closed. No root doc lists the 14 IDs. Get them from the owner, and record the 14 IDs and each result in the scan report ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository)).
-- [ ] t6: Scan every tracked file and every commit on every ref. Use a secret scanner over the full history, such as `gitleaks git --log-opts="--all"`. Search every commit, for example with `git rev-list --all | xargs git grep -I -n -E <pattern>`, for local home-folder paths on macOS, Linux and Windows, for the work email and for client data. The owner gives the work email and the client terms as local inputs. No repository file holds them ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)).
-- [ ] t7: Run `make-docs project surface ensure assets --target-root .`, then write the scan report at `docs/assets/maintainer/public-scan/<date>-scan.md`. The report states the scanned commit (`git rev-parse main`), the tools and their versions, each check with its result and its count of findings, and the 14 old commit ID results. The report holds no secret, no email address and no client term.
-- [ ] t8: Fix each finding in a file with a normal commit on the phase branch, then scan again.
-- [ ] t9: Owner gate: the owner's clear yes in chat before any history rewrite or force push to `main`. A finding in an earlier commit needs a history rewrite. After a rewrite, GitHub still opens the commits from before the rewrite by their IDs until the owner chooses how to drop them, as in [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github). Stop the phase until the owner decides.
+- [x] t5: Check again that each of the 14 old commit IDs returns "No commit found" on GitHub, for example with `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each ID. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)). This is a read-only check, because both items are closed. No root doc lists the 14 IDs. Get them from the owner, and record the 14 IDs and each result in the scan report ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository)).
+- [x] t6: Scan every tracked file and every commit on every ref. Use a secret scanner over the full history, such as `gitleaks git --log-opts="--all"`. Search every commit, for example with `git rev-list --all | xargs git grep -I -n -E <pattern>`, for local home-folder paths on macOS, Linux and Windows, for the work email and for client data. Also search the commit messages (for example with `git log --all --format=%B`), the tag messages (for example with `git for-each-ref refs/tags --format='%(contents)'`), the file names on every ref (for example with `git rev-list --all --objects`) and the files inside `.tgz` archives. The t4 check covers the commit records. The client-term pattern also matches the domain of the work email, so it covers the work email in file text and in commit messages. The owner gives only the client terms as local inputs. No repository file holds them ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)).
+- [x] t7: Run `make-docs project surface ensure assets --target-root .`, then write the scan report at `docs/assets/maintainer/public-scan/<date>-scan.md`. The report states the scanned commit (`git rev-parse main`), the tools and their versions, each check with its result and its count of findings, and the 14 old commit ID results. The Stage 3 change after the public step adds the t10 result to the report. The report holds no secret, no email address and no client term.
+- [x] t8: Fix each finding in a file with a normal commit on the phase branch, then scan again. On 2026-11-02, the scan found no finding to fix.
+- [ ] t9: Owner gate: the owner's clear yes in chat before any history rewrite or force push to `main`. A finding in an earlier commit needs a history rewrite. After a rewrite, GitHub still opens the commits from before the rewrite by their IDs until the owner chooses how to drop them, as in [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github). Stop the phase until the owner decides. On 2026-11-02, no history rewrite is needed.
 - [ ] t10: After the phase pull request merges, run the scan of t6 again on the merged `main`, just before the public step. Make sure that no other commit lands on `main` between this scan and Stage 3.
 
 ### Acceptance criteria
 
 - A205: Each of the 14 old commit IDs returns "No commit found" on GitHub, and the scan report lists each ID with its result. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
-- A206: The scan report names the commit of the merged `main` and reports zero findings for secrets, local home-folder paths, the work email and client data.
-- A207: `git rev-parse main` at the time of the public step equals the commit in the scan report.
+- A206: The t10 result in the scan report names the commit of the merged `main` and reports zero findings for secrets, local home-folder paths, the work email and client data.
+- A207: `git rev-parse main` at the time of the public step equals the commit that the t10 scan names.
 
 ### Dependencies
 
 - Stage 1 of this phase.
-- The owner supplies the 14 old commit IDs, the work email and the client terms as local inputs. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
+- The owner supplies the 14 old commit IDs and the client terms as local inputs. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
 
 ### Closeout Notes
 
@@ -137,8 +137,8 @@ Human Experience Review stays separate. In this phase the agent opens the public
 - Human Experience Review: not applicable to this stage.
 - Optional experience handoff: not applicable.
 - Explicit human acceptance gate: none. The owner gate in t9 applies only when a history rewrite is needed.
-- Evidence report: the `A205` to `A207` section of `evidence.md`, with a link to the scan report. To be recorded at closeout.
-- Phase / capability status: to be recorded at closeout. Planned: the stage closes when `A205` to `A207` pass.
+- Evidence report: the [scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md), and [Stage 2 - History Scan and Old Commit IDs](evidence.md#stage-2---history-scan-and-old-commit-ids) in `evidence.md`.
+- Phase / capability status: Stage 2 is open on 2026-11-02. `A205` passes. `A206` has the phase-branch scan with 0 findings and waits for the t10 scan. `A207` waits for the public step. Planned: the stage closes when `A205` to `A207` pass.
 
 ## Stage 3 - Public Step and Rulesets
 
@@ -161,6 +161,7 @@ Human Experience Review stays separate. In this phase the agent opens the public
 
 - Stage 2 of this phase.
 - The owner is available for the gates in t11 to t13.
+- The owner's pick for the client-data cleanup of the old `make-docs` repository. If that pick rewrites the old history, the commit ID of the old `v2.0.6` tag changes. In that case, fix the `make-kit` files that cite that ID, and merge the fix before the t10 scan.
 
 ### Closeout Notes
 
