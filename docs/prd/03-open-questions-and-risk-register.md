@@ -1245,7 +1245,7 @@ Code anchors:
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | The owner asked on 2026-11-02 to remove all client names and client data from the files and the git history before the public step. On 2026-11-02 the owner chose option A: rewrite every commit with `git-filter-repo`, then delete and create the GitHub repository again. | Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public` checks the history again. |
+| Closed | The owner asked on 2026-11-02 to remove all client names and client data from the files and the git history before the public step. On 2026-11-02 the owner chose option A: rewrite every commit with `git-filter-repo`, then delete and create the GitHub repository again. Done on 2026-11-02: the history is rewritten, the new repository is private, and each of the 8 old commit IDs returns "No commit found" on GitHub. | Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public` checks the 8 old IDs again. |
 
 **Question**: The copy-day scan on 2026-11-02 found client names in 14 committed `kits/make-blueprint/` files, and all 8 commits on `main` hold client data. The first 5 commits also hold an old root `README.md` with client names, client folder paths and the owner's home-folder path. Rewrite the history now, and delete and create the GitHub repository again, as in [Q-026](#q-026-old-commit-ids-on-github) (option A)? Or wait until the Phase 2 scan (option B)?
 
@@ -1255,7 +1255,7 @@ Code anchors:
 
 **To close**: The files and every commit on `main` hold no client names, and each old commit ID returns "No commit found" on GitHub.
 
-**Resolution**: The owner chose option A on 2026-11-02. A test rewrite on a scratch copy found 0 hits in all 8 commits. The item closes when the rewritten history is on GitHub and each old commit ID returns "No commit found".
+**Resolution**: The owner chose option A on 2026-11-02, and a test rewrite on a scratch copy found 0 hits in all 8 commits. The same day, `git-filter-repo` rewrote every commit and branch, with neutral labels such as "Client A", `<client-b-project>` and `<user-home>` in place of the client names, client folder paths and the owner's home-folder path. The rewrite changed 14 `kits/make-blueprint/` files and the old root `README.md` in the first 5 commits, and every rewritten commit and every commit message holds 0 hits. The owner deleted the GitHub repository, and the agent created it again as private, with the wiki off, and pushed only the new `main` at commit `a5ebdfb`. Each of the 8 old commit IDs returns "No commit found" on GitHub, and the Phase 1 branch is not pushed.
 
 ## Rebuild Risks
 
@@ -1320,7 +1320,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 | --- | --- | --- |
 | Open | None yet | Mitigation: the scan, [Q-022](#q-022-work-email-in-commit-history) and [Q-026](#q-026-old-commit-ids-on-github). Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public`. |
 
-**Issue**: A public repository shows its whole git history. A secret, client data, a local home-folder path or the work email in any commit becomes public. A known finding: client names are in committed files and in earlier commits on `main` ([Q-040](#q-040-client-names-in-the-committed-history)).
+**Issue**: A public repository shows its whole git history. A secret, client data, a local home-folder path or the work email in any commit becomes public. A known finding, fixed on 2026-11-02: client names were in committed files and in earlier commits on `main`, and the history was rewritten ([Q-040](#q-040-client-names-in-the-committed-history)).
 
 **Why it matters**: A public commit cannot be taken back. Copies and forks keep it.
 

@@ -18,7 +18,7 @@ The phase depends on [Phase 1](01-copy-day.md), because the copied Make Docs tre
 
 ## Overview
 
-A public commit cannot be taken back ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)). So this phase first adds the root MIT `LICENSE` ([Q-018](../../prd/03-open-questions-and-risk-register.md#q-018-license)), `.github/CODEOWNERS` with the owner only ([Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-code-owners)) and the root Dependabot config. Then it scans every tracked file and every commit, and checks again that each old commit ID from before the email rewrite returns "No commit found" on GitHub. [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github) is closed: the owner deleted and created the GitHub repository again on 2026-11-01. This phase only checks the old IDs again.
+A public commit cannot be taken back ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)). So this phase first adds the root MIT `LICENSE` ([Q-018](../../prd/03-open-questions-and-risk-register.md#q-018-license)), `.github/CODEOWNERS` with the owner only ([Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-code-owners)) and the root Dependabot config. Then it scans every tracked file and every commit, and checks again that each of the 14 old commit IDs returns "No commit found" on GitHub: the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)). Both items are closed: after each rewrite, the owner deleted the GitHub repository and it was created again, on 2026-11-01 and on 2026-11-02. This phase only checks the old IDs again.
 
 After a clean scan, the owner makes the repository public. Then the rulesets go on.
 
@@ -51,7 +51,7 @@ Decision record for Automated Implementation Testing:
 | Decision informed | Whether the owner can make the repository public |
 | Reason now | The public step cannot be undone, so the scan must run on the exact history that goes public ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)) |
 | Product maturity | Private repository with a short history and the copied Make Docs tree |
-| Scope | Every tracked file, every commit on every ref, commit metadata, and the 6 old commit IDs on GitHub |
+| Scope | Every tracked file, every commit on every ref, commit metadata, and the 14 old commit IDs on GitHub: the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)) |
 | Executor | The implementing coding agent |
 | Gate effect | Blocking for the public step in Stage 3. Any finding stops the phase until it is fixed. |
 | Effort budget | One scan of the phase branch, and one final scan of the merged `main` just before the public step |
@@ -112,23 +112,23 @@ Human Experience Review stays separate. In this phase the agent opens the public
 
 ### Tasks
 
-- [ ] t5: Check again that each of the 6 commit IDs from before the email rewrite returns "No commit found" on GitHub, for example with `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each ID. This is a read-only check, because [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github) is closed. No root doc lists the 6 IDs. Get them from the owner, and record the 6 IDs and each result in the scan report ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository)).
+- [ ] t5: Check again that each of the 14 old commit IDs returns "No commit found" on GitHub, for example with `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each ID. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)). This is a read-only check, because both items are closed. No root doc lists the 14 IDs. Get them from the owner, and record the 14 IDs and each result in the scan report ([08 Build and Release, Public Repository](../../prd/08-build-and-release.md#public-repository)).
 - [ ] t6: Scan every tracked file and every commit on every ref. Use a secret scanner over the full history, such as `gitleaks git --log-opts="--all"`. Search every commit, for example with `git rev-list --all | xargs git grep -I -n -E <pattern>`, for local home-folder paths on macOS, Linux and Windows, for the work email and for client data. The owner gives the work email and the client terms as local inputs. No repository file holds them ([R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository)).
-- [ ] t7: Run `make-docs project surface ensure assets --target-root .`, then write the scan report at `docs/assets/maintainer/public-scan/<date>-scan.md`. The report states the scanned commit (`git rev-parse main`), the tools and their versions, each check with its result and its count of findings, and the 6 old commit ID results. The report holds no secret, no email address and no client term.
+- [ ] t7: Run `make-docs project surface ensure assets --target-root .`, then write the scan report at `docs/assets/maintainer/public-scan/<date>-scan.md`. The report states the scanned commit (`git rev-parse main`), the tools and their versions, each check with its result and its count of findings, and the 14 old commit ID results. The report holds no secret, no email address and no client term.
 - [ ] t8: Fix each finding in a file with a normal commit on the phase branch, then scan again.
 - [ ] t9: Owner gate: the owner's clear yes in chat before any history rewrite or force push to `main`. A finding in an earlier commit needs a history rewrite. After a rewrite, GitHub still opens the commits from before the rewrite by their IDs until the owner chooses how to drop them, as in [Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github). Stop the phase until the owner decides.
 - [ ] t10: After the phase pull request merges, run the scan of t6 again on the merged `main`, just before the public step. Make sure that no other commit lands on `main` between this scan and Stage 3.
 
 ### Acceptance criteria
 
-- A205: Each of the 6 old commit IDs returns "No commit found" on GitHub, and the scan report lists each ID with its result.
+- A205: Each of the 14 old commit IDs returns "No commit found" on GitHub, and the scan report lists each ID with its result. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
 - A206: The scan report names the commit of the merged `main` and reports zero findings for secrets, local home-folder paths, the work email and client data.
 - A207: `git rev-parse main` at the time of the public step equals the commit in the scan report.
 
 ### Dependencies
 
 - Stage 1 of this phase.
-- The owner supplies the 6 old commit IDs, the work email and the client terms as local inputs.
+- The owner supplies the 14 old commit IDs, the work email and the client terms as local inputs. The 14 IDs are the 6 from before the email rewrite ([Q-026](../../prd/03-open-questions-and-risk-register.md#q-026-old-commit-ids-on-github)) and the 8 from before the client-name rewrite ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
 
 ### Closeout Notes
 
