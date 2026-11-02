@@ -16,7 +16,7 @@ Where to go:
 - For repo-wide work or work that crosses kits, use the root `docs/` folder and the Make Docs block below.
 - If you cannot tell which project a task belongs to, ask the person before you write anything.
 
-Temporary workarounds. Each one is a planned deferred obligation in the root PRD register, which is created with the root PRDs. Remove each workaround when Make Docs ships its fix; do not treat any of them as the normal way of working.
+Temporary workarounds. Each one is a deferred obligation, with its full record under [Deferred Obligations](docs/prd/03-open-questions-and-risk-register.md#deferred-obligations) in the root PRD register. Remove each workaround when Make Docs ships its fix; do not treat any of them as the normal way of working.
 
 1. Every kit keeps a `docs/work/` folder, even when it is empty, so the Make Docs upward folder search stops at the kit. (O-001)
 2. Run `make-docs` commands for a kit from inside the kit folder, or pass the kit folder with `--repo-root` or `--target-root`. (O-002)
