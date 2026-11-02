@@ -41,17 +41,17 @@ make-kit/
   kits/make-blueprint/      Make Blueprint: its packages, its docs/, its routers
 ```
 
-Not every part exists today. This table shows the state on 2026-11-01 and the point from which each part exists.
+Not every part exists today. This table shows the state on 2026-11-02 and the point from which each part exists.
 
-| Path | State on 2026-11-01 | Exists from | Owner |
+| Path | State on 2026-11-02 | Exists from | Owner |
 | --- | --- | --- | --- |
 | `AGENTS.md`, `CLAUDE.md` | Present, with the hand-written map and the Make Docs block | Now | This document |
 | `README.md` | Present | Now | The repository owner |
 | `.make-docs/config.yaml` | Present | Now | This document |
 | `docs/` | Present | Now | This PRD set |
 | `kits/make-blueprint/` | Present, with docs and routers only | Now. Its packages come with the Make Blueprint v2.0 work. | The Make Blueprint PRD set |
-| `kits/make-docs/` | Absent | Copy day ([Q-003 Copy Source and Freeze](03-open-questions-and-risk-register.md#q-003-copy-source-and-freeze)) | The Make Docs PRD set and [08 Build and Release](08-build-and-release.md) |
-| `package.json`, `package-lock.json` | Absent | Copy day ([Q-005 One Root npm Workspace](03-open-questions-and-risk-register.md#q-005-one-root-npm-workspace)) | This document |
+| `kits/make-docs/` | Present, copied from the tag `v2.0.6` | Copy day ([Q-003 Copy Source and Freeze](03-open-questions-and-risk-register.md#q-003-copy-source-and-freeze)) | The Make Docs PRD set and [08 Build and Release](08-build-and-release.md) |
+| `package.json`, `package-lock.json` | Present | Copy day ([Q-005 One Root npm Workspace](03-open-questions-and-risk-register.md#q-005-one-root-npm-workspace)) | This document |
 | `LICENSE` | Absent | The public step ([Q-018 License](03-open-questions-and-risk-register.md#q-018-license)) | [08 Build and Release](08-build-and-release.md) |
 | `.github/` | Absent | The public step and the CI step ([Q-010 CI Layout and Release Tags](03-open-questions-and-risk-register.md#q-010-ci-layout-and-release-tags)) | [08 Build and Release](08-build-and-release.md) |
 | `scripts/routing-check/` | Absent | The first routing check | This document, [Routing Check](#routing-check) |
@@ -78,7 +78,7 @@ The repository root and each kit folder are separate Make Docs projects. Make Do
 | --- | --- | --- | --- | --- |
 | Repo-wide | `docs/` | `.make-docs/config.yaml` | Root `AGENTS.md` and `CLAUDE.md`, and the routers in `docs/` | The shared core, the setup tool, the shared `.make/` rules, the build and release flow, and decisions that cross kits |
 | Make Blueprint | `kits/make-blueprint/docs/` | `kits/make-blueprint/.make-docs/config.yaml` | `kits/make-blueprint/AGENTS.md` and `kits/make-blueprint/CLAUDE.md`, and the routers in its `docs/` | Every Make Blueprint design, plan, PRD and work doc |
-| Make Docs | `kits/make-docs/docs/` | `kits/make-docs/.make-docs/config.yaml` | `kits/make-docs/AGENTS.md` and `kits/make-docs/CLAUDE.md`, and the routers in its `docs/` | Every Make Docs design, plan, PRD and work doc. The project exists from copy day. |
+| Make Docs | `kits/make-docs/docs/` | `kits/make-docs/.make-docs/config.yaml` | `kits/make-docs/AGENTS.md` and `kits/make-docs/CLAUDE.md`, and the routers in its `docs/` | Every Make Docs design, plan, PRD and work doc |
 
 The root map is a hand-written part of the root `AGENTS.md` and `CLAUDE.md`, outside the Make Docs block. Make Docs does not manage it. The root map has these parts:
 
@@ -174,10 +174,10 @@ Requirements:
 Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, sections 2, 4, 5 and 7)
-- `make-docs v2.0.6: packages/cli/package.json:2` (`@brucewaynedecoy/make-docs`)
-- `make-docs v2.0.6: packages/cli/package.json:15` (the `make-docs` bin)
-- `make-docs v2.0.6: packages/docs/package.json:2` (`@make-docs/template`, private)
-- `make-docs v2.0.6: packages/skills/package.json:2` (`@make-docs/skills`, private)
+- [`make-docs v2.0.6: packages/cli/package.json:2`](../../kits/make-docs/packages/cli/package.json) (`@brucewaynedecoy/make-docs`)
+- [`make-docs v2.0.6: packages/cli/package.json:15`](../../kits/make-docs/packages/cli/package.json) (the `make-docs` bin)
+- [`make-docs v2.0.6: packages/docs/package.json:2`](../../kits/make-docs/packages/docs/package.json) (`@make-docs/template`, private)
+- [`make-docs v2.0.6: packages/skills/package.json:2`](../../kits/make-docs/packages/skills/package.json) (`@make-docs/skills`, private)
 
 ## Runtime Boundaries
 
@@ -245,7 +245,7 @@ Requirements:
 - The root holds the only `package-lock.json`. No folder under `kits/` or `packages/` holds a lockfile.
 - No `package.json` below the repository root declares `workspaces`, because npm cannot nest one workspace root inside another.
 - `npm ci`, the build and all Make Docs tests pass when they run from the repository root.
-- The Make Docs `tsup` config resolves `yaml` through the workspace. Today it resolves `yaml` from a fixed path below the package's repository root (`make-docs v2.0.6: packages/cli/tsup.config.ts:7` and `make-docs v2.0.6: packages/cli/tsup.config.ts:27`), and that path does not exist inside `kits/make-docs/`.
+- The Make Docs `tsup` config resolves `yaml` through the workspace. The copy in `kits/make-docs/` resolves `yaml` through Node module resolution from the package folder. At `v2.0.6` the config resolves `yaml` from a fixed path below the package's repository root ([`make-docs v2.0.6: packages/cli/tsup.config.ts:7`](../../kits/make-docs/packages/cli/tsup.config.ts) and [`make-docs v2.0.6: packages/cli/tsup.config.ts:27`](../../kits/make-docs/packages/cli/tsup.config.ts)), and that path does not exist inside `kits/make-docs/`.
 - Make Docs tests and scripts that assume they run at the repository root pass from `kits/make-docs/` ([R-006 Make Docs Tests That Assume the Repository Root](03-open-questions-and-risk-register.md#r-006-make-docs-tests-that-assume-the-repository-root)).
 - Each Make Docs project config in the repository has a different `projectId`.
 - No configuration file in the repository holds a secret or a local home-folder path.
@@ -256,9 +256,9 @@ Code anchors:
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Context; Decision, sections 2, 3, 6, 7, 8 and 12)
 - `.make-docs/config.yaml`
 - `kits/make-blueprint/.make-docs/config.yaml`
-- `make-docs v2.0.6: package.json:10` (the old repository's own workspace root, `packages/*`)
-- `make-docs v2.0.6: packages/cli/tsup.config.ts:27`
-- `make-docs v2.0.6: .make-docs/config.yaml:1` (the Make Docs `projectId`)
+- [`make-docs v2.0.6: package.json:10`](https://github.com/brucewaynedecoy/make-docs/blob/v2.0.6/package.json) (the old repository's own workspace root, `packages/*`)
+- [`make-docs v2.0.6: packages/cli/tsup.config.ts:27`](../../kits/make-docs/packages/cli/tsup.config.ts)
+- [`make-docs v2.0.6: .make-docs/config.yaml:1`](../../kits/make-docs/.make-docs/config.yaml) (the Make Docs `projectId`)
 
 ## Source Anchors
 
@@ -267,6 +267,6 @@ Code anchors:
 - The root map in [AGENTS.md](../../AGENTS.md) and [CLAUDE.md](../../CLAUDE.md), above the Make Docs block
 - Make Docs path and folder facts: [05 Kit Conventions](05-kit-conventions.md)
 - [Make Blueprint 02 Architecture Overview](../../kits/make-blueprint/docs/prd/02-architecture-overview.md)
-- `make-docs v2.0.6: package.json`
-- `make-docs v2.0.6: packages/cli/package.json`
-- `make-docs v2.0.6: packages/cli/tsup.config.ts`
+- [`make-docs v2.0.6: package.json`](https://github.com/brucewaynedecoy/make-docs/blob/v2.0.6/package.json)
+- [`make-docs v2.0.6: packages/cli/package.json`](../../kits/make-docs/packages/cli/package.json)
+- [`make-docs v2.0.6: packages/cli/tsup.config.ts`](../../kits/make-docs/packages/cli/tsup.config.ts)

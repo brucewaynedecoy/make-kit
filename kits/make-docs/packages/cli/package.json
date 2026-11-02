@@ -1,0 +1,53 @@
+{
+  "name": "@brucewaynedecoy/make-docs",
+  "version": "2.0.6",
+  "description": "Plan and maintain project docs with a CLI, MCP server, templates, and optional agent Skills.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brucewaynedecoy/make-kit.git",
+    "directory": "kits/make-docs/packages/cli"
+  },
+  "homepage": "https://github.com/brucewaynedecoy/make-kit#readme",
+  "bugs": {
+    "url": "https://github.com/brucewaynedecoy/make-kit/issues"
+  },
+  "type": "module",
+  "bin": {
+    "make-docs": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "template",
+    "skill-registry.json",
+    "skill-registry.schema.json",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build-mcp-app-assets.mjs --check && tsup",
+    "dev": "npm run build && node dist/index.js",
+    "test": "vitest run",
+    "validate:defaults": "vitest run tests/consistency.test.ts tests/template-links.test.ts tests/package-safety.test.ts",
+    "prepack": "node ../../scripts/copy-template-to-cli.mjs && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@clack/core": "1.5.1",
+    "@clack/prompts": "1.8.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "yaml": "^2.9.0",
+    "zod": "^4.6.7"
+  }
+}

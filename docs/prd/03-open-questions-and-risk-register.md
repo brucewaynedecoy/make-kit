@@ -31,7 +31,7 @@ Status meanings in this register:
 - `Deferred`: the answer belongs to a later wave and does not block the Step 0 backlog.
 - `Closed`: settled, with a resolution.
 
-Code text in the form `make-docs v2.0.6: <path>:<line>` names a file in the Make Docs source tree at the tag `v2.0.6` (commit `ff0b97dc`). The Make Docs code is not in this repository on 2026-11-01, so these anchors are not links.
+A code anchor names a file in the Make Docs source tree at the tag `v2.0.6` (commit `ff0b97dc`), for example [`make-docs v2.0.6: packages/cli/src/cli.ts:3673`](../../kits/make-docs/packages/cli/src/cli.ts). The link text has the tag, the path and, where given, the line. Make Docs is in `kits/make-docs/`, copied from that tag, so each anchor is a link to its file in `kits/make-docs/`. The link goes to the file, not to the line. The line number is a fact of the tag `v2.0.6`, also after a later release changes the file. The old root `package.json` is not in `kits/make-docs/`, because the root `package.json` of this repository replaces it. An anchor to that file links to the file at the tag in the old repository.
 
 ## Confirmed Drift
 
@@ -39,13 +39,13 @@ Each item is a place where Make Docs at `v2.0.6` differs from a target rule in [
 
 Code anchors:
 
-- `make-docs v2.0.6: packages/cli/src/cli.ts`
-- `make-docs v2.0.6: packages/cli/src/run/`
-- `make-docs v2.0.6: packages/cli/src/operations/`
-- `make-docs v2.0.6: packages/cli/src/mcp/`
-- `make-docs v2.0.6: packages/cli/src/managed-block.ts`
-- `make-docs v2.0.6: packages/cli/src/config.ts`
-- `make-docs v2.0.6: packages/cli/src/store/`
+- [`make-docs v2.0.6: packages/cli/src/cli.ts`](../../kits/make-docs/packages/cli/src/cli.ts)
+- [`make-docs v2.0.6: packages/cli/src/run/`](../../kits/make-docs/packages/cli/src/run/)
+- [`make-docs v2.0.6: packages/cli/src/operations/`](../../kits/make-docs/packages/cli/src/operations/)
+- [`make-docs v2.0.6: packages/cli/src/mcp/`](../../kits/make-docs/packages/cli/src/mcp/)
+- [`make-docs v2.0.6: packages/cli/src/managed-block.ts`](../../kits/make-docs/packages/cli/src/managed-block.ts)
+- [`make-docs v2.0.6: packages/cli/src/config.ts`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: packages/cli/src/store/`](../../kits/make-docs/packages/cli/src/store/)
 
 ### D-001 Top-Level Help Hides Project Commands
 
@@ -53,7 +53,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, CLI Top Level](05-kit-conventions.md#cli-top-level). |
 
-**Issue**: The top-level help lists only four `project` paths (`make-docs v2.0.6: packages/cli/src/cli.ts:3673`). `project --help` lists only path hygiene (`make-docs v2.0.6: packages/cli/src/cli.ts:3547`). The CLI also admits `project persona list`, the four `project layout` verbs, `project checkout-move` and `project checkout-register` (`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:220`, `make-docs v2.0.6: packages/cli/src/operations/registry.ts:190`).
+**Issue**: The top-level help lists only four `project` paths ([`make-docs v2.0.6: packages/cli/src/cli.ts:3673`](../../kits/make-docs/packages/cli/src/cli.ts)). `project --help` lists only path hygiene ([`make-docs v2.0.6: packages/cli/src/cli.ts:3547`](../../kits/make-docs/packages/cli/src/cli.ts)). The CLI also admits `project persona list`, the four `project layout` verbs, `project checkout-move` and `project checkout-register` ([`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:220`](../../kits/make-docs/packages/cli/src/run/root-operations.ts), [`make-docs v2.0.6: packages/cli/src/operations/registry.ts:190`](../../kits/make-docs/packages/cli/src/operations/registry.ts)).
 
 **Why it matters**: A person or an agent who reads the help cannot find commands that the CLI admits. The target rule says that the help of each group lists every admitted command path.
 
@@ -67,7 +67,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | Fix in Make Docs 2.2.0 on the core ([Q-035](#q-035-scope-of-the-uninstall-fix-in-220)) | Part of the uninstall fix. Step 0 work phase `07-shared-core`. Owner: [05 Kit Conventions, CLI Top Level](05-kit-conventions.md#cli-top-level). |
 
-**Issue**: The `uninstall` help says that it removes "the global store at ~/.make-docs/" (`make-docs v2.0.6: packages/cli/src/cli.ts:3652`). Its options list leaves out `--remove-store` (`make-docs v2.0.6: packages/cli/src/cli.ts:3662`). The command prints "The global Store is preserved" also when `--remove-store` is set (`make-docs v2.0.6: packages/cli/src/self/uninstall-tool.ts:126`). Make Docs PRD 16 says that `uninstall` removes the Store (`make-docs v2.0.6: docs/prd/16-package-runtime-and-deployment-boundaries.md:18`), but the Make Docs rule R-SELF-1 keeps it.
+**Issue**: The `uninstall` help says that it removes "the global store at ~/.make-docs/" ([`make-docs v2.0.6: packages/cli/src/cli.ts:3652`](../../kits/make-docs/packages/cli/src/cli.ts)). Its options list leaves out `--remove-store` ([`make-docs v2.0.6: packages/cli/src/cli.ts:3662`](../../kits/make-docs/packages/cli/src/cli.ts)). The command prints "The global Store is preserved" also when `--remove-store` is set ([`make-docs v2.0.6: packages/cli/src/self/uninstall-tool.ts:126`](../../kits/make-docs/packages/cli/src/self/uninstall-tool.ts)). Make Docs PRD 16 says that `uninstall` removes the Store ([`make-docs v2.0.6: docs/prd/16-package-runtime-and-deployment-boundaries.md:18`](../../kits/make-docs/docs/prd/16-package-runtime-and-deployment-boundaries.md)), but the Make Docs rule R-SELF-1 keeps it.
 
 **Why it matters**: A person can think that `uninstall` deletes their Store, or that `--remove-store` did nothing. The help, the message and PRD 16 disagree with the code.
 
@@ -81,7 +81,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, CLI Top Level](05-kit-conventions.md#cli-top-level). |
 
-**Issue**: The README in the 2.0.6 package says "Make Docs 2.0.4 needs Node.js 24". `make-docs v2.0.6: packages/cli/README.md:7`.
+**Issue**: The README in the 2.0.6 package says "Make Docs 2.0.4 needs Node.js 24". [`make-docs v2.0.6: packages/cli/README.md:7`](../../kits/make-docs/packages/cli/README.md).
 
 **Why it matters**: The npm package page shows a wrong version to every user.
 
@@ -95,7 +95,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Run Command Paths](05-kit-conventions.md#run-command-paths). |
 
-**Issue**: The hand-written `run` help shows the example `make-docs run package plan --harness codex ...` (`make-docs v2.0.6: packages/cli/src/cli.ts:3591`). Make Docs R-GRAM-1 says that `run package` is not a current surface (`make-docs v2.0.6: docs/prd/39-cli-command-model-and-operation-registry.md:275`).
+**Issue**: The hand-written `run` help shows the example `make-docs run package plan --harness codex ...` ([`make-docs v2.0.6: packages/cli/src/cli.ts:3591`](../../kits/make-docs/packages/cli/src/cli.ts)). Make Docs R-GRAM-1 says that `run package` is not a current surface ([`make-docs v2.0.6: docs/prd/39-cli-command-model-and-operation-registry.md:275`](../../kits/make-docs/docs/prd/39-cli-command-model-and-operation-registry.md)).
 
 **Why it matters**: An agent that copies the example runs a command that fails.
 
@@ -109,7 +109,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Run Command Paths](05-kit-conventions.md#run-command-paths). |
 
-**Issue**: The CLI source README names `playbook` and `package` as the registered domains. It leaves out `prd`, `performance`, `backlog`, `resource`, `project`, `lifecycle` and `uat` (`make-docs v2.0.6: packages/cli/src/README.md:41`). It says that the `lifecycle` dispatcher was pruned, but `lifecycle` is a live domain (`make-docs v2.0.6: packages/cli/src/README.md:47`). A code comment points to the removed `src/operations/cli.ts` (`make-docs v2.0.6: packages/cli/src/operations/cli-options.ts:5`). The type `OperationDomainName` lists only `closeout`, `work`, `lifecycle` and `prd` (`make-docs v2.0.6: packages/cli/src/operations/types.ts:16`).
+**Issue**: The CLI source README names `playbook` and `package` as the registered domains. It leaves out `prd`, `performance`, `backlog`, `resource`, `project`, `lifecycle` and `uat` ([`make-docs v2.0.6: packages/cli/src/README.md:41`](../../kits/make-docs/packages/cli/src/README.md)). It says that the `lifecycle` dispatcher was pruned, but `lifecycle` is a live domain ([`make-docs v2.0.6: packages/cli/src/README.md:47`](../../kits/make-docs/packages/cli/src/README.md)). A code comment points to the removed `src/operations/cli.ts` ([`make-docs v2.0.6: packages/cli/src/operations/cli-options.ts:5`](../../kits/make-docs/packages/cli/src/operations/cli-options.ts)). The type `OperationDomainName` lists only `closeout`, `work`, `lifecycle` and `prd` ([`make-docs v2.0.6: packages/cli/src/operations/types.ts:16`](../../kits/make-docs/packages/cli/src/operations/types.ts)).
 
 **Why it matters**: Maintainers and agents read the source notes to find the domains. Wrong notes lead to wrong changes, also during the core slices.
 
@@ -123,7 +123,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Run Command Paths](05-kit-conventions.md#run-command-paths). |
 
-**Issue**: The usage text shows `make-docs run <domain> <verb>` (`make-docs v2.0.6: packages/cli/src/cli.ts:3586`, `make-docs v2.0.6: packages/cli/src/cli.ts:2547`). Most `run` paths have three segments.
+**Issue**: The usage text shows `make-docs run <domain> <verb>` ([`make-docs v2.0.6: packages/cli/src/cli.ts:3586`](../../kits/make-docs/packages/cli/src/cli.ts), [`make-docs v2.0.6: packages/cli/src/cli.ts:2547`](../../kits/make-docs/packages/cli/src/cli.ts)). Most `run` paths have three segments.
 
 **Why it matters**: The usage text does not match most real command paths.
 
@@ -137,7 +137,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner decision on the live names. Owner: [05 Kit Conventions, Run Command Paths](05-kit-conventions.md#run-command-paths). |
 
-**Issue**: Some MCP tool names change or drop the verb of their identifier. `work.backlog-cache.lookup` is `backlog_cache_read`, and `project.persona.list` is `personas`. `make-docs v2.0.6: packages/cli/src/mcp/tools.ts:137`.
+**Issue**: Some MCP tool names change or drop the verb of their identifier. `work.backlog-cache.lookup` is `backlog_cache_read`, and `project.persona.list` is `personas`. [`make-docs v2.0.6: packages/cli/src/mcp/tools.ts:137`](../../kits/make-docs/packages/cli/src/mcp/tools.ts).
 
 **Why it matters**: An agent cannot predict a tool name from its identifier. A rename of a live tool breaks the agent-tool rules and the Skills that name it.
 
@@ -151,7 +151,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: Four places set exit codes: `make-docs v2.0.6: packages/cli/src/run/entry.ts:21`, `make-docs v2.0.6: packages/cli/src/run/cli.ts:583`, `make-docs v2.0.6: packages/cli/src/cli.ts:1845` and `make-docs v2.0.6: packages/cli/src/run/root-operations.ts:485`.
+**Issue**: Four places set exit codes: [`make-docs v2.0.6: packages/cli/src/run/entry.ts:21`](../../kits/make-docs/packages/cli/src/run/entry.ts), [`make-docs v2.0.6: packages/cli/src/run/cli.ts:583`](../../kits/make-docs/packages/cli/src/run/cli.ts), [`make-docs v2.0.6: packages/cli/src/cli.ts:1845`](../../kits/make-docs/packages/cli/src/cli.ts) and [`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:485`](../../kits/make-docs/packages/cli/src/run/root-operations.ts).
 
 **Why it matters**: Each command can choose its own codes, so scripts and agents cannot rely on one meaning for each code.
 
@@ -165,7 +165,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: `update` and `uninstall` return `refused-non-interactive`, `cancelled`, `manual-binary-removal-required`, `delegate-failed` or `manual-update-required` without an error. The CLI does not use the result for the exit code, so they exit 0. `make-docs v2.0.6: packages/cli/src/cli.ts:389`, `make-docs v2.0.6: packages/cli/src/self/uninstall-tool.ts:103`, `make-docs v2.0.6: packages/cli/src/self/update-tool.ts:189`.
+**Issue**: `update` and `uninstall` return `refused-non-interactive`, `cancelled`, `manual-binary-removal-required`, `delegate-failed` or `manual-update-required` without an error. The CLI does not use the result for the exit code, so they exit 0. [`make-docs v2.0.6: packages/cli/src/cli.ts:389`](../../kits/make-docs/packages/cli/src/cli.ts), [`make-docs v2.0.6: packages/cli/src/self/uninstall-tool.ts:103`](../../kits/make-docs/packages/cli/src/self/uninstall-tool.ts), [`make-docs v2.0.6: packages/cli/src/self/update-tool.ts:189`](../../kits/make-docs/packages/cli/src/self/update-tool.ts).
 
 **Why it matters**: A script or an agent sees success when the update or the uninstall did not finish.
 
@@ -179,7 +179,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. The Naive UAT removal can close it ([Q-009](#q-009-naive-uat-removal)). Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: The six `uat.*.validate` operations exit 0 when the status is not `passed`. `make-docs v2.0.6: packages/cli/src/run/cli.ts:583`.
+**Issue**: The six `uat.*.validate` operations exit 0 when the status is not `passed`. [`make-docs v2.0.6: packages/cli/src/run/cli.ts:583`](../../kits/make-docs/packages/cli/src/run/cli.ts).
 
 **Why it matters**: A failed check looks like a pass in a script or in CI.
 
@@ -193,7 +193,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: Outside path hygiene, an input error throws and exits 1 (`make-docs v2.0.6: packages/cli/src/run/entry.ts:21`). Path hygiene exits 2 on read errors and also on every other thrown error (`make-docs v2.0.6: packages/cli/src/cli.ts:1848`).
+**Issue**: Outside path hygiene, an input error throws and exits 1 ([`make-docs v2.0.6: packages/cli/src/run/entry.ts:21`](../../kits/make-docs/packages/cli/src/run/entry.ts)). Path hygiene exits 2 on read errors and also on every other thrown error ([`make-docs v2.0.6: packages/cli/src/cli.ts:1848`](../../kits/make-docs/packages/cli/src/cli.ts)).
 
 **Why it matters**: Code 2 has two meanings in path hygiene and no use in other commands, so a caller cannot tell an input error from a failure.
 
@@ -207,7 +207,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: A path-hygiene error prints the plain text `Path check error: ...`, also in JSON mode. `make-docs v2.0.6: packages/cli/src/cli.ts:1847`.
+**Issue**: A path-hygiene error prints the plain text `Path check error: ...`, also in JSON mode. [`make-docs v2.0.6: packages/cli/src/cli.ts:1847`](../../kits/make-docs/packages/cli/src/cli.ts).
 
 **Why it matters**: A caller in JSON mode cannot parse the error.
 
@@ -221,7 +221,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: `run` prints the raw result with no `ok` field (`make-docs v2.0.6: packages/cli/src/run/cli.ts:578`). Only the error shape has `ok`.
+**Issue**: `run` prints the raw result with no `ok` field ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:578`](../../kits/make-docs/packages/cli/src/run/cli.ts)). Only the error shape has `ok`.
 
 **Why it matters**: A caller must tell success from an error by the stream alone.
 
@@ -235,7 +235,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Outcomes and Exit Codes](05-kit-conventions.md#outcomes-and-exit-codes). |
 
-**Issue**: A refused write and a missing approval each have their own error class but no `code`, so both serialize as `operation-error` (`make-docs v2.0.6: packages/cli/src/operations/context.ts:110`, `make-docs v2.0.6: packages/cli/src/operations/context.ts:117`, `make-docs v2.0.6: packages/cli/src/operations/registry.ts:520`). A pending operation has its own code, `operation-pending` (`make-docs v2.0.6: packages/cli/src/operations/context.ts:130`).
+**Issue**: A refused write and a missing approval each have their own error class but no `code`, so both serialize as `operation-error` ([`make-docs v2.0.6: packages/cli/src/operations/context.ts:110`](../../kits/make-docs/packages/cli/src/operations/context.ts), [`make-docs v2.0.6: packages/cli/src/operations/context.ts:117`](../../kits/make-docs/packages/cli/src/operations/context.ts), [`make-docs v2.0.6: packages/cli/src/operations/registry.ts:520`](../../kits/make-docs/packages/cli/src/operations/registry.ts)). A pending operation has its own code, `operation-pending` ([`make-docs v2.0.6: packages/cli/src/operations/context.ts:130`](../../kits/make-docs/packages/cli/src/operations/context.ts)).
 
 **Why it matters**: A caller cannot tell a refused write from a missing approval without a parse of the message text.
 
@@ -249,7 +249,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: `resource list` uses `--format table|json`, and `resource read` uses `--format raw|json`. The defaults are `table` and `raw`. Neither command prints JSON on a non-TTY. `make-docs v2.0.6: packages/cli/src/run/root-operations.ts:69`, `make-docs v2.0.6: packages/cli/src/run/root-operations.ts:143`.
+**Issue**: `resource list` uses `--format table|json`, and `resource read` uses `--format raw|json`. The defaults are `table` and `raw`. Neither command prints JSON on a non-TTY. [`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:69`](../../kits/make-docs/packages/cli/src/run/root-operations.ts), [`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:143`](../../kits/make-docs/packages/cli/src/run/root-operations.ts).
 
 **Why it matters**: Agents need a second flag spelling for one command group, and a non-TTY caller gets a table.
 
@@ -263,7 +263,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: `setup backup` and `setup remove` reject `--json` (`make-docs v2.0.6: packages/cli/src/cli.ts:2749`) and `--dry-run` (`make-docs v2.0.6: packages/cli/src/cli.ts:2787`).
+**Issue**: `setup backup` and `setup remove` reject `--json` ([`make-docs v2.0.6: packages/cli/src/cli.ts:2749`](../../kits/make-docs/packages/cli/src/cli.ts)) and `--dry-run` ([`make-docs v2.0.6: packages/cli/src/cli.ts:2787`](../../kits/make-docs/packages/cli/src/cli.ts)).
 
 **Why it matters**: Both commands write project files, but a caller cannot preview them or read their result as JSON.
 
@@ -277,7 +277,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: `--dry-run` is not in `BOOLEAN_FLAGS` (`make-docs v2.0.6: packages/cli/src/operations/cli-options.ts:17`), so `run` reads it as a flag that needs a value. Dry run is off unless a command spelling sets it (`make-docs v2.0.6: packages/cli/src/run/cli.ts:555`).
+**Issue**: `--dry-run` is not in `BOOLEAN_FLAGS` ([`make-docs v2.0.6: packages/cli/src/operations/cli-options.ts:17`](../../kits/make-docs/packages/cli/src/operations/cli-options.ts)), so `run` reads it as a flag that needs a value. Dry run is off unless a command spelling sets it ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:555`](../../kits/make-docs/packages/cli/src/run/cli.ts)).
 
 **Why it matters**: A person or an agent cannot preview a `run` command that writes.
 
@@ -291,7 +291,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: `setup skills` takes `--dry-run` but rejects `--json`. `make-docs v2.0.6: packages/cli/src/cli.ts:2749`.
+**Issue**: `setup skills` takes `--dry-run` but rejects `--json`. [`make-docs v2.0.6: packages/cli/src/cli.ts:2749`](../../kits/make-docs/packages/cli/src/cli.ts).
 
 **Why it matters**: A caller cannot read the result of a Skills install as JSON.
 
@@ -305,7 +305,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: The `update` and `uninstall` parser accepts only `--help`, `--yes`, `--remove-store` and `--target`. `make-docs v2.0.6: packages/cli/src/cli.ts:2252`.
+**Issue**: The `update` and `uninstall` parser accepts only `--help`, `--yes`, `--remove-store` and `--target`. [`make-docs v2.0.6: packages/cli/src/cli.ts:2252`](../../kits/make-docs/packages/cli/src/cli.ts).
 
 **Why it matters**: A caller cannot preview an update or an uninstall, or read its result as JSON. [D-009](#d-009-update-and-uninstall-exit-0-when-not-finished) is the related exit-code gap.
 
@@ -319,7 +319,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run). |
 
-**Issue**: `project` commands print JSON only with an explicit `--json` (`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:307`, `:361`, `:408`, `:486`, `:567`). On a non-TTY, their success output is text, but their error output is JSON (`make-docs v2.0.6: packages/cli/src/run/entry.ts:34`).
+**Issue**: `project` commands print JSON only with an explicit `--json` ([`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:307`](../../kits/make-docs/packages/cli/src/run/root-operations.ts), `:361`, `:408`, `:486`, `:567`). On a non-TTY, their success output is text, but their error output is JSON ([`make-docs v2.0.6: packages/cli/src/run/entry.ts:34`](../../kits/make-docs/packages/cli/src/run/entry.ts)).
 
 **Why it matters**: An agent that runs a `project` command without `--json` gets text on success and JSON on an error.
 
@@ -333,7 +333,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | `repair` stays preview-first ([Q-036](#q-036-preview-first-write-commands)) | No release is set yet. Owner: [05 Kit Conventions, JSON Output and Dry Run](05-kit-conventions.md#json-output-and-dry-run), [05 Kit Conventions, CLI Write Intent](05-kit-conventions.md#cli-write-intent). |
 
-**Issue**: Path hygiene uses `--format text|json`, with JSON as the default also on a TTY (`make-docs v2.0.6: packages/cli/src/cli.ts:1770`, `make-docs v2.0.6: packages/cli/src/cli.ts:1802`). `repair` meets the preview-first rule in [CLI Write Intent](05-kit-conventions.md#cli-write-intent). It previews by default, writes only with `--apply`, takes `--dry-run` for the preview and fails when both flags are set (`make-docs v2.0.6: packages/cli/src/cli.ts:1806`, `make-docs v2.0.6: packages/cli/src/cli.ts:1814`). Its MCP tool `paths_repair` writes only with `apply: true` and `allowWrite` (`make-docs v2.0.6: packages/cli/src/operations/project/ops.ts:415`). But the Make Docs PRDs do not name `project path-hygiene repair` as a preview-first command. PRD 39 names the path-hygiene operations only as a group (`make-docs v2.0.6: docs/prd/39-cli-command-model-and-operation-registry.md:96`).
+**Issue**: Path hygiene uses `--format text|json`, with JSON as the default also on a TTY ([`make-docs v2.0.6: packages/cli/src/cli.ts:1770`](../../kits/make-docs/packages/cli/src/cli.ts), [`make-docs v2.0.6: packages/cli/src/cli.ts:1802`](../../kits/make-docs/packages/cli/src/cli.ts)). `repair` meets the preview-first rule in [CLI Write Intent](05-kit-conventions.md#cli-write-intent). It previews by default, writes only with `--apply`, takes `--dry-run` for the preview and fails when both flags are set ([`make-docs v2.0.6: packages/cli/src/cli.ts:1806`](../../kits/make-docs/packages/cli/src/cli.ts), [`make-docs v2.0.6: packages/cli/src/cli.ts:1814`](../../kits/make-docs/packages/cli/src/cli.ts)). Its MCP tool `paths_repair` writes only with `apply: true` and `allowWrite` ([`make-docs v2.0.6: packages/cli/src/operations/project/ops.ts:415`](../../kits/make-docs/packages/cli/src/operations/project/ops.ts)). But the Make Docs PRDs do not name `project path-hygiene repair` as a preview-first command. PRD 39 names the path-hygiene operations only as a group ([`make-docs v2.0.6: docs/prd/39-cli-command-model-and-operation-registry.md:96`](../../kits/make-docs/docs/prd/39-cli-command-model-and-operation-registry.md)).
 
 **Why it matters**: Path hygiene has a third output rule. An agent that reads only the Make Docs PRDs cannot tell that `repair` writes nothing without `--apply`.
 
@@ -347,7 +347,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, CLI Write Intent](05-kit-conventions.md#cli-write-intent). |
 
-**Issue**: `run` always allows writes (`make-docs v2.0.6: packages/cli/src/run/cli.ts:553`). `project` commands decide by verb (`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:302`). `resource ensure` needs `--allow-write` (`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:195`). The path-hygiene `repair --apply` flag meets the preview-first rule ([Q-036](#q-036-preview-first-write-commands)), so it is not part of this gap. [D-021](#d-021-path-hygiene-uses-its-own-output-and-write-flags) tracks what still differs in path hygiene.
+**Issue**: `run` always allows writes ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:553`](../../kits/make-docs/packages/cli/src/run/cli.ts)). `project` commands decide by verb ([`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:302`](../../kits/make-docs/packages/cli/src/run/root-operations.ts)). `resource ensure` needs `--allow-write` ([`make-docs v2.0.6: packages/cli/src/run/root-operations.ts:195`](../../kits/make-docs/packages/cli/src/run/root-operations.ts)). The path-hygiene `repair --apply` flag meets the preview-first rule ([Q-036](#q-036-preview-first-write-commands)), so it is not part of this gap. [D-021](#d-021-path-hygiene-uses-its-own-output-and-write-flags) tracks what still differs in path hygiene.
 
 **Why it matters**: A person or an agent cannot know whether a write command needs a flag.
 
@@ -361,7 +361,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Project Target](05-kit-conventions.md#project-target). |
 
-**Issue**: The CLI uses `--target` (`make-docs v2.0.6: packages/cli/src/cli.ts:2306`), `--target-root` (`make-docs v2.0.6: packages/cli/src/run/cli.ts:215`) and `--repo-root` (`make-docs v2.0.6: packages/cli/src/run/cli.ts:89`). MCP uses `targetDir` (`make-docs v2.0.6: packages/cli/src/mcp/tools.ts:63`) and `targetRoot`.
+**Issue**: The CLI uses `--target` ([`make-docs v2.0.6: packages/cli/src/cli.ts:2306`](../../kits/make-docs/packages/cli/src/cli.ts)), `--target-root` ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:215`](../../kits/make-docs/packages/cli/src/run/cli.ts)) and `--repo-root` ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:89`](../../kits/make-docs/packages/cli/src/run/cli.ts)). MCP uses `targetDir` ([`make-docs v2.0.6: packages/cli/src/mcp/tools.ts:63`](../../kits/make-docs/packages/cli/src/mcp/tools.ts)) and `targetRoot`.
 
 **Why it matters**: Agents must learn several names for one input. In a repository with nested projects, a wrong name sends a command to the wrong project.
 
@@ -375,7 +375,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | Fix in Make Docs 2.1.0, with the nested-project fixes ([Q-014](#q-014-nested-project-fixes)) | The code cause of [O-001](#o-001-upward-project-search-stops-at-the-nearest-project). Owner: [05 Kit Conventions, Project Target](05-kit-conventions.md#project-target). |
 
-**Issue**: The `run` default stops at the nearest `.make-docs/config.yaml` (`make-docs v2.0.6: packages/cli/src/run/cli.ts:73`). `findRepoRoot` stops at the nearest `docs/work` folder or `.git` (`make-docs v2.0.6: packages/cli/src/operations/shared.ts:6`).
+**Issue**: The `run` default stops at the nearest `.make-docs/config.yaml` ([`make-docs v2.0.6: packages/cli/src/run/cli.ts:73`](../../kits/make-docs/packages/cli/src/run/cli.ts)). `findRepoRoot` stops at the nearest `docs/work` folder or `.git` ([`make-docs v2.0.6: packages/cli/src/operations/shared.ts:6`](../../kits/make-docs/packages/cli/src/operations/shared.ts)).
 
 **Why it matters**: A nested project with no `docs/work/` folder resolves to its parent project. Every kit in this repository keeps an empty `docs/work/` folder to avoid this (O-001).
 
@@ -389,7 +389,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, MCP Server](05-kit-conventions.md#mcp-server). |
 
-**Issue**: Codex uses `mcp_servers.make_docs` (`make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:50`, `make-docs v2.0.6: packages/cli/src/harness-access/native.ts:617`). Claude Code, Copilot and generic clients use `mcpServers.make-docs` (`make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:74`, `make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:104`, `make-docs v2.0.6: packages/cli/src/generic-mcp-setup.ts:110`).
+**Issue**: Codex uses `mcp_servers.make_docs` ([`make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:50`](../../kits/make-docs/packages/cli/src/harness-access/registry.ts), [`make-docs v2.0.6: packages/cli/src/harness-access/native.ts:617`](../../kits/make-docs/packages/cli/src/harness-access/native.ts)). Claude Code, Copilot and generic clients use `mcpServers.make-docs` ([`make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:74`](../../kits/make-docs/packages/cli/src/harness-access/registry.ts), [`make-docs v2.0.6: packages/cli/src/harness-access/registry.ts:104`](../../kits/make-docs/packages/cli/src/harness-access/registry.ts), [`make-docs v2.0.6: packages/cli/src/generic-mcp-setup.ts:110`](../../kits/make-docs/packages/cli/src/generic-mcp-setup.ts)).
 
 **Why it matters**: The entry name differs between agent tools, so the core cannot build it from one kit name.
 
@@ -403,7 +403,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, MCP Server](05-kit-conventions.md#mcp-server). |
 
-**Issue**: The MCP server name is `@brucewaynedecoy/make-docs`, not `make-docs`. `make-docs v2.0.6: packages/cli/src/mcp/server.ts:35`.
+**Issue**: The MCP server name is `@brucewaynedecoy/make-docs`, not `make-docs`. [`make-docs v2.0.6: packages/cli/src/mcp/server.ts:35`](../../kits/make-docs/packages/cli/src/mcp/server.ts).
 
 **Why it matters**: The target rule names each server `<kit-cli>`. A scoped package name differs from the CLI name that agents see in their config.
 
@@ -417,7 +417,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, MCP Server](05-kit-conventions.md#mcp-server). |
 
-**Issue**: Each agent-tool entry writes `args = ["mcp"]` with no `--profile`, so every entry runs the default profile `all`. `make-docs v2.0.6: packages/cli/src/harness-access/native.ts:619`.
+**Issue**: Each agent-tool entry writes `args = ["mcp"]` with no `--profile`, so every entry runs the default profile `all`. [`make-docs v2.0.6: packages/cli/src/harness-access/native.ts:619`](../../kits/make-docs/packages/cli/src/harness-access/native.ts).
 
 **Why it matters**: The intent profiles have no effect for agent-tool entries, so every agent session lists every tool.
 
@@ -431,7 +431,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, MCP Server](05-kit-conventions.md#mcp-server). |
 
-**Issue**: The `manifest` tool says that it reads `.make-docs/manifest.json` (`make-docs v2.0.6: packages/cli/src/mcp/tools.ts:102`). `loadManifest` reads the Store installation ledger (`make-docs v2.0.6: packages/cli/src/manifest.ts:155`).
+**Issue**: The `manifest` tool says that it reads `.make-docs/manifest.json` ([`make-docs v2.0.6: packages/cli/src/mcp/tools.ts:102`](../../kits/make-docs/packages/cli/src/mcp/tools.ts)). `loadManifest` reads the Store installation ledger ([`make-docs v2.0.6: packages/cli/src/manifest.ts:155`](../../kits/make-docs/packages/cli/src/manifest.ts)).
 
 **Why it matters**: An agent that reads the description looks for a legacy project file that the kit does not write.
 
@@ -445,7 +445,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | Fix in Make Docs 2.2.0 on the core, with tag-aware managed blocks ([Q-007](#q-007-make-docs-changes-in-step-0)) | Step 0 work phase `07-shared-core`. Owner: [05 Kit Conventions, Routers and Managed Blocks](05-kit-conventions.md#routers-and-managed-blocks), [06 Shared Core](06-shared-core.md#core-versions-and-the-exact-pin). |
 
-**Issue**: The markers are fixed strings (`make-docs v2.0.6: packages/cli/src/managed-block.ts:1`). Callers such as `make-docs v2.0.6: packages/cli/src/planner.ts:1780` and `make-docs v2.0.6: packages/cli/src/operations/project/ops.ts:272` pass no markers. A second kit that uses this code writes `make-docs` markers.
+**Issue**: The markers are fixed strings ([`make-docs v2.0.6: packages/cli/src/managed-block.ts:1`](../../kits/make-docs/packages/cli/src/managed-block.ts)). Callers such as [`make-docs v2.0.6: packages/cli/src/planner.ts:1780`](../../kits/make-docs/packages/cli/src/planner.ts) and [`make-docs v2.0.6: packages/cli/src/operations/project/ops.ts:272`](../../kits/make-docs/packages/cli/src/operations/project/ops.ts) pass no markers. A second kit that uses this code writes `make-docs` markers.
 
 **Why it matters**: Two kits cannot share one instruction file safely.
 
@@ -459,7 +459,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | Fix in Make Docs 2.2.0 on the core, with the uninstall fix ([Q-007](#q-007-make-docs-changes-in-step-0)) | The uninstall fix also covers D-002 and D-039 ([Q-035](#q-035-scope-of-the-uninstall-fix-in-220)). Owner: [05 Kit Conventions, Routers and Managed Blocks](05-kit-conventions.md#routers-and-managed-blocks), [06 Shared Core](06-shared-core.md#core-versions-and-the-exact-pin). |
 
-**Issue**: When a router also holds user text, `setup remove` keeps the whole file, the Make Docs block included (`make-docs v2.0.6: packages/cli/src/audit.ts:330`). Sync removal strips only the block (`make-docs v2.0.6: packages/cli/src/planner.ts:716`).
+**Issue**: When a router also holds user text, `setup remove` keeps the whole file, the Make Docs block included ([`make-docs v2.0.6: packages/cli/src/audit.ts:330`](../../kits/make-docs/packages/cli/src/audit.ts)). Sync removal strips only the block ([`make-docs v2.0.6: packages/cli/src/planner.ts:716`](../../kits/make-docs/packages/cli/src/planner.ts)).
 
 **Why it matters**: After `setup remove`, the project still has a Make Docs block that tells agents to use a kit that is gone.
 
@@ -473,7 +473,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Routers and Managed Blocks](05-kit-conventions.md#routers-and-managed-blocks). |
 
-**Issue**: The block library reasserts a malformed block (`make-docs v2.0.6: packages/cli/src/managed-block.ts:136`). The setup planner skips the file with "Repair it before setup can continue" (`make-docs v2.0.6: packages/cli/src/planner.ts:367`).
+**Issue**: The block library reasserts a malformed block ([`make-docs v2.0.6: packages/cli/src/managed-block.ts:136`](../../kits/make-docs/packages/cli/src/managed-block.ts)). The setup planner skips the file with "Repair it before setup can continue" ([`make-docs v2.0.6: packages/cli/src/planner.ts:367`](../../kits/make-docs/packages/cli/src/planner.ts)).
 
 **Why it matters**: The library and the planner disagree. A caller that uses the library directly can overwrite user text near a malformed block.
 
@@ -487,7 +487,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Routers and Managed Blocks](05-kit-conventions.md#routers-and-managed-blocks). |
 
-**Issue**: The Codex config uses `# make-docs:begin harness-access codex mcp` and `# make-docs:end harness-access codex mcp`, outside the block library. `make-docs v2.0.6: packages/cli/src/harness-access/native.ts:102`.
+**Issue**: The Codex config uses `# make-docs:begin harness-access codex mcp` and `# make-docs:end harness-access codex mcp`, outside the block library. [`make-docs v2.0.6: packages/cli/src/harness-access/native.ts:102`](../../kits/make-docs/packages/cli/src/harness-access/native.ts).
 
 **Why it matters**: Two block formats need two parsers with two sets of rules.
 
@@ -501,7 +501,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | A later Make Docs wave sets the folder to `.make/docs/` ([Q-007](#q-007-make-docs-changes-in-step-0)) | No release is set yet. Owner: [05 Kit Conventions, Project Config](05-kit-conventions.md#project-config). |
 
-**Issue**: The project tool directory is `.make-docs/`, not `.make/docs/`. `make-docs v2.0.6: packages/cli/src/tool-directory.ts:7`.
+**Issue**: The project tool directory is `.make-docs/`, not `.make/docs/`. [`make-docs v2.0.6: packages/cli/src/tool-directory.ts:7`](../../kits/make-docs/packages/cli/src/tool-directory.ts).
 
 **Why it matters**: Make Docs differs from every other kit. A folder change touches every live Make Docs project.
 
@@ -515,7 +515,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. The gap covers top-level keys only ([Q-038](#q-038-nested-config-key-style)). Related: [D-041](#d-041-make-docs-sets-no-nested-config-key-style). Owner: [05 Kit Conventions, Project Config](05-kit-conventions.md#project-config). |
 
-**Issue**: The top-level key `prd_authority` uses snake_case, and the other top-level keys use camelCase. `make-docs v2.0.6: packages/cli/src/config.ts:161`.
+**Issue**: The top-level key `prd_authority` uses snake_case, and the other top-level keys use camelCase. [`make-docs v2.0.6: packages/cli/src/config.ts:161`](../../kits/make-docs/packages/cli/src/config.ts).
 
 **Why it matters**: The target rule says that top-level config keys use camelCase. A live project config uses `prd_authority`.
 
@@ -529,7 +529,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | The setup tool wave owns the shared files ([Q-001](#q-001-step-0-backlog-scope), [Q-007](#q-007-make-docs-changes-in-step-0)) | No release is set yet. Related: [Q-027](#q-027-persona-list-move-for-existing-projects), [Q-028](#q-028-shared-file-schema-details), [Q-029](#q-029-agent-tool-choices-for-existing-make-docs-projects). Owner: [05 Kit Conventions, Project Config](05-kit-conventions.md#project-config), [07 Setup Tool and Shared Files](07-setup-tool-and-shared-files.md). |
 
-**Issue**: `harnessIntegrations` and `harnessCapabilities`, which belong in `.make/config.yaml`, and `personas`, which belongs in `.make/personas.yaml`, sit beside the kit-only `labels`, `generatedProse` and `prd_authority`. `make-docs v2.0.6: packages/cli/src/config.ts:95`.
+**Issue**: `harnessIntegrations` and `harnessCapabilities`, which belong in `.make/config.yaml`, and `personas`, which belongs in `.make/personas.yaml`, sit beside the kit-only `labels`, `generatedProse` and `prd_authority`. [`make-docs v2.0.6: packages/cli/src/config.ts:95`](../../kits/make-docs/packages/cli/src/config.ts).
 
 **Why it matters**: A second kit cannot read the shared choices without a read of the Make Docs config.
 
@@ -543,7 +543,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. After copy day, the Make Docs register tracks the PRD text. Owner: [05 Kit Conventions, Project Config](05-kit-conventions.md#project-config). |
 
-**Issue**: The folder model in Make Docs PRD 21 lists `.make-docs/agentics/skills/` (`make-docs v2.0.6: docs/prd/21-project-tool-directory-and-resource-tiers.md:29`). The code treats that root as retired (`make-docs v2.0.6: packages/cli/src/tool-directory.ts:24`), and the skills README says "Never create an active `.make-docs/agentics` Skill root" (`make-docs v2.0.6: packages/skills/README.md:5`).
+**Issue**: The folder model in Make Docs PRD 21 lists `.make-docs/agentics/skills/` ([`make-docs v2.0.6: docs/prd/21-project-tool-directory-and-resource-tiers.md:29`](../../kits/make-docs/docs/prd/21-project-tool-directory-and-resource-tiers.md)). The code treats that root as retired ([`make-docs v2.0.6: packages/cli/src/tool-directory.ts:24`](../../kits/make-docs/packages/cli/src/tool-directory.ts)), and the skills README says "Never create an active `.make-docs/agentics` Skill root" ([`make-docs v2.0.6: packages/skills/README.md:5`](../../kits/make-docs/packages/skills/README.md)).
 
 **Why it matters**: An agent that reads PRD 21 can make a Skill root that the code treats as retired.
 
@@ -557,7 +557,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | A later Make Docs wave sets the folder to `~/.make/docs/` ([Q-007](#q-007-make-docs-changes-in-step-0)) | No release is set yet. Related: [R-010](#r-010-store-schema-locked-at-version-6). Owner: [05 Kit Conventions, Machine Folders](05-kit-conventions.md#machine-folders). |
 
-**Issue**: The Store root is `~/.make-docs/`, not `~/.make/docs/`. `make-docs v2.0.6: packages/cli/src/store/paths.ts:12`.
+**Issue**: The Store root is `~/.make-docs/`, not `~/.make/docs/`. [`make-docs v2.0.6: packages/cli/src/store/paths.ts:12`](../../kits/make-docs/packages/cli/src/store/paths.ts).
 
 **Why it matters**: A new Store root moves the Store of every live user. Make Docs 2.0.x looks only in `~/.make-docs/`.
 
@@ -571,7 +571,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Machine Folders](05-kit-conventions.md#machine-folders). |
 
-**Issue**: The help and the Store README give `~/.make-docs` for every operating system. `make-docs v2.0.6: packages/cli/src/cli.ts:3652`, `make-docs v2.0.6: packages/cli/src/store/README.md:16`.
+**Issue**: The help and the Store README give `~/.make-docs` for every operating system. [`make-docs v2.0.6: packages/cli/src/cli.ts:3652`](../../kits/make-docs/packages/cli/src/cli.ts), [`make-docs v2.0.6: packages/cli/src/store/README.md:16`](../../kits/make-docs/packages/cli/src/store/README.md).
 
 **Why it matters**: A Windows user looks in the wrong folder. On Windows the Store root is below `LOCALAPPDATA`, then `APPDATA`, then the home folder.
 
@@ -585,7 +585,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | Fix in Make Docs 2.2.0 on the core ([Q-035](#q-035-scope-of-the-uninstall-fix-in-220)) | Part of the uninstall fix. Step 0 work phase `07-shared-core`. Owner: [05 Kit Conventions, Machine Folders](05-kit-conventions.md#machine-folders). |
 
-**Issue**: `setup remove` skips the pruning of `<home>/.make-docs` by a fixed path and ignores `MAKE_DOCS_HOME`. `make-docs v2.0.6: packages/cli/src/uninstall.ts:161`.
+**Issue**: `setup remove` skips the pruning of `<home>/.make-docs` by a fixed path and ignores `MAKE_DOCS_HOME`. [`make-docs v2.0.6: packages/cli/src/uninstall.ts:161`](../../kits/make-docs/packages/cli/src/uninstall.ts).
 
 **Why it matters**: When `MAKE_DOCS_HOME` names another folder, the guard does not protect that Store root.
 
@@ -599,7 +599,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Owner: [05 Kit Conventions, Store Boundary](05-kit-conventions.md#store-boundary). |
 
-**Issue**: The Store README calls `.make-docs/manifest.json` the canonical install record (`make-docs v2.0.6: packages/cli/src/store/README.md:37`, again at `:104`). It says that the identity is minted into the manifest (`:41`). It also names a v5 backup file (`:14`), cites the missing `operations/playbook-packaging/registration-seam.ts` (`:36`) and says that the model "stays on schema version 1" (`:59`).
+**Issue**: The Store README calls `.make-docs/manifest.json` the canonical install record ([`make-docs v2.0.6: packages/cli/src/store/README.md:37`](../../kits/make-docs/packages/cli/src/store/README.md), again at `:104`). It says that the identity is minted into the manifest (`:41`). It also names a v5 backup file (`:14`), cites the missing `operations/playbook-packaging/registration-seam.ts` (`:36`) and says that the model "stays on schema version 1" (`:59`).
 
 **Why it matters**: Maintainers read the Store README before the Store slices of the core work. Wrong notes can lead to a write of a legacy project record.
 
@@ -613,7 +613,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | No release is set yet. Related: [Q-038](#q-038-nested-config-key-style), [D-034](#d-034-config-key-styles-are-mixed). Owner: [05 Kit Conventions, Project Config](05-kit-conventions.md#project-config). |
 
-**Issue**: The Make Docs PRDs set no style for nested config keys, and the nested keys use two styles. `prd_authority.markdown_sources` uses snake_case (`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md:57`). `labels.documentKinds` (`make-docs v2.0.6: packages/cli/src/config.ts:163`), `reviewStatus` in `harnessCapabilities` (`make-docs v2.0.6: packages/cli/src/config.ts:167`) and `accessCeiling` in `harnessIntegrations` (`make-docs v2.0.6: packages/cli/src/config.ts:172`) use camelCase.
+**Issue**: The Make Docs PRDs set no style for nested config keys, and the nested keys use two styles. `prd_authority.markdown_sources` uses snake_case ([`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md:57`](../../kits/make-docs/docs/prd/24-project-configuration-and-convention-overlay.md)). `labels.documentKinds` ([`make-docs v2.0.6: packages/cli/src/config.ts:163`](../../kits/make-docs/packages/cli/src/config.ts)), `reviewStatus` in `harnessCapabilities` ([`make-docs v2.0.6: packages/cli/src/config.ts:167`](../../kits/make-docs/packages/cli/src/config.ts)) and `accessCeiling` in `harnessIntegrations` ([`make-docs v2.0.6: packages/cli/src/config.ts:172`](../../kits/make-docs/packages/cli/src/config.ts)) use camelCase.
 
 **Why it matters**: The target rule says that each kit sets the style of its nested keys in its own PRDs. Without that rule, a new nested Make Docs key can take either style.
 
@@ -891,7 +891,7 @@ Code anchors:
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Closed | Keep `projectId` `831ddb50-b97a-47e2-9f2c-f491b27b8759`. Run `make-docs project checkout-move` on copy day. | Owner: [08 Build and Release, Source Home](08-build-and-release.md#source-home). |
+| Closed | Keep `projectId` `831ddb50-b97a-47e2-9f2c-f491b27b8759`. Copy day used `make-docs project checkout-register`, not `checkout-move`, by owner decision on 2026-11-02. | Owner: [08 Build and Release, Source Home](08-build-and-release.md#source-home). |
 
 **Question**: Does `kits/make-docs/` keep the Make Docs `projectId` `831ddb50-b97a-47e2-9f2c-f491b27b8759`, with `make-docs project checkout-move` from the old folder on copy day (option A), or get a new `projectId` (option B)?
 
@@ -901,7 +901,7 @@ Code anchors:
 
 **To close**: The owner chooses the identity.
 
-**Resolution**: The owner accepted option A on 2026-10-31.
+**Resolution**: The owner accepted option A on 2026-10-31. On copy day, `make-docs project checkout-move preview` returned `status` `blocked` with 2 blockers, and the move apply step did not run. A move expects the source folder to be gone, but the old clone `../make-docs` stays because of the freeze and the read-only rule. The saved Store hash for `.agents/skills/backlog-review/assets/backlog-review-report.html` is stale, because that file has the same SHA-256 in `kits/make-docs/`, in the old clone and at the `v2.0.6` tag. The owner accepted `make-docs project checkout-register` on 2026-11-02. Its apply step returned `status` `registered` with the new checkout ID `99188529-0b18-42b0-84ef-554d001afd79` for the same `projectId`. It returned `projectFilesChanged` `false`, and a SHA-256 list of the files under `kits/make-docs/` was the same before and after. The old checkout ID `fb3f0042-91fa-445b-bfec-16e3dde15fc2` stays bound to the old clone ([01 Copy Day, Stage 4](../work/2026-11-01-w1-r0-make-kit-monorepo/01-copy-day.md#stage-4---store-identity-root-map-and-make-docs-register)).
 
 ### Q-018 License
 
@@ -1109,7 +1109,7 @@ Code anchors:
 | --- | --- | --- |
 | Open | None yet | Must close before the Store slice of the core work, in Step 0 work phase `07-shared-core`. Owner: [06 Shared Core, Store Base and Schema Version 6](06-shared-core.md#store-base-and-schema-version-6). |
 
-**Question**: Make Docs has one migration list and one `PRAGMA user_version` counter (`make-docs v2.0.6: packages/cli/src/store/database.ts:86`), and the counter must stay at 6, because Make Docs 2.0.x refuses a Store above 6 (`make-docs v2.0.6: packages/cli/src/store/database.ts:575`). How does the core split the base migrations from the kit migrations without a new version?
+**Question**: Make Docs has one migration list and one `PRAGMA user_version` counter ([`make-docs v2.0.6: packages/cli/src/store/database.ts:86`](../../kits/make-docs/packages/cli/src/store/database.ts)), and the counter must stay at 6, because Make Docs 2.0.x refuses a Store above 6 ([`make-docs v2.0.6: packages/cli/src/store/database.ts:575`](../../kits/make-docs/packages/cli/src/store/database.ts)). How does the core split the base migrations from the kit migrations without a new version?
 
 **Why it matters**: A wrong split can raise `user_version` and lock every Make Docs 2.0.x user out of their Store ([R-010](#r-010-store-schema-locked-at-version-6)).
 
@@ -1241,6 +1241,22 @@ Code anchors:
 
 **Resolution**: Owner accepted on 2026-11-01. [05 Kit Conventions, CLI Top Level](05-kit-conventions.md#cli-top-level) lets a kit add at most one more top-level command: a lifecycle command that starts a long-running process, such as a local server, when its own PRDs name it. The help lists the seven commands and that command. [06 Shared Core, Core Boundary](06-shared-core.md#core-boundary) keeps the rule that the core reserves no command name, and calls `serve` the Make Blueprint long-running lifecycle command. Make Docs has no such command, so the change adds no gap. Make Blueprint register [Q-101](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#q-101-long-running-lifecycle-command) records the kit side.
 
+### Q-040 Client Names in the Committed History
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Open | The owner asked on 2026-11-02 to remove all client names and client data from the files and the git history before the public step. On 2026-11-02 the owner chose option A: rewrite every commit with `git-filter-repo`, then delete and create the GitHub repository again. | Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public` checks the history again. |
+
+**Question**: The copy-day scan on 2026-11-02 found client names in 14 committed `kits/make-blueprint/` files, and all 8 commits on `main` hold client data. The first 5 commits also hold an old root `README.md` with client names, client folder paths and the owner's home-folder path. Rewrite the history now, and delete and create the GitHub repository again, as in [Q-026](#q-026-old-commit-ids-on-github) (option A)? Or wait until the Phase 2 scan (option B)?
+
+**Why it matters**: A public commit cannot be taken back ([R-004](#r-004-exposed-history-in-the-public-repository)). After a force push, GitHub keeps the old commits open by their IDs ([Q-026](#q-026-old-commit-ids-on-github)).
+
+**Recommendation**: Option A. The repository is private and holds only `main`, with no pull requests.
+
+**To close**: The files and every commit on `main` hold no client names, and each old commit ID returns "No commit found" on GitHub.
+
+**Resolution**: The owner chose option A on 2026-11-02. A test rewrite on a scratch copy found 0 hits in all 8 commits. The item closes when the rewritten history is on GitHub and each old commit ID returns "No commit found".
+
 ## Rebuild Risks
 
 Each item is a place where Step 0 or a later rebuild can go wrong. R-001 and R-002 came from the Make Blueprint register. The other items come from the design trade-offs and from the PRD workers.
@@ -1249,8 +1265,8 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Consequences: trade-offs and risks)
 - `kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md` (R-001, R-002)
-- `make-docs v2.0.6: packages/cli/src/store/database.ts`
-- `make-docs v2.0.6: packages/cli/tsup.config.ts`
+- [`make-docs v2.0.6: packages/cli/src/store/database.ts`](../../kits/make-docs/packages/cli/src/store/database.ts)
+- [`make-docs v2.0.6: packages/cli/tsup.config.ts`](../../kits/make-docs/packages/cli/tsup.config.ts)
 
 ### R-001 Core Release Friction
 
@@ -1304,7 +1320,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 | --- | --- | --- |
 | Open | None yet | Mitigation: the scan, [Q-022](#q-022-work-email-in-commit-history) and [Q-026](#q-026-old-commit-ids-on-github). Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public`. |
 
-**Issue**: A public repository shows its whole git history. A secret, client data, a local home-folder path or the work email in any commit becomes public.
+**Issue**: A public repository shows its whole git history. A secret, client data, a local home-folder path or the work email in any commit becomes public. A known finding: client names are in committed files and in earlier commits on `main` ([Q-040](#q-040-client-names-in-the-committed-history)).
 
 **Why it matters**: A public commit cannot be taken back. Copies and forks keep it.
 
@@ -1330,15 +1346,17 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Mitigation: copy-day test fixes. Owner: [02 Architecture Overview, Configuration Surfaces](02-architecture-overview.md#configuration-surfaces), [08 Build and Release, Build in the Root Workspace](08-build-and-release.md#build-in-the-root-workspace). Step 0 work phase `01-copy-day`. |
+| Closed | Fix each path that assumes the old root. Done on 2026-11-02: acceptance criteria `A106` and `A107` passed. | Owner: [02 Architecture Overview, Configuration Surfaces](02-architecture-overview.md#configuration-surfaces), [08 Build and Release, Build in the Root Workspace](08-build-and-release.md#build-in-the-root-workspace). |
 
-**Issue**: Some Make Docs tests, scripts and build files find the repository root from their own folder. Under `kits/make-docs/`, that root is the kit folder, not the git root. The `tsup` config is one example (`make-docs v2.0.6: packages/cli/tsup.config.ts:7`, `make-docs v2.0.6: packages/cli/tsup.config.ts:27`).
+**Issue**: Some Make Docs tests, scripts and build files find the repository root from their own folder. Under `kits/make-docs/`, that root is the kit folder, not the git root. The `tsup` config is one example ([`make-docs v2.0.6: packages/cli/tsup.config.ts:7`](../../kits/make-docs/packages/cli/tsup.config.ts), [`make-docs v2.0.6: packages/cli/tsup.config.ts:27`](../../kits/make-docs/packages/cli/tsup.config.ts)).
 
 **Why it matters**: The build or the tests fail after copy day, and copy day cannot finish.
 
 **Recommendation**: On copy day, run the build and all Make Docs tests from the repository root, and fix each path that assumes the old root.
 
 **To close**: `npm ci`, the build and all Make Docs tests pass from the repository root.
+
+**Resolution**: Closed on 2026-11-02. In Phase 1 of the Step 0 backlog, acceptance `A106` passed on 2026-11-02: `npm ci` from the repository root exits 0, and the lockfile compare script reports 0 version or integrity differences ([01 Copy Day, Stage 2](../work/2026-11-01-w1-r0-make-kit-monorepo/01-copy-day.md#stage-2---root-workspace-and-lockfile)). Acceptance `A107` passed on 2026-11-02 ([01 Copy Day, Stage 3](../work/2026-11-01-w1-r0-make-kit-monorepo/01-copy-day.md#stage-3---build-tests-and-repository-links)). `npm run build` and `npm test` from the repository root exit 0. `node --test` has 19 passes. Vitest has 1996 passes, 0 failures and 6 skipped env-gated suites. One test assumed the old root: [`kits/make-docs/packages/cli/tests/mcp-app-contract.test.ts`](../../kits/make-docs/packages/cli/tests/mcp-app-contract.test.ts) loaded the `tsx` loader from a fixed `node_modules` path below that root. The test now resolves the loader through Node module resolution. The build path for `yaml` in [`kits/make-docs/packages/cli/tsup.config.ts`](../../kits/make-docs/packages/cli/tsup.config.ts) changed the same way.
 
 ### R-007 Urgent Fix During the Freeze
 
@@ -1358,13 +1376,13 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Owner: [08 Build and Release, Switch Point](08-build-and-release.md#switch-point). Step 0 work phase `05-switch-point`. |
+| Open | The owner accepted on 2026-11-02 that file-list compares ignore the content-hash part of `dist/` chunk names. | Owner: [08 Build and Release, Switch Point](08-build-and-release.md#switch-point). Step 0 work phase `05-switch-point`. |
 
-**Issue**: The Make Docs build bundles `yaml`, `zod` and `@clack/*` code and writes source maps (`make-docs v2.0.6: packages/cli/tsup.config.ts:20`). The bundle and map text hold `node_modules` paths and dependency versions. A root lockfile can change them. The switch test compares the file list, but the file content can still differ.
+**Issue**: The Make Docs build bundles `yaml`, `zod` and `@clack/*` code and writes source maps ([`make-docs v2.0.6: packages/cli/tsup.config.ts:20`](../../kits/make-docs/packages/cli/tsup.config.ts)). The bundle and map text hold `node_modules` paths and dependency versions. A root lockfile can change them. The switch test compares the file list, but the file content can still differ. On copy day, the `npm pack --dry-run` file list differed from the 2.0.6 list only in the content-hash part of 38 `dist/` chunk names on each side (19 `.js` and 19 `.js.map`), and the chunks pair one-to-one by name stem and size, within a few hundred bytes ([01 Copy Day, Stage 3](../work/2026-11-01-w1-r0-make-kit-monorepo/01-copy-day.md#stage-3---build-tests-and-repository-links)). The causes are the `node_modules` path comments that esbuild writes, which are 6 characters longer under `kits/make-docs/packages/cli/`, the `packageDigest` of `packages/cli/package.json` in the embedded skills bundle ([`kits/make-docs/packages/cli/scripts/embedded-skills.ts:90`](../../kits/make-docs/packages/cli/scripts/embedded-skills.ts)), and chunk hashes that include the names of the chunks they import. No build setting was changed to force a match.
 
 **Why it matters**: 08 says that the 2.0.7 files differ from 2.0.6 only in the version and the repository links. A changed bundle can break that rule or change behavior.
 
-**Recommendation**: Build the root lockfile from the old lockfile, so the dependency versions stay the same. Compare the file content of the two tarballs, not only the file list, and review each difference that is not a repository link.
+**Recommendation**: Build the root lockfile from the old lockfile, so the dependency versions stay the same. In each file-list compare with 2.0.6, ignore the content-hash part of each `dist/<name>-<hash>.js` and `dist/<name>-<hash>.js.map` name. At the switch point, compare the file content of the two tarballs, not only the file list. Expect two known differences: the longer `node_modules` path comments and the changed `packageDigest`. Review every other difference that is not a repository link.
 
 **To close**: The content compare of 2.0.7 with 2.0.6 shows only the version and repository links, or the owner accepts each other difference.
 
@@ -1388,7 +1406,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 | --- | --- | --- |
 | Open | None yet | Owner: [06 Shared Core, Store Base and Schema Version 6](06-shared-core.md#store-base-and-schema-version-6). Related: [Q-031](#q-031-store-version-counter-for-base-and-kit-tables). |
 
-**Issue**: Make Docs 2.0.x refuses a Store whose `user_version` is above 6 (`make-docs v2.0.6: packages/cli/src/store/database.ts:575`). No path exists to version 7 that keeps Make Docs 2.0.x users in their Store.
+**Issue**: Make Docs 2.0.x refuses a Store whose `user_version` is above 6 ([`make-docs v2.0.6: packages/cli/src/store/database.ts:575`](../../kits/make-docs/packages/cli/src/store/database.ts)). No path exists to version 7 that keeps Make Docs 2.0.x users in their Store.
 
 **Why it matters**: A base-table change that needs a new version locks every Make Docs 2.0.x user out of their Store.
 
@@ -1402,7 +1420,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 | --- | --- | --- |
 | Open | None yet | Owner: [05 Kit Conventions, Machine Folders](05-kit-conventions.md#machine-folders), [07 Setup Tool and Shared Files](07-setup-tool-and-shared-files.md#rebuild-notes). |
 
-**Issue**: When the project root is the home folder, the project tool directory `.make/<kit>/` and the machine folder `~/.make/<kit>/` are the same folder. Make Docs has the same overlap today with `.make-docs` and tells the two apart with a marker check (`make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`).
+**Issue**: When the project root is the home folder, the project tool directory `.make/<kit>/` and the machine folder `~/.make/<kit>/` are the same folder. Make Docs has the same overlap today with `.make-docs` and tells the two apart with a marker check ([`make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`](../../kits/make-docs/packages/cli/src/store/lifecycle.ts)).
 
 **Why it matters**: A kit can read project config as machine state, or remove project files with the Store.
 
@@ -1509,5 +1527,5 @@ The Make Blueprint register has its own O-001, [Confirm Make Docs Links in Proje
 - `AGENTS.md` and `CLAUDE.md` (the root map and its numbered workarounds)
 - `kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md` (R-001, R-002 and its own O-001)
 - `docs/prd/05-kit-conventions.md` (the gaps D-001 to D-041)
-- `make-docs v2.0.6: packages/cli/src/`
-- `make-docs v2.0.6: docs/prd/`
+- [`make-docs v2.0.6: packages/cli/src/`](../../kits/make-docs/packages/cli/src/)
+- [`make-docs v2.0.6: docs/prd/`](../../kits/make-docs/docs/prd/)

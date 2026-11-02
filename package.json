@@ -1,0 +1,24 @@
+{
+  "name": "make-kit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Monorepo root for make-kit. Each kit lives under kits/<kit>, and code the kits share lives under packages/.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "kits/*/packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w kits/make-docs/packages/cli",
+    "dev": "npm run dev -w kits/make-docs/packages/cli",
+    "test": "npm run test:smoke-harness && npm test -w kits/make-docs/packages/cli",
+    "test:smoke-harness": "node --test kits/make-docs/scripts/tests/smoke-pack-runner.test.mjs kits/make-docs/scripts/tests/w22-p6-package-proof.test.mjs",
+    "validate:defaults": "npm run validate:defaults -w kits/make-docs/packages/cli",
+    "smoke:pack": "node kits/make-docs/scripts/smoke-pack.mjs",
+    "smoke:pack:local": "node kits/make-docs/scripts/smoke-pack.mjs --mode local",
+    "smoke:pack:runners": "node kits/make-docs/scripts/smoke-pack.mjs --mode runners"
+  }
+}

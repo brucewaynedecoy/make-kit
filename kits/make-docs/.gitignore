@@ -1,0 +1,96 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+#
+# Pattern quick reference:
+#   foo         → matches "foo" at ANY depth (file or directory)
+#   foo/        → matches directory "foo" at any depth
+#   /foo        → matches "foo" ONLY at repo root
+#   *.ext       → matches files at any depth
+#   **/foo      → explicit "any depth" (same as bare `foo`)
+#   !foo        → un-ignore (negation)
+#
+# IMPORTANT: .gitignore does NOT untrack files that are already committed.
+# To untrack: `git rm --cached <path>` then commit.
+
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# build outputs
+dist/
+build/
+out/
+wheels/
+*.tsbuildinfo
+*.tgz
+# Exact old package archives used by the W22 R0 P7 upgrade fixtures.
+!packages/cli/tests/fixtures/legacy-packages/make-docs-0.1.0.tgz
+!packages/cli/tests/fixtures/legacy-packages/brucewaynedecoy-make-docs-1.0.0-rc.1.tgz
+!packages/cli/tests/fixtures/legacy-packages/brucewaynedecoy-make-docs-2.0.0-rc-f5fd5579.tgz
+next-env.d.ts
+
+# testing
+coverage/
+tests/input/
+tests/output/
+
+# environment files
+.env
+.env.*
+!.env.example
+!.env.test
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# scratch / backups / deprecated
+.old/
+.deprecated/
+.backup/
+.inbox/
+.temp/
+.tmp/
+.templates/
+.make-docs/backup/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# secrets / certs
+*.pem
+
+# editor & tooling
+.vscode/
+.hintrc
+.windsurfrules
+
+# tool caches
+.turbo/
+.cache/
+.parcel-cache/
+
+# deployment platforms
+.vercel/
+.motia/
+
+# python
+__pycache__
+*.py[oc]
+*.egg-info/
+.venv/
+venv/
+python_modules/
+
+# make-docs
+.make-docs/runs/
+.make-docs/state/

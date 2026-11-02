@@ -1,0 +1,6 @@
+{
+  "name": "@make-docs/template",
+  "version": "0.0.0",
+  "private": true,
+  "description": "make-docs template package. Contains the documentation template tree consumed by the CLI at build/publish time."
+}

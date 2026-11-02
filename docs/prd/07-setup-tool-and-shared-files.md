@@ -15,7 +15,7 @@ The setup tool, `make-kit setup`, lets a person set up any mix of kits in a proj
 
 This document owns the setup tool steps, the fields of the three project files, the rules for reading and writing them, the shared `.make/` router, where Make Docs reads its Personas, and how Make Blueprint uses the shared people and roles. [06 Shared Core](06-shared-core.md) owns the core code that reads and writes the shared files. Terms are in [04 Glossary](04-glossary.md).
 
-The setup tool and the shared files ship in the setup tool wave, a repo-wide wave after Step 0 ([Q-001 Step 0 Backlog Scope](03-open-questions-and-risk-register.md#q-001-step-0-backlog-scope)). The setup tool ships with Make Blueprint v2.0. On 2026-11-01 none of these exist. `packages/kit/` is not in the repository, and each kit sets up alone with its own CLI. Make Docs keeps its agent-tool choices and its Personas in `.make-docs/config.yaml` (`make-docs v2.0.6: packages/cli/src/config.ts:95`).
+The setup tool and the shared files ship in the setup tool wave, a repo-wide wave after Step 0 ([Q-001 Step 0 Backlog Scope](03-open-questions-and-risk-register.md#q-001-step-0-backlog-scope)). The setup tool ships with Make Blueprint v2.0. On 2026-11-01 none of these exist. `packages/kit/` is not in the repository, and each kit sets up alone with its own CLI. Make Docs keeps its agent-tool choices and its Personas in `.make-docs/config.yaml` ([`make-docs v2.0.6: packages/cli/src/config.ts:95`](../../kits/make-docs/packages/cli/src/config.ts)).
 
 Code anchors:
 
@@ -100,7 +100,7 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Human Experience Intent; Decision, section 5)
 - `docs/plans/2026-11-01-w1-r0-make-kit-monorepo/00-overview.md` (Human Experience Propagation)
-- `make-docs v2.0.6: packages/cli/src/setup-system.ts:59` (the Make Docs setup that `make-kit setup` calls)
+- [`make-docs v2.0.6: packages/cli/src/setup-system.ts:59`](../../kits/make-docs/packages/cli/src/setup-system.ts) (the Make Docs setup that `make-kit setup` calls)
 
 ### Shared Setup Choices
 
@@ -112,9 +112,9 @@ Requirements:
 
 - In a project where a person set up one kit and chose Claude Code and Codex, the next kit's `setup` shows Claude Code and Codex already selected. The person can keep them with no new choice.
 - When a person changes the agent tools during any kit's `setup`, `.make/config.yaml` holds the new choice, and the next `setup` of any kit shows it.
-- From the setup tool wave on, Make Docs `setup` reads and writes its agent-tool choices in `.make/config.yaml` through the core. Until then, Make Docs keeps them in `.make-docs/config.yaml` under `harnessIntegrations` (`make-docs v2.0.6: packages/cli/src/config.ts:104`). How the choices of an existing Make Docs project reach `.make/config.yaml` is open ([Q-029 Agent-Tool Choices for Existing Make Docs Projects](03-open-questions-and-risk-register.md#q-029-agent-tool-choices-for-existing-make-docs-projects)).
+- From the setup tool wave on, Make Docs `setup` reads and writes its agent-tool choices in `.make/config.yaml` through the core. Until then, Make Docs keeps them in `.make-docs/config.yaml` under `harnessIntegrations` ([`make-docs v2.0.6: packages/cli/src/config.ts:104`](../../kits/make-docs/packages/cli/src/config.ts)). How the choices of an existing Make Docs project reach `.make/config.yaml` is open ([Q-029 Agent-Tool Choices for Existing Make Docs Projects](03-open-questions-and-risk-register.md#q-029-agent-tool-choices-for-existing-make-docs-projects)).
 - `.make/config.yaml` holds no kit-only setting.
-- `.make/config.yaml` holds no secret. It holds no MCP connection key, no key hash and no local home-folder path. Each kit keeps its machine approvals and its MCP connection record in its own Store, as Make Docs does in its machine `config.json` (`make-docs v2.0.6: packages/cli/src/store/global-config.ts:45`).
+- `.make/config.yaml` holds no secret. It holds no MCP connection key, no key hash and no local home-folder path. Each kit keeps its machine approvals and its MCP connection record in its own Store, as Make Docs does in its machine `config.json` ([`make-docs v2.0.6: packages/cli/src/store/global-config.ts:45`](../../kits/make-docs/packages/cli/src/store/global-config.ts)).
 
 Evidence: the same install test with two kits.
 
@@ -122,8 +122,8 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Human Experience Intent; Decision, section 6)
 - `kits/make-blueprint/docs/prd/06-project-layout-and-instruction-files.md` (Project Config)
-- `make-docs v2.0.6: packages/cli/src/config.ts:104`
-- `make-docs v2.0.6: .make-docs/config.yaml:2` (`harnessIntegrations` in the Make Docs project)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:104`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: .make-docs/config.yaml:2`](../../kits/make-docs/.make-docs/config.yaml) (`harnessIntegrations` in the Make Docs project)
 
 ### Shared People and Roles
 
@@ -133,9 +133,9 @@ Requirements:
 
 - The core reads and writes `.make/personas.yaml`. Each kit only reads it and asks the core for a change.
 - The core creates the file on its first write. Its write is part of the same journaled change as the kit operation that asked for it, so a crash never leaves the file and that kit's records out of step.
-- The built-in `user` and `maintainer` entries stay implicit defaults, as in Make Docs today. The core does not write them. An entry with the slug `user` or `maintainer` can set display fields, and its primitive stays fixed. Make Docs PRD 24 states this rule today, in its Persona Configuration section (`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`).
+- The built-in `user` and `maintainer` entries stay implicit defaults, as in Make Docs today. The core does not write them. An entry with the slug `user` or `maintainer` can set display fields, and its primitive stays fixed. Make Docs PRD 24 states this rule today, in its Persona Configuration section ([`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`](../../kits/make-docs/docs/prd/24-project-configuration-and-convention-overlay.md)).
 - A slug is unique across the whole file, whatever its primitive. The core refuses a write that gives two entries the same slug. The kit operation that asked for that write returns the `blocked` outcome and names the clash.
-- The core refuses an entry with a reserved slug: `project`, `archive`, `artifacts`, `library` or `playbooks` (`make-docs v2.0.6: packages/cli/src/config.ts:14`).
+- The core refuses an entry with a reserved slug: `project`, `archive`, `artifacts`, `library` or `playbooks` ([`make-docs v2.0.6: packages/cli/src/config.ts:14`](../../kits/make-docs/packages/cli/src/config.ts)).
 - When the core writes the file, it keeps the project's comments and the other entries, as Make Docs keeps comments and unrelated fields in its config today.
 - An absent file gives the built-in entries only. No kit fails because the file is absent.
 - An entry enabled for Make Docs is a Make Docs Persona.
@@ -144,13 +144,13 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, section 6)
 - `kits/make-blueprint/docs/prd/05-ecosystem-and-shared-core.md` (Shared Core)
-- `make-docs v2.0.6: packages/cli/src/config.ts:14`
-- `make-docs v2.0.6: packages/cli/src/config.ts:164`
-- `make-docs v2.0.6: packages/cli/src/config.ts:259`
+- [`make-docs v2.0.6: packages/cli/src/config.ts:14`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:164`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:259`](../../kits/make-docs/packages/cli/src/config.ts)
 
 ### Make Docs Personas
 
-Make Docs keeps its Persona list in `.make-docs/config.yaml` under `personas` at `v2.0.6`. Each entry has `slug`, `label`, `description` and `primitive` (`make-docs v2.0.6: packages/cli/src/config.ts:164`). The primitives are `user` and `maintainer` (`make-docs v2.0.6: packages/cli/src/config.ts:13`). Make Docs merges the configured entries with the built-in `user` and `maintainer` entries by slug (`make-docs v2.0.6: packages/cli/src/config.ts:259`), and it reports a duplicate slug as `duplicate-persona-slug` (`make-docs v2.0.6: packages/cli/src/config.ts:717`). `make-docs project persona list` shows the effective set.
+Make Docs keeps its Persona list in `.make-docs/config.yaml` under `personas` at `v2.0.6`. Each entry has `slug`, `label`, `description` and `primitive` ([`make-docs v2.0.6: packages/cli/src/config.ts:164`](../../kits/make-docs/packages/cli/src/config.ts)). The primitives are `user` and `maintainer` ([`make-docs v2.0.6: packages/cli/src/config.ts:13`](../../kits/make-docs/packages/cli/src/config.ts)). Make Docs merges the configured entries with the built-in `user` and `maintainer` entries by slug ([`make-docs v2.0.6: packages/cli/src/config.ts:259`](../../kits/make-docs/packages/cli/src/config.ts)), and it reports a duplicate slug as `duplicate-persona-slug` ([`make-docs v2.0.6: packages/cli/src/config.ts:717`](../../kits/make-docs/packages/cli/src/config.ts)). `make-docs project persona list` shows the effective set.
 
 Requirements:
 
@@ -162,8 +162,8 @@ Requirements:
 Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, section 6; Consequences: left open)
-- `make-docs v2.0.6: packages/cli/src/config.ts:164`
-- `make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md` (Persona Configuration)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:164`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`](../../kits/make-docs/docs/prd/24-project-configuration-and-convention-overlay.md) (Persona Configuration)
 
 ### Make Blueprint Use
 
@@ -232,7 +232,7 @@ Code anchors:
 
 ### Kit Settings
 
-`.make/<kit>/config.yaml` holds the settings that only one kit uses, such as that kit's project ID. Make Blueprint keeps its settings in `.make/blueprint/config.yaml` ([Make Blueprint Project Config](../../kits/make-blueprint/docs/prd/06-project-layout-and-instruction-files.md#project-config)). Make Docs keeps its settings in `.make-docs/config.yaml` at `v2.0.6`. Its allowed top-level keys are `projectId`, `labels`, `personas`, `generatedProse`, `harnessCapabilities`, `harnessIntegrations` and `prd_authority` (`make-docs v2.0.6: packages/cli/src/config.ts:154`). Two of these keys hold data that the target keeps in the shared files. `harnessIntegrations` holds the agent-tool choices that belong in `.make/config.yaml`. `personas` holds the entries that belong in `.make/personas.yaml`.
+`.make/<kit>/config.yaml` holds the settings that only one kit uses, such as that kit's project ID. Make Blueprint keeps its settings in `.make/blueprint/config.yaml` ([Make Blueprint Project Config](../../kits/make-blueprint/docs/prd/06-project-layout-and-instruction-files.md#project-config)). Make Docs keeps its settings in `.make-docs/config.yaml` at `v2.0.6`. Its allowed top-level keys are `projectId`, `labels`, `personas`, `generatedProse`, `harnessCapabilities`, `harnessIntegrations` and `prd_authority` ([`make-docs v2.0.6: packages/cli/src/config.ts:154`](../../kits/make-docs/packages/cli/src/config.ts)). Two of these keys hold data that the target keeps in the shared files. `harnessIntegrations` holds the agent-tool choices that belong in `.make/config.yaml`. `personas` holds the entries that belong in `.make/personas.yaml`.
 
 Requirements:
 
@@ -258,8 +258,8 @@ Requirements:
 Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, section 6; Alternatives Considered: a separate `name` field)
-- `make-docs v2.0.6: packages/cli/src/config.ts:13`
-- `make-docs v2.0.6: packages/cli/src/config.ts:14`
+- [`make-docs v2.0.6: packages/cli/src/config.ts:13`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:14`](../../kits/make-docs/packages/cli/src/config.ts)
 
 ## Integrations
 
@@ -271,29 +271,29 @@ Code anchors:
 | Agent tools: Claude Code, Codex and GitHub Copilot CLI | The agent-tool choice in `.make/config.yaml` names them. Each kit's own setup writes the agent-tool entries. | Setup tool wave |
 | npm | Ships `@brucewaynedecoy/make-kit` with the `make-kit` CLI. [08 Build and Release](08-build-and-release.md) owns its release. | With Make Blueprint v2.0 |
 
-The current Make Docs rules for its project config and Personas are in `make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md` (Persona Configuration, Harness Capability Records) and `make-docs v2.0.6: docs/prd/47-persona-model.md`.
+The current Make Docs rules for its project config and Personas are in [`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`](../../kits/make-docs/docs/prd/24-project-configuration-and-convention-overlay.md) (Persona Configuration, Harness Capability Records) and [`make-docs v2.0.6: docs/prd/47-persona-model.md`](../../kits/make-docs/docs/prd/47-persona-model.md).
 
 Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, sections 5 and 6)
 - `kits/make-blueprint/docs/prd/05-ecosystem-and-shared-core.md` (Make Docs Capabilities Make Blueprint Depends On)
-- `make-docs v2.0.6: packages/cli/src/setup-system.ts:59`
+- [`make-docs v2.0.6: packages/cli/src/setup-system.ts:59`](../../kits/make-docs/packages/cli/src/setup-system.ts)
 
 ## Rebuild Notes
 
 - **One identifier field.** An entry has `slug` as its only identifier. A `name` field beside it could disagree with it. Make Blueprint text calls the display field `label`.
 - **Do not write the built-in entries.** They stay implicit, so an absent file still gives `user` and `maintainer`.
 - **Two core versions read the same files.** Each kit pins its own core version, so two core versions can read and write `.make/config.yaml` and `.make/personas.yaml` in one project. A change to their format is a breaking core change ([R-002 Two Core Versions in One Project](03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project)).
-- **Keep kit settings out of the shared file.** Make Docs mixes shared and kit-only settings in one file today (`make-docs v2.0.6: packages/cli/src/config.ts:95`). The target splits them.
+- **Keep kit settings out of the shared file.** Make Docs mixes shared and kit-only settings in one file today ([`make-docs v2.0.6: packages/cli/src/config.ts:95`](../../kits/make-docs/packages/cli/src/config.ts)). The target splits them.
 - **Keep secrets out of project files.** The shared files are in git, and many projects are public. MCP keys and key hashes stay in each kit's Store.
-- **Project folder and machine folder at the home folder.** When the project root is the home folder, `.make/<kit>/` and `~/.make/<kit>/` are the same folder. Make Docs has the same overlap with `.make-docs` and tells the two apart with a marker check (`make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`). The overlap is a tracked risk ([R-011 Project and Machine Folders Overlap](03-open-questions-and-risk-register.md#r-011-project-and-machine-folders-overlap)).
-- **Make Docs key style is mixed.** The top-level key `prd_authority` is snake_case, and the other top-level keys are camelCase (`make-docs v2.0.6: packages/cli/src/config.ts:161`). [05 Kit Conventions](05-kit-conventions.md#project-config) owns the top-level key style. Each kit sets the style of its nested keys in its own PRDs.
+- **Project folder and machine folder at the home folder.** When the project root is the home folder, `.make/<kit>/` and `~/.make/<kit>/` are the same folder. Make Docs has the same overlap with `.make-docs` and tells the two apart with a marker check ([`make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`](../../kits/make-docs/packages/cli/src/store/lifecycle.ts)). The overlap is a tracked risk ([R-011 Project and Machine Folders Overlap](03-open-questions-and-risk-register.md#r-011-project-and-machine-folders-overlap)).
+- **Make Docs key style is mixed.** The top-level key `prd_authority` is snake_case, and the other top-level keys are camelCase ([`make-docs v2.0.6: packages/cli/src/config.ts:161`](../../kits/make-docs/packages/cli/src/config.ts)). [05 Kit Conventions](05-kit-conventions.md#project-config) owns the top-level key style. Each kit sets the style of its nested keys in its own PRDs.
 
 Code anchors:
 
-- `make-docs v2.0.6: packages/cli/src/config.ts:95`
-- `make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`
-- `make-docs v2.0.6: packages/cli/src/config.ts:161`
+- [`make-docs v2.0.6: packages/cli/src/config.ts:95`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: packages/cli/src/store/lifecycle.ts:131`](../../kits/make-docs/packages/cli/src/store/lifecycle.ts)
+- [`make-docs v2.0.6: packages/cli/src/config.ts:161`](../../kits/make-docs/packages/cli/src/config.ts)
 
 ## Source Anchors
 
@@ -302,5 +302,5 @@ Code anchors:
 - [Q-001 Step 0 Backlog Scope](03-open-questions-and-risk-register.md#q-001-step-0-backlog-scope), [Q-023 Persona Entry Fields](03-open-questions-and-risk-register.md#q-023-persona-entry-fields), [Q-027 Persona List Move for Existing Projects](03-open-questions-and-risk-register.md#q-027-persona-list-move-for-existing-projects), [Q-037 Router Places in Kit Terms](03-open-questions-and-risk-register.md#q-037-router-places-in-kit-terms)
 - Make Blueprint register [Q-060](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#q-060-shared-setup-choices-across-kits), [Q-072](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#q-072-shared-people-and-roles-file), [Q-077](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#q-077-shared-people-and-roles-file-details) and [D-011](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#d-011-project-display-name-from-the-v1-import)
 - [Make Blueprint 05 Ecosystem and Shared Core](../../kits/make-blueprint/docs/prd/05-ecosystem-and-shared-core.md), [Make Blueprint 06 Project Layout and Instruction Files](../../kits/make-blueprint/docs/prd/06-project-layout-and-instruction-files.md), [Make Blueprint 10 Records and Identity](../../kits/make-blueprint/docs/prd/10-records-and-identity.md)
-- `make-docs v2.0.6: packages/cli/src/config.ts`
-- `make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`
+- [`make-docs v2.0.6: packages/cli/src/config.ts`](../../kits/make-docs/packages/cli/src/config.ts)
+- [`make-docs v2.0.6: docs/prd/24-project-configuration-and-convention-overlay.md`](../../kits/make-docs/docs/prd/24-project-configuration-and-convention-overlay.md)

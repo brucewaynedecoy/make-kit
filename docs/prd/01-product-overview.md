@@ -13,9 +13,9 @@ source:
 
 Make Kit is a family of command-line tools for work on a project with AI agents. Each tool is a kit. The `make-kit` repository (`github.com/brucewaynedecoy/make-kit`) is the one home for every kit, for the shared core that the kits use, and for the `make-kit` setup tool that sets up any mix of kits.
 
-| Product | npm package | CLI | Home in this repository | Status on 2026-11-01 |
+| Product | npm package | CLI | Home in this repository | Status on 2026-11-02 |
 | --- | --- | --- | --- | --- |
-| Make Docs | `@brucewaynedecoy/make-docs` | `make-docs` | `kits/make-docs/` | Live product. The latest release is 2.0.6, with the tag `v2.0.6`. Its code lives in the old `make-docs` repository until copy day. |
+| Make Docs | `@brucewaynedecoy/make-docs` | `make-docs` | `kits/make-docs/` | Live product. The latest release is 2.0.6, with the tag `v2.0.6`. Its code is in `kits/make-docs/`, copied from the tag `v2.0.6`. It releases from the old `make-docs` repository until the switch point. |
 | Make Blueprint | `@brucewaynedecoy/make-blueprint` | `make-blueprint` | `kits/make-blueprint/` | Designed and planned for v2.0. The folder holds docs only. No code is written yet. |
 | Shared core | `@brucewaynedecoy/make-core` | None. The core is a library. | `packages/core/` | Planned for Step 0. The folder does not exist yet. |
 | Setup tool | `@brucewaynedecoy/make-kit` | `make-kit` | `packages/kit/` | Planned for the setup tool wave after Step 0. The folder does not exist yet. |
@@ -130,8 +130,8 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, sections 3, 4, 5, 9 and 11)
 - `kits/make-blueprint/docs/prd/01-product-overview.md` (Release Scope)
-- `make-docs v2.0.6: packages/cli/package.json:2` (the npm name `@brucewaynedecoy/make-docs`)
-- `make-docs v2.0.6: packages/cli/package.json:3` (version 2.0.6)
+- [`make-docs v2.0.6: packages/cli/package.json:2`](../../kits/make-docs/packages/cli/package.json) (the npm name `@brucewaynedecoy/make-docs`)
+- [`make-docs v2.0.6: packages/cli/package.json:3`](../../kits/make-docs/packages/cli/package.json) (version 2.0.6)
 
 ## System Boundaries
 
@@ -162,14 +162,14 @@ Code anchors:
 
 - `docs/designs/2026-10-30-make-kit-monorepo.md` (Decision, sections 1, 3, 8 and 12; Consequences: trade-offs and risks)
 - `AGENTS.md` and `CLAUDE.md` (the monorepo map: repo-wide work in `docs/`, kit work in `kits/<kit>/docs/`)
-- `make-docs v2.0.6: .github/workflows/publish-npm.yml`
-- `make-docs v2.0.6: LICENSE`
+- [`make-docs v2.0.6: .github/workflows/publish-npm.yml`](../../kits/make-docs/.github/workflows/publish-npm.yml)
+- [`make-docs v2.0.6: LICENSE`](../../kits/make-docs/LICENSE)
 
 ## Current Limitations
 
-These limits are true on 2026-11-01.
+These limits are true on 2026-11-02.
 
-- **Make Docs is not in this repository yet.** Its code, its two CI workflows and its release flow live in the old `make-docs` repository until copy day ([Q-003 Copy Source and Freeze](03-open-questions-and-risk-register.md#q-003-copy-source-and-freeze)). Root PRDs cite its code as plain `make-docs v2.0.6:` text, not as links.
+- **Make Docs does not release from this repository yet.** Its code is in `kits/make-docs/`, copied from the tag `v2.0.6` ([Q-003 Copy Source and Freeze](03-open-questions-and-risk-register.md#q-003-copy-source-and-freeze)). Its two CI workflows do not run in this repository until the CI step. Its release flow stays in the old `make-docs` repository until the switch point ([08 Build and Release](08-build-and-release.md)).
 - **The core does not exist yet.** `packages/core/` is not in the repository, and `@brucewaynedecoy/make-core` is not on npm. Until Make Docs 2.2.0, the behavior that the core will hold lives in Make Docs code. See [06 Shared Core](06-shared-core.md).
 - **No setup tool in Step 0.** `make-kit setup`, `.make/config.yaml` and `.make/personas.yaml` belong to a later repo-wide wave ([Q-001 Step 0 Backlog Scope](03-open-questions-and-risk-register.md#q-001-step-0-backlog-scope)). Until that wave, each kit sets up alone with its own CLI, and Make Docs reads its Personas from `.make-docs/config.yaml`. How an existing project's Persona list reaches `.make/personas.yaml` is open ([Q-027 Persona List Move for Existing Projects](03-open-questions-and-risk-register.md#q-027-persona-list-move-for-existing-projects)).
 - **The repository is private.** It stays private until the public step in Step 0 ([Q-004 Public Repository Before the Switch](03-open-questions-and-risk-register.md#q-004-public-repository-before-the-switch)).
@@ -194,4 +194,4 @@ Code anchors:
 - The root map in [AGENTS.md](../../AGENTS.md) and [CLAUDE.md](../../CLAUDE.md), above the Make Docs block
 - The Make Blueprint release scope in [01 Product Overview](../../kits/make-blueprint/docs/prd/01-product-overview.md#release-scope)
 - [README.md](../../README.md)
-- `make-docs v2.0.6: packages/cli/package.json`
+- [`make-docs v2.0.6: packages/cli/package.json`](../../kits/make-docs/packages/cli/package.json)

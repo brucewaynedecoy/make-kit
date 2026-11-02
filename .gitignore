@@ -1,2 +1,5 @@
 # Local backup copies that Make Docs writes in each Make Docs project
 **/.make-docs/backup/
+
+# npm workspace dependencies installed at the repository root
+node_modules/

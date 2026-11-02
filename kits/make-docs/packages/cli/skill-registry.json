@@ -1,0 +1,495 @@
+{
+  "$schema": "./skill-registry.schema.json",
+  "schemaVersion": 1,
+  "manifestId": "make-docs.first-party",
+  "displayName": "make-docs first-party skills",
+  "description": "First-party make-docs skills grouped by stable purpose ids.",
+  "sourcePolicy": {
+    "kind": "first-party",
+    "label": "First-party make-docs registry",
+    "allowRemoteSkillSources": false
+  },
+  "purposes": [
+    {
+      "id": "archive-management",
+      "label": "Archive management",
+      "description": "Archive, relationship tracing, staleness, and deprecation workflows.",
+      "order": 10,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "backlog-review",
+      "label": "Backlog review",
+      "description": "Portfolio review, attention, status, and recommended-order reporting.",
+      "order": 15,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "codebase-decomposition",
+      "label": "Codebase decomposition",
+      "description": "Repository analysis and implementation-planning inputs.",
+      "order": 20,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "documentation-maintenance",
+      "label": "Documentation maintenance",
+      "description": "Cleanup, style, path, link, and documentation hygiene workflows.",
+      "order": 30,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "lifecycle-closeout",
+      "label": "Lifecycle closeout",
+      "description": "Validation, history, PRD/risk reconciliation, and commit-message preparation.",
+      "order": 40,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "workflow-execution",
+      "label": "Workflow execution",
+      "description": "Wave and phase execution support.",
+      "order": 50,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "plan-creation",
+      "label": "Plan creation",
+      "description": "Design-to-plan and planning-prep workflows.",
+      "order": 60,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "migration-support",
+      "label": "Migration support",
+      "description": "Compatibility, audit, migration, and package-transition support.",
+      "order": 70,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    },
+    {
+      "id": "naive-uat",
+      "label": "Unassisted Goal Testing",
+      "description": "Access the shared Unassisted Goal Testing workflow.",
+      "order": 55,
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs canonical purpose",
+        "manifestId": "make-docs.first-party"
+      }
+    }
+  ],
+  "skills": [
+    {
+      "name": "archive-docs",
+      "displayName": "Archive docs",
+      "source": "embedded:archive-docs",
+      "entryPoint": "SKILL.md",
+      "installName": "archive-docs",
+      "description": "Relationship-aware archival, staleness detection, deprecation, and impact analysis for docs/ artifacts.",
+      "purposes": [
+        "archive-management"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "references/archive-workflow.md",
+          "installPath": "references/archive-workflow.md"
+        },
+        {
+          "source": "scripts/trace_relationships.py",
+          "installPath": "scripts/trace_relationships.py"
+        }
+      ]
+    },
+    {
+      "name": "backlog-review",
+      "displayName": "Backlog Review",
+      "source": "embedded:backlog-review",
+      "entryPoint": "SKILL.md",
+      "installName": "backlog-review",
+      "description": "Review the full Make Docs work portfolio and explain focus, attention, and recommended order.",
+      "purposes": [
+        "backlog-review"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "README.md",
+          "installPath": "README.md"
+        },
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "references/review-method.md",
+          "installPath": "references/review-method.md"
+        },
+        {
+          "source": "references/report-model.md",
+          "installPath": "references/report-model.md"
+        },
+        {
+          "source": "references/fallback.md",
+          "installPath": "references/fallback.md"
+        },
+        {
+          "source": "references/cache.md",
+          "installPath": "references/cache.md"
+        },
+        {
+          "source": "references/rule-map.md",
+          "installPath": "references/rule-map.md"
+        },
+        {
+          "source": "examples/chat-reports.md",
+          "installPath": "examples/chat-reports.md"
+        },
+        {
+          "source": "examples/human-errors.json",
+          "installPath": "examples/human-errors.json"
+        },
+        {
+          "source": "references/html-report.md",
+          "installPath": "references/html-report.md"
+        },
+        {
+          "source": "scripts/render-report.mjs",
+          "installPath": "scripts/render-report.mjs"
+        },
+        {
+          "source": "scripts/report-contract.mjs",
+          "installPath": "scripts/report-contract.mjs"
+        },
+        {
+          "source": "scripts/agent-contract.mjs",
+          "installPath": "scripts/agent-contract.mjs"
+        },
+        {
+          "source": "scripts/collect-project-lead-context.mjs",
+          "installPath": "scripts/collect-project-lead-context.mjs"
+        },
+        {
+          "source": "assets/backlog-review-report.html",
+          "installPath": "assets/backlog-review-report.html"
+        }
+      ]
+    },
+    {
+      "name": "cleanup-docs",
+      "displayName": "Clean up docs",
+      "source": "embedded:cleanup-docs",
+      "entryPoint": "SKILL.md",
+      "installName": "cleanup-docs",
+      "description": "Audit and clean Markdown docs formatting drift, hard-wrapped prose, list spacing, and document-contract issues.",
+      "purposes": [
+        "documentation-maintenance"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "scripts/check_markdown_style.py",
+          "installPath": "scripts/check_markdown_style.py"
+        }
+      ]
+    },
+    {
+      "name": "decompose-codebase",
+      "displayName": "Decompose codebase",
+      "source": "embedded:decompose-codebase",
+      "entryPoint": "SKILL.md",
+      "installName": "decompose-codebase",
+      "description": "Plan and reverse-engineer repos into structured PRDs.",
+      "purposes": [
+        "codebase-decomposition",
+        "plan-creation"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "scripts/probe_environment.py",
+          "installPath": "scripts/probe_environment.py"
+        },
+        {
+          "source": "scripts/validate_output.py",
+          "installPath": "scripts/validate_output.py"
+        },
+        {
+          "source": "references/planning-workflow.md",
+          "installPath": "references/planning-workflow.md"
+        },
+        {
+          "source": "references/execution-workflow.md",
+          "installPath": "references/execution-workflow.md"
+        },
+        {
+          "source": "references/mcp-playbook.md",
+          "installPath": "references/mcp-playbook.md"
+        },
+        {
+          "source": "references/output-contract.md",
+          "installPath": "references/output-contract.md"
+        },
+        {
+          "source": "references/harness-capability-matrix.md",
+          "installPath": "references/harness-capability-matrix.md"
+        },
+        {
+          "source": "assets/templates/decomposition-plan.md",
+          "installPath": "assets/templates/decomposition-plan.md"
+        },
+        {
+          "source": "assets/templates/prd-index.md",
+          "installPath": "assets/templates/prd-index.md"
+        },
+        {
+          "source": "assets/templates/prd-overview.md",
+          "installPath": "assets/templates/prd-overview.md"
+        },
+        {
+          "source": "assets/templates/prd-architecture.md",
+          "installPath": "assets/templates/prd-architecture.md"
+        },
+        {
+          "source": "assets/templates/prd-subsystem.md",
+          "installPath": "assets/templates/prd-subsystem.md"
+        },
+        {
+          "source": "assets/templates/prd-reference.md",
+          "installPath": "assets/templates/prd-reference.md"
+        },
+        {
+          "source": "assets/templates/prd-risk-register.md",
+          "installPath": "assets/templates/prd-risk-register.md"
+        },
+        {
+          "source": "assets/templates/prd-glossary.md",
+          "installPath": "assets/templates/prd-glossary.md"
+        },
+        {
+          "source": "assets/templates/rebuild-backlog-index.md",
+          "installPath": "assets/templates/rebuild-backlog-index.md"
+        },
+        {
+          "source": "assets/templates/rebuild-backlog-phase.md",
+          "installPath": "assets/templates/rebuild-backlog-phase.md"
+        }
+      ]
+    },
+    {
+      "name": "naive-uat",
+      "displayName": "Unassisted Goal Testing",
+      "source": "embedded:naive-uat",
+      "entryPoint": "SKILL.md",
+      "installName": "naive-uat",
+      "description": "Thin CLI access to the shared Unassisted Goal Testing workflow.",
+      "purposes": [
+        "naive-uat"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": []
+    },
+    {
+      "name": "preflight",
+      "displayName": "Preflight",
+      "source": "embedded:preflight",
+      "entryPoint": "SKILL.md",
+      "installName": "preflight",
+      "description": "Review a named phase and settle needed owner choices. Explicit use only.",
+      "purposes": [
+        "plan-creation"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "references/decisions.md",
+          "installPath": "references/decisions.md"
+        },
+        {
+          "source": "references/store.md",
+          "installPath": "references/store.md"
+        }
+      ]
+    },
+    {
+      "name": "factory",
+      "displayName": "Factory",
+      "source": "embedded:factory",
+      "entryPoint": "SKILL.md",
+      "installName": "factory",
+      "description": "Coordinate approved backlog work, review, and correction. Explicit use only.",
+      "purposes": [
+        "workflow-execution"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "references/profiles.md",
+          "installPath": "references/profiles.md"
+        },
+        {
+          "source": "references/store.md",
+          "installPath": "references/store.md"
+        },
+        {
+          "source": "references/work-methods.md",
+          "installPath": "references/work-methods.md"
+        }
+      ]
+    },
+    {
+      "name": "human-experience",
+      "displayName": "Human Experience",
+      "source": "embedded:human-experience",
+      "entryPoint": "SKILL.md",
+      "installName": "human-experience",
+      "description": "Shape or review a clear, usable human interaction. Explicit use only.",
+      "purposes": [
+        "documentation-maintenance"
+      ],
+      "supportedHarnesses": [
+        "claude-code",
+        "codex",
+        "github-copilot"
+      ],
+      "provenance": {
+        "kind": "first-party",
+        "label": "make-docs embedded first-party Skill",
+        "manifestId": "make-docs.first-party",
+        "repository": "brucewaynedecoy/make-docs"
+      },
+      "assets": [
+        {
+          "source": "agents/openai.yaml",
+          "installPath": "agents/openai.yaml"
+        },
+        {
+          "source": "references/surfaces.md",
+          "installPath": "references/surfaces.md"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,609 @@
+import { mkdirSync, realpathSync, symlinkSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { callMakeDocsMcpTool } from "../src/mcp/tools";
+import { createExecutionContext } from "../src/operations/context";
+import { invokeOperation } from "../src/operations/registry";
+import { validatePrdAuthority } from "../src/operations/prd";
+import { runRunCommand } from "../src/run/cli";
+import { cleanupTempDir, createTempDir } from "./helpers";
+
+const readFilePaths = vi.hoisted(() => [] as string[]);
+const readBodyPaths = vi.hoisted(() => [] as string[]);
+const readDirectoryPaths = vi.hoisted(() => [] as string[]);
+vi.mock("node:fs", async (importOriginal) => {
+  const original = await importOriginal<typeof import("node:fs")>();
+  return {
+    ...original,
+    readdirSync: (...args: Parameters<typeof original.readdirSync>) => {
+      readDirectoryPaths.push(String(args[0]));
+      return original.readdirSync(...args);
+    },
+    openSync: (...args: Parameters<typeof original.openSync>) => {
+      readFilePaths.push(String(args[0]));
+      return original.openSync(...args);
+    },
+    readFileSync: (...args: Parameters<typeof original.readFileSync>) => {
+      readFilePaths.push(String(args[0]));
+      readBodyPaths.push(String(args[0]));
+      return original.readFileSync(...args);
+    },
+  };
+});
+
+function writeMarkdown(root: string, relativePath: string, lines: string[]): void {
+  const absolutePath = path.join(root, relativePath);
+  mkdirSync(path.dirname(absolutePath), { recursive: true });
+  writeFileSync(absolutePath, `${lines.join("\n")}\n`, "utf8");
+}
+
+function writeStructured(root: string, relativePath: string, contents: string): void {
+  const absolutePath = path.join(root, relativePath);
+  mkdirSync(path.dirname(absolutePath), { recursive: true });
+  writeFileSync(absolutePath, contents, "utf8");
+}
+
+describe("authoritative PRD validation", () => {
+  const tempRoots: string[] = [];
+  const priorExitCode = process.exitCode;
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    process.exitCode = priorExitCode;
+    for (const root of tempRoots.splice(0)) {
+      cleanupTempDir(root);
+    }
+  });
+
+  test("passes surgical updates, Requirement History, and genuinely new capability PRDs", () => {
+    const root = createTempDir("make-docs-prd-authority-pass-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", [
+      "# Product Requirements Index",
+      "",
+      "| PRD | Kind |",
+      "| --- | --- |",
+      "| [01 Accounts](01-accounts.md) | capability |",
+    ]);
+    writeMarkdown(root, "docs/prd/01-accounts.md", [
+      "---",
+      "kind: prd",
+      "status: active",
+      "---",
+      "",
+      "# 01 Accounts",
+      "",
+      "## Requirements",
+      "",
+      "Accounts use the current authentication contract.",
+      "",
+      "## Requirement History",
+      "",
+      "- 2026-08-08 W18 R16: replaced the prior contract; provenance: [former record](15-revise-authentication.md).",
+    ]);
+    writeMarkdown(root, "docs/prd/02-offline-sync.md", [
+      "# 02 Update Delivery",
+      "",
+      "## Requirements",
+      "",
+      "The product synchronizes queued work when connectivity returns.",
+      "",
+      "```markdown",
+      "# 99 Revise This Example",
+      "## Baseline Being Revised or Removed",
+      "[example](99-revise-example.md)",
+      "```",
+    ]);
+    writeMarkdown(root, ".make-docs/archive/history/legacy.md", [
+      "# Legacy provenance",
+      "",
+      "See [the former revision](../../../prd/15-revise-authentication.md).",
+    ]);
+    writeMarkdown(root, "docs/designs/migration.md", [
+      "# Migration design",
+      "",
+      "## Migration Provenance",
+      "",
+      "The design came from [the former change record](../prd/15-revise-authentication.md).",
+    ]);
+    writeStructured(
+      root,
+      "docs/artifacts/lineage.yaml",
+      [
+        "lineage:",
+        "  sourcePrds:",
+        "    - docs/prd/15-revise-authentication.md",
+        "notes: docs/prd/15-revise-authentication.md",
+        "",
+      ].join("\n"),
+    );
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.status).toBe("passed");
+    expect(report.diagnostics).toEqual([]);
+    expect(report.prdFilesScanned).toBe(3);
+  });
+
+  test("rejects every retired editorial PRD shape with stable diagnostic codes", () => {
+    const root = createTempDir("make-docs-prd-authority-fail-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", [
+      "# Product Requirements Index",
+      "",
+      "| PRD | Kind |",
+      "| --- | --- |",
+      "| [12 Revise Search](12-revise-search.md) | revision |",
+    ]);
+    writeMarkdown(root, "docs/prd/12-revise-search.md", [
+      "# 12 Revise Search",
+      "",
+      "## Baseline Being Revised or Removed",
+      "",
+      "The former search contract.",
+    ]);
+    writeMarkdown(root, "docs/prd/13-capability.md", [
+      "---",
+      "kind: enhancement",
+      "coordinate: W18 R16",
+      "---",
+      "",
+      "# 13 Capability",
+    ]);
+    writeMarkdown(root, "docs/plans/2026-09-26-w18-r16-current/00-overview.md", [
+      "---",
+      "source:",
+      "  type: prd",
+      "  path: docs/prd/12-revise-search.md",
+      "---",
+      "",
+      "# Current plan",
+      "",
+      "Source authority: [revision PRD](../../prd/12-revise-search.md).",
+    ]);
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.status).toBe("failed");
+    expect(new Set(report.diagnostics.map((diagnostic) => diagnostic.code))).toEqual(
+      new Set([
+        "PRD-AUTH-001",
+        "PRD-AUTH-002",
+        "PRD-AUTH-003",
+        "PRD-AUTH-004",
+        "PRD-AUTH-005",
+        "PRD-AUTH-006",
+        "PRD-AUTH-010",
+      ]),
+    );
+    expect(report.diagnostics).toEqual(
+      [...report.diagnostics].sort(
+        (left, right) =>
+          left.path.localeCompare(right.path) ||
+          left.line - right.line ||
+          left.code.localeCompare(right.code),
+      ),
+    );
+  });
+
+  test.each([
+    "add",
+    "enhance",
+    "remove",
+    "deprecate",
+    "reconcile",
+    "reconciliation",
+  ])(
+    "rejects the %s editorial filename family case-insensitively",
+    (verb) => {
+      const root = createTempDir(`make-docs-prd-authority-${verb}-`);
+      tempRoots.push(root);
+      writeMarkdown(root, `docs/prd/20-${verb}-thing.md`, [`# 20 ${verb} Thing`]);
+      expect(validatePrdAuthority(root).diagnostics).toEqual(
+        expect.arrayContaining([expect.objectContaining({ code: "PRD-AUTH-001" })]),
+      );
+    },
+  );
+
+  test.each([
+    "add",
+    "enhance",
+    "remove",
+    "deprecate",
+    "reconcile",
+    "reconciliation",
+  ])("rejects the %s editorial H1 subject", (verb) => {
+    const root = createTempDir(`make-docs-prd-authority-h1-${verb}-`);
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/20-capability.md", [`# 20 ${verb} Thing`]);
+    expect(validatePrdAuthority(root).diagnostics).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: "PRD-AUTH-002" })]),
+    );
+  });
+
+  test("allows ambiguous product nouns in capability filenames and H1 subjects", () => {
+    const root = createTempDir("make-docs-prd-authority-product-nouns-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/20-update-delivery.md", ["# 20 Update Delivery"]);
+    writeMarkdown(root, "docs/prd/21-replacement-policy.md", ["# 21 Replacement Policy"]);
+    writeMarkdown(root, "docs/prd/22-migration-safety.md", ["# 22 Migration Safety"]);
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.status).toBe("passed");
+    expect(report.diagnostics).toEqual([]);
+  });
+
+  test("checks only explicit authority contexts and canonical archive provenance", () => {
+    const root = createTempDir("make-docs-prd-authority-contexts-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", [
+      "# Product Requirements Index",
+      "",
+      "## Document Map",
+      "",
+      "| Document | Kind |",
+      "| --- | --- |",
+      "| [Old](12-revise-search.md) | capability |",
+    ]);
+    writeMarkdown(root, "docs/work/2026-09-26-w18-r16-current/00-index.md", [
+      "# Current work",
+      "",
+      "## Source PRD Docs",
+      "",
+      "- [Active editorial target](../../prd/12-revise-search.md)",
+      "- [Archived editorial target](../../../.make-docs/archive/prds/2026/12-revise-search.md)",
+    ]);
+    writeMarkdown(root, "docs/designs/2026-09-26-migration.md", [
+      "# Migration notes",
+      "",
+      "## Migration Provenance",
+      "",
+      "[Former record](../prd/12-revise-search.md)",
+    ]);
+    writeMarkdown(root, "docs/history/current.md", [
+      "# Misplaced active authority",
+      "",
+      "## Source PRD Docs",
+      "",
+      "[Former record](../prd/12-revise-search.md)",
+    ]);
+    writeMarkdown(root, ".make-docs/archive/current.md", [
+      "# Archived record",
+      "",
+      "## Source PRD Docs",
+      "",
+      "[Former record](../../prd/12-revise-search.md)",
+    ]);
+    writeStructured(root, ".make-docs/config.yaml", "prd_authority:\n  markdown_sources:\n    - docs/history/current.md\n");
+
+    const report = validatePrdAuthority(root);
+    const authorityLinkDiagnostics = report.diagnostics.filter(
+      (diagnostic) => diagnostic.code === "PRD-AUTH-005",
+    );
+
+    expect(authorityLinkDiagnostics.map((diagnostic) => diagnostic.path)).toEqual([
+      "docs/history/current.md",
+      "docs/prd/00-index.md",
+      "docs/work/2026-09-26-w18-r16-current/00-index.md",
+      "docs/work/2026-09-26-w18-r16-current/00-index.md",
+    ]);
+    expect(authorityLinkDiagnostics.some((diagnostic) => diagnostic.message.includes("archive/prds"))).toBe(true);
+  });
+
+  test("scopes kind validation to top-level frontmatter and the index Document Map", () => {
+    const root = createTempDir("make-docs-prd-authority-kind-scope-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", [
+      "# Product Requirements Index",
+      "",
+      "## Unrelated Matrix",
+      "",
+      "| Document | Kind |",
+      "| --- | --- |",
+      "| Example | revision |",
+      "",
+      "## Document Map",
+      "",
+      "| Document | Kind |",
+      "| --- | --- |",
+      "| Capability | addition |",
+      "",
+      "| Status | Notes |",
+      "| --- | --- |",
+      "| revision | unrelated second table |",
+    ]);
+    writeMarkdown(root, "docs/prd/01-capability.md", [
+      "---",
+      "kind: enhancement",
+      "metadata:",
+      "  kind: revision",
+      "---",
+      "",
+      "# 01 Capability",
+      "",
+      "kind: removal",
+    ]);
+
+    const kinds = validatePrdAuthority(root).diagnostics.filter(
+      (diagnostic) => diagnostic.code === "PRD-AUTH-003",
+    );
+
+    expect(kinds.map((diagnostic) => [diagnostic.path, diagnostic.line])).toEqual([
+      ["docs/prd/00-index.md", 13],
+      ["docs/prd/01-capability.md", 2],
+    ]);
+  });
+
+  test("does not open standalone structured evidence", () => {
+    const root = createTempDir("make-docs-prd-authority-structured-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", ["# Product Requirements Index"]);
+    writeStructured(
+      root,
+      "docs/conformance/map.json",
+      JSON.stringify({
+        sourcePrds: ["docs/prd/12-revise-search.md"],
+      }),
+    );
+    writeStructured(
+      root,
+      "docs/conformance/map.yaml",
+      "authority_path: .make-docs/archive/prds/2026/14-revise-archive.md\n",
+    );
+    writeStructured(root, "docs/conformance/map.yml", "source_prd: docs/prd/14-revise-source.md\n");
+    writeStructured(
+      root,
+      "docs/plans/current/implementation-evidence/events.jsonl",
+      [
+        JSON.stringify({ source_prd: "docs/prd/15-revise-jsonl.md" }),
+        "",
+      ].join("\n"),
+    );
+    readFilePaths.length = 0;
+    const report = validatePrdAuthority(root);
+    const resolvedRoot = realpathSync(root);
+
+    expect(report.status).toBe("passed");
+    expect(report.structuredFilesScanned).toBe(0);
+    expect(readFilePaths).toContain(path.join(resolvedRoot, "docs/prd/00-index.md"));
+    for (const relativePath of [
+      "docs/conformance/map.json",
+      "docs/conformance/map.yaml",
+      "docs/conformance/map.yml",
+      "docs/plans/current/implementation-evidence/events.jsonl",
+    ]) {
+      expect(readFilePaths).not.toContain(path.join(resolvedRoot, relativePath));
+    }
+  });
+
+  test("selects working paths before reads, even when stored copies have copied metadata", () => {
+    const root = createTempDir("make-docs-prd-authority-working-paths-");
+    tempRoots.push(root);
+    const plan = "docs/plans/2026-09-26-w18-r16-current";
+    const work = "docs/work/2026-09-26-w18-r16-current";
+    writeMarkdown(root, "docs/prd/00-index.md", ["# Product Requirements Index"]);
+    const storedPaths = [
+      "docs/prd/snapshots/12-revise-hidden.md",
+      `${plan}/scratch-copy/01-copied.md`,
+      `${plan}/implementation-evidence/02-copied.md`,
+      `${work}/backups/03-copied.md`,
+      "docs/history/unlisted.md",
+    ];
+    for (const relativePath of storedPaths) {
+      writeMarkdown(root, relativePath, [
+        "---", "kind: plan", "status: active", "source_prd: docs/prd/12-revise-old.md", "---",
+        "# Stored copy", "", "## Source PRD Docs", "[Former record](../../../../prd/12-revise-old.md)",
+      ]);
+    }
+    writeMarkdown(root, "docs/designs/2026-09-26-research-evidence.md", [
+      "---", "kind: design", "status: active", "---", "# Design", "", "## Source PRD Docs",
+      "[Former record](../prd/12-revise-old.md)",
+    ]);
+    writeMarkdown(root, `${plan}/00-overview.md`, [
+      "---", "kind: plan", "status: active", "---", "# Plan",
+    ]);
+    writeMarkdown(root, `${plan}/01-older-phase.md`, [
+      "# Older plan phase", "", "## Source PRD Docs",
+      "[Former record](../../prd/12-revise-old.md)",
+    ]);
+    writeMarkdown(root, `${work}/00-index.md`, [
+      "---", "kind: work", "status: completed", "---", "# Completed work", "",
+      "## Source PRD Docs", "[Former record](../../prd/12-revise-old.md)",
+    ]);
+    writeMarkdown(root, "docs/history/current.md", [
+      "# Custom working document", "", "## Source PRD Docs",
+      "[Former record](../prd/12-revise-old.md)",
+    ]);
+    writeStructured(root, ".make-docs/config.yaml", "prd_authority:\n  markdown_sources:\n    - docs/history/current.md\n");
+
+    readDirectoryPaths.length = 0;
+    readFilePaths.length = 0;
+    const report = validatePrdAuthority(root);
+    const resolvedRoot = realpathSync(root);
+
+    expect(report.prdFilesScanned).toBe(1);
+    expect(report.markdownFilesScanned).toBe(6);
+    expect(report.markdownSourceCoverage).toEqual({
+      prd: 1, design: 1, plan: 2, work: 1, custom: 1,
+      customPaths: ["docs/history/current.md"],
+    });
+    expect(report.structuredFilesScanned).toBe(0);
+    expect(report.diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([
+      ["PRD-AUTH-005", "docs/designs/2026-09-26-research-evidence.md"],
+      ["PRD-AUTH-005", "docs/history/current.md"],
+      ["PRD-AUTH-005", `${plan}/01-older-phase.md`],
+      ["PRD-AUTH-005", `${work}/00-index.md`],
+    ]);
+    for (const relativePath of storedPaths) {
+      expect(readFilePaths).not.toContain(path.join(resolvedRoot, relativePath));
+      expect(readDirectoryPaths).not.toContain(path.dirname(path.join(resolvedRoot, relativePath)));
+    }
+  });
+
+  test("reports unsafe custom declarations while checking a valid custom source without Store access", () => {
+    const root = createTempDir("make-docs-prd-authority-custom-paths-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", ["# Product Requirements Index"]);
+    writeMarkdown(root, "docs/history/current.md", [
+      "# Current history", "", "## Source PRD Docs", "[Former record](../prd/12-revise-old.md)",
+    ]);
+    writeMarkdown(root, "docs/archive/old.md", ["# Old record"]);
+    symlinkSync("current.md", path.join(root, "docs/history/link.md"));
+    writeStructured(root, ".make-docs/config.yaml", [
+      "prd_authority:", "  markdown_sources:",
+      "    - docs/history/current.md",
+      "    - docs/history/missing.md",
+      "    - docs/history/*.md",
+      "    - docs/history/link.md",
+      "    - docs/archive/old.md",
+      "    - docs/../outside.md",
+      "    - docs/history/",
+      "",
+    ].join("\n"));
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.diagnostics.filter((diagnostic) => diagnostic.code === "PRD-AUTH-009")).toHaveLength(6);
+    expect(report.diagnostics).toContainEqual(expect.objectContaining({
+      code: "PRD-AUTH-005", path: "docs/history/current.md",
+    }));
+    expect(report.markdownSourceCoverage.customPaths).toEqual(["docs/history/current.md"]);
+  });
+
+  test("keeps default sources when project config is empty", () => {
+    const root = createTempDir("make-docs-prd-authority-empty-config-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/00-index.md", ["# Product Requirements Index"]);
+    writeStructured(root, ".make-docs/config.yaml", "");
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.status).toBe("passed");
+    expect(report.markdownSourceCoverage.prd).toBe(1);
+    expect(report.markdownSourceCoverage.custom).toBe(0);
+  });
+
+  test("bounds frontmatter reads and keeps other selected checks visible", () => {
+    const root = createTempDir("make-docs-prd-authority-frontmatter-");
+    tempRoots.push(root);
+    const plan = "docs/plans/2026-09-26-w18-r16-current/00-overview.md";
+    const work = "docs/work/2026-09-26-w18-r16-current/00-index.md";
+    writeMarkdown(root, "docs/prd/00-index.md", ["# Product Requirements Index"]);
+    writeMarkdown(root, "docs/designs/2026-09-26-current.md", [
+      "---", "kind: work", "status: active", "---", "# Design", "",
+      "## Source PRD Docs", "[Former record](../prd/12-revise-old.md)",
+    ]);
+    writeMarkdown(root, plan, ["---", "kind: plan", "status: active", "# No closing delimiter"]);
+    writeMarkdown(root, work, ["---", `kind: ${"x".repeat(65 * 1024)}`, "---", "# Oversize header"]);
+
+    readBodyPaths.length = 0;
+    const report = validatePrdAuthority(root);
+    const resolvedRoot = realpathSync(root);
+
+    expect(report.diagnostics.filter((diagnostic) => diagnostic.code === "PRD-AUTH-010")).toHaveLength(3);
+    expect(report.diagnostics).toContainEqual(expect.objectContaining({
+      code: "PRD-AUTH-005", path: "docs/designs/2026-09-26-current.md",
+    }));
+    expect(report.markdownFilesScanned).toBe(2);
+    expect(readBodyPaths).not.toContain(path.join(resolvedRoot, plan));
+    expect(readBodyPaths).not.toContain(path.join(resolvedRoot, work));
+  });
+
+  test("distinguishes an absent PRD set from invalid and escaping target roots", () => {
+    const missing = path.join(createTempDir("make-docs-prd-authority-missing-parent-"), "missing");
+    tempRoots.push(path.dirname(missing));
+    const missingReport = validatePrdAuthority(missing);
+    expect(missingReport).toEqual(
+      expect.objectContaining({
+        status: "failed",
+        targetRootStatus: "invalid",
+        prdSetStatus: "absent",
+      }),
+    );
+    expect(missingReport.diagnostics[0]?.code).toBe("PRD-AUTH-007");
+
+    const fileRoot = createTempDir("make-docs-prd-authority-file-root-");
+    tempRoots.push(fileRoot);
+    writeStructured(fileRoot, "project.txt", "not a directory\n");
+    expect(validatePrdAuthority(path.join(fileRoot, "project.txt")).diagnostics[0]?.code).toBe(
+      "PRD-AUTH-007",
+    );
+
+    const empty = createTempDir("make-docs-prd-authority-empty-");
+    tempRoots.push(empty);
+    expect(validatePrdAuthority(empty)).toEqual(
+      expect.objectContaining({ status: "passed", prdSetStatus: "absent" }),
+    );
+
+    const root = createTempDir("make-docs-prd-authority-symlink-root-");
+    const outside = createTempDir("make-docs-prd-authority-symlink-outside-");
+    tempRoots.push(root, outside);
+    mkdirSync(path.join(root, "docs"), { recursive: true });
+    mkdirSync(path.join(outside, "prd"), { recursive: true });
+    symlinkSync(path.join(outside, "prd"), path.join(root, "docs", "prd"), "dir");
+    const escapingReport = validatePrdAuthority(root);
+    expect(escapingReport.prdSetStatus).toBe("unsafe");
+    expect(escapingReport.diagnostics).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: "PRD-AUTH-008" })]),
+    );
+  });
+
+  test("rejects an exact docs/prd root symlink even when it resolves inside the project", () => {
+    const root = createTempDir("make-docs-prd-authority-internal-symlink-");
+    tempRoots.push(root);
+    mkdirSync(path.join(root, "docs", "stored-prds"), { recursive: true });
+    symlinkSync("stored-prds", path.join(root, "docs", "prd"), "dir");
+
+    const report = validatePrdAuthority(root);
+
+    expect(report.prdSetStatus).toBe("unsafe");
+    expect(report.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "PRD-AUTH-008",
+          path: "docs/prd",
+          message: expect.stringContaining("symbolic link"),
+        }),
+      ]),
+    );
+  });
+
+  test("operation, MCP, JSON CLI, and human CLI share the structured result and CLI failure", async () => {
+    const root = createTempDir("make-docs-prd-authority-surfaces-");
+    tempRoots.push(root);
+    writeMarkdown(root, "docs/prd/99-REMOVE-legacy.md", ["# 99 REMOVE Legacy"]);
+
+    const invocation = await invokeOperation(
+      "prd.authority.validate",
+      { targetRoot: root },
+      createExecutionContext({ surface: "test", writesAllowed: false }),
+    );
+    expect(invocation.value).toEqual(
+      expect.objectContaining({ status: "failed", targetRoot: root }),
+    );
+
+    const mcp = await callMakeDocsMcpTool("prd_validate", {
+      targetRoot: root,
+    });
+    expect(JSON.stringify(mcp)).toContain("PRD-AUTH-001");
+
+    const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    await runRunCommand(["prd", "authority", "validate", "--target-root", root, "--json"]);
+    const json = JSON.parse(writeSpy.mock.calls.map(([chunk]) => String(chunk)).join(""));
+    expect(json.status).toBe("failed");
+    expect(json.markdownSourceCoverage.prd).toBe(1);
+    expect(process.exitCode).toBe(1);
+
+    process.exitCode = 0;
+    writeSpy.mockClear();
+    await runRunCommand(["prd", "authority", "validate", "--target-root", root], {
+      isTty: true,
+    });
+    const human = writeSpy.mock.calls.map(([chunk]) => String(chunk)).join("");
+    expect(human).toContain("PRD authority validation: failed");
+    expect(human).toContain("Markdown checked: 1 (PRD 1");
+    expect(human).toContain("PRD-AUTH-001");
+    expect(process.exitCode).toBe(1);
+  });
+});

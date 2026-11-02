@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "targetRoot": "<client-project>",
+  "targetRootStatus": "valid",
+  "prdRoot": "<client-project>/docs/prd",
+  "prdSetStatus": "present",
+  "prdFilesScanned": 8,
+  "markdownFilesScanned": 109,
+  "structuredFilesScanned": 0,
+  "linksScanned": 142,
+  "diagnostics": []
+}

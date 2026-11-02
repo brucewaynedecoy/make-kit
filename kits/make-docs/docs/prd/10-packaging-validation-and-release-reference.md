@@ -1,0 +1,307 @@
+# 10 Packaging, Validation, and Release Reference
+
+## Purpose
+
+This reference doc captures the current publishable surface for `make-docs`, the validation commands that guard it, and the maintainer release procedure encoded in the repository today. It stays separate from subsystem narrative docs because the package allowlist in `packages/cli/package.json`, the prepack copy step in `scripts/copy-template-to-cli.mjs`, and the smoke-pack assertions in `scripts/smoke-pack.mjs` are operational facts rather than product-behavior descriptions.
+
+## Reference
+
+### Packaging Surface
+
+The first-party Skill payload and allowlist entries below state the required W19 R5 target. The current package does not yet deliver all seven Skills. The owner accepted the W19 R5 work backlog on 2026-09-09 and authorized implementation; tasks and package proof remain pending. Other rows describe the existing package mechanics.
+
+| Topic | Current behavior | Primary anchors |
+| --- | --- | --- |
+| Publishable npm package | The only publishable workspace is `@brucewaynedecoy/make-docs` under `packages/cli/`; the monorepo root is `private: true` and only delegates scripts to that workspace. The package exposes the `make-docs` binary. | `package.json:2-19`; `packages/cli/package.json` (`name`, `version`, `license`, `repository`, `bin`) |
+| CLI allowlist | The shipped file allowlist includes `dist`, `template`, `skill-registry.json`, `skill-registry.schema.json`, `README.md`; `dist` contains the embedded registry-declared first-party Skill bytes, with no separate Skill directory added to the allowlist. Root `docs/`, root `AGENTS.md`, and root `CLAUDE.md` are not in the allowlist. | `packages/cli/package.json` (`files`) |
+| Template packaging | `prepack` runs `node ../../scripts/copy-template-to-cli.mjs && npm run build`, and that script replaces `packages/cli/template` with `packages/docs/template` before pack/publish. | `packages/cli/package.json` (`scripts.prepack`), `scripts/copy-template-to-cli.mjs:24-32` |
+| Performance governance resources | The contract, prompt, reference, and profile template are peer resources authored under `packages/docs/template/.make-docs/system/`, generated into `packages/cli/template/` through prepack, and deliberately dogfooded only for selected resources and routers. Package and dogfood proof must cover all four resource identities and intended bytes. | [PRD 48](./48-performance-evidence-governance.md); [W19 R2 plan](../plans/2026-08-13-w19-r2-performance-evidence-governance/00-overview.md) |
+| Dev vs packed template resolution | Local development reads `packages/docs/template/` first through `resolveTemplateRoot`, then falls back to the bundled `packages/cli/template/` in packed contexts. | `packages/cli/src/utils.ts:33-55`, `packages/docs/README.md:31-37` |
+| Docs/template workspace status | `packages/docs` is `private` and exists to hold the source-of-truth template consumed by the CLI at build/publish time. It is not independently published today. | `packages/docs/package.json:2-5`, `packages/docs/README.md:123-125` |
+| Skills workspace status | `packages/skills` is also `private`; the CLI build embeds its declared first-party Skill bytes directly in compiled output and packages registry metadata without publishing or renaming the workspace itself. | `packages/skills/package.json:2-5`, `packages/cli/package.json` (`files`), `scripts/copy-template-to-cli.mjs:29-32` |
+
+Current package mechanics therefore split into two modes: local development works from `packages/docs/template/` (`packages/cli/src/utils.ts:33-55`), while packed artifacts work from `packages/cli/template` after `prepack` (`scripts/copy-template-to-cli.mjs:24-32`). Any release checklist that ignores that distinction will miss a class of template drift bugs.
+
+### Prepack and Smoke-Pack Flow
+
+| Step | What happens | Primary anchors |
+| --- | --- | --- |
+| Prepack entry | `npm run prepack` runs inside `packages/cli`, copies the template, validates `packages/cli/skill-registry.json`, then builds `dist/index.js`. | `packages/cli/package.json` (`scripts.prepack`), `scripts/copy-template-to-cli.mjs:24-47` |
+| Mode selection | The smoke script selects `full`, `local`, or `runners`. The default `full` mode remains the complete release gate. | `package.json` (`smoke:pack`, `smoke:pack:local`, `smoke:pack:runners`), `scripts/smoke-pack.mjs` |
+| Runner preflight | Full and runner-only modes check required commands and npm registry access before `prepack`. A blocked registry fails quickly and directs restricted environments to the local mode. | `scripts/lib/smoke-pack-runner.mjs` |
+| Tarball creation | The smoke script executes `npm pack --json --ignore-scripts` only after running `prepack`, so the tarball reflects the already-bundled template and built output. | `scripts/smoke-pack.mjs` (`packResult`) |
+| Bin validation | After unpacking, the script reads the packed `package.json` and asserts the package exposes only the `make-docs` bin before invoking it. | `scripts/smoke-pack.mjs` (`packedPackageJson`, `packedMakeDocs`) |
+| Package-runner validation | Runner-only and full modes invoke the packed tarball through `npx --package`, `pnpm dlx`, and `bun x --package` into isolated temp working directories, targets, `HOME`, and package-manager cache roots. Each action streams output and reports its time. | `scripts/smoke-pack.mjs`, `scripts/lib/smoke-pack-runner.mjs` |
+| Skills validation | Smoke-pack rewrites the packed skill registry to a repo-backed fixture server, runs `make-docs setup skills --dry-run`, installs the base package, verifies shared skill payloads plus native harness exposure, and asserts stale generated stubs, legacy duplicated payloads, or unsafe fallback artifacts are absent. | `scripts/smoke-pack.mjs` |
+| Installer validation | Smoke proves the Store installation record, absent local operational manifest/state, configured documentation routers, repeat setup with no unintended changes, and project-removal boundaries. | `scripts/smoke-pack.mjs` |
+| Project backup and removal validation | Smoke verifies Store-owned backup/restore metadata and completion, local backup payload copies, safe managed project removal, preserved unmanaged content, and protected legacy root `.backup/**`. | `scripts/smoke-pack.mjs` |
+| Machine uninstall validation | Sandboxed uninstall proves separate binary-removal confirmation and Store cleanup choice. The Store remains by default, including with `--yes`; only explicit `--remove-store` enters reviewed Store cleanup. | `scripts/smoke-pack.mjs`; [PRD 39](39-cli-command-model-and-operation-registry.md) |
+
+The smoke script is therefore more than a tarball smoke test. Local mode gives bounded evidence in a restricted test area. It is not release evidence. Full mode proves that prepack bundling, remote package-runner execution, packaged installation, skill distribution, backup, and uninstall agree on the same release surface.
+
+### Validation Matrix
+
+| Command | Scope | What it proves | Primary anchors |
+| --- | --- | --- | --- |
+| `npm test` | Root automated suite | Covers the smoke harness plus the full CLI Vitest suite. | `package.json` (`scripts.test`, `scripts.test:smoke-harness`) |
+| `npm test -w packages/cli` | Full CLI Vitest suite | Covers profile logic, CLI flows, installer integration, skills behavior, and lifecycle commands. | `packages/cli/package.json` (`scripts.test`) |
+| `npm run validate:defaults` | Default-asset consistency | Runs `packages/cli/tests/consistency.test.ts`, which checks that desired scaffold assets match packaged template bytes, every template file is covered by the static asset pipeline, and every instruction router has managed-block markers. | `package.json:17`, `packages/cli/package.json` (`scripts.validate:defaults`), `packages/cli/tests/consistency.test.ts` |
+| `bash scripts/check-instruction-routers.sh` | Router integrity | Enforces `AGENTS.md`/`CLAUDE.md` pairing, byte identity, per-directory line budgets, and banned headings. | `scripts/check-instruction-routers.sh:1-58`, `packages/cli/src/README.md:165-176` |
+| `bash scripts/check-wave-numbering.sh` | Docs/work namespace hygiene | Warns on duplicate `wN-rN` coordinates across both repo-root docs and `packages/docs/template/docs`. | `scripts/check-wave-numbering.sh:15-58`, `docs/assets/archive/work/2026-04-16-w5-r2-cli-skill-installation/07-tests-and-validation.md` |
+| `npm run smoke:pack:local` | Local packaged validation | Exercises prepack, tarball creation, packed CLI install, skills, backup, and uninstall without package-runner or registry access. It is not release evidence. | `package.json`, `scripts/smoke-pack.mjs` |
+| `npm run smoke:pack:runners` | Online package-runner validation | Exercises cold-cache `npx`, `pnpm dlx`, and Bun installs after a bounded command and registry preflight. | `package.json`, `scripts/smoke-pack.mjs`, `scripts/lib/smoke-pack-runner.mjs` |
+| `npm run smoke:pack` | Complete packaged end-to-end validation | Runs the local and online paths against one tarball. This is the required release proof. | `package.json`, `scripts/smoke-pack.mjs` |
+| Installed global-link matrix | Persistent package-manager installation | Installs the exact tarball into an isolated home, invokes the normal `make-docs` link with the repository unavailable, and proves that setup verifies the resolved declared package bin while unsafe links remain blocked. | `scripts/smoke-pack.mjs`, `packages/cli/src/harness-access/contract.ts`, `packages/cli/src/setup-system.ts` |
+| Package-runner spot checks | Manual packaged run | Use only when diagnosing runner-specific behavior beyond smoke-pack. The maintained automated proof is the tarball smoke run, not a persistent local CLI install. | `scripts/smoke-pack.mjs` |
+
+For Performance Evidence Governance changes, the validation matrix also requires focused proof that the four stable resource URIs resolve to the intended upstream bytes, the packaged projection is generated rather than hand-edited, selected root dogfood matches upstream where parity is required, router pairs remain thin and byte-consistent where required, and installed-project resolution preserves the selected local-projection and machine-installed fallback precedence. This is resource-delivery proof, not benchmark execution or a new validator operation.
+
+### Maintainer Release Procedure
+
+The maintainer runbook is now `RELEASING.md` at the repository root. A reviewed version change reaches `main` through a pull request. Publishing a GitHub Release with a matching `v` tag starts `.github/workflows/publish-npm.yml`. That workflow checks that the tag is on `main`, that the version has not been published, and that the release type matches the version. It builds, tests, and inspects the CLI tarball. It stages only `packages/cli` through npm trusted publishing. An npm maintainer approves the staged package with two-factor authentication before it becomes public. Stable versions use `latest`; prereleases use `next`.
+
+`npm run smoke:pack` remains the extended package proof across install tools and platforms. The release workflow runs its own source and package checks before staging. `packages/docs` and `packages/skills` remain private workspaces.
+
+The earlier npm prerelease `1.0.0-rc.1` remains under Apache-2.0. The package version and license metadata come from `packages/cli/package.json`; new releases use MIT. The first-publish design in `docs/designs/2026-04-15-cli-publishing.md` remains a record of the earlier decision.
+
+### Candidate Artifact and Publication Identity
+
+- R-RELEASE-ARTIFACT-1 (MUST): record the candidate's reviewed source revision and tree state, CLI and lock versions, package identity, tarball SHA-256, and contents. The final installed matrix, real-host matrix, and complete `npm run smoke:pack` must use that same artifact. Local-only smoke is bounded evidence. Local and online runner passes on different tarballs do not prove one candidate.
+- R-RELEASE-ARTIFACT-2 (MUST): use [RELEASING.md](../../RELEASING.md) as the maintainer release runbook. Review the exact candidate, license, dependency changes, package contents, automated results, and open GitHub security alerts before a release recommendation. Resolve or explicitly assess high-severity findings with scope, decision, and evidence. This review does not authorize unrelated dependency changes. Retain prior client/platform limits and bounded performance waivers until fresh proof closes their exact scope.
+- R-RELEASE-ARTIFACT-3 (MUST): the release path checks that the tag is `v` followed by the reviewed CLI version, that the tagged commit is in `origin/main` history, and that the version is not already public. The checkout-move repair candidate is `2.0.6`. The GitHub release-published workflow uses Node.js 24 and npm 11.17.0, runs `npm ci`, CLI prepack, the smoke harness, the full CLI suite with its configured 120000 ms timeout, default-resource checks, and package inspection before `npm stage publish` with provenance. Recheck the owning workflow and runbook at the release decision; a successful source run is not public package proof.
+- R-RELEASE-ARTIFACT-4 (MUST): the tested, approved, and staged tarball digests must agree. A workflow rebuild from the same tag is not enough. If it produces another digest, stop staging until that exact replacement passes required installed and real-host proof. Preserve artifact identity and evidence through staging. Before public approval, inspect the stage identity and staged tarball when needed to verify the approved digest.
+- R-RELEASE-ARTIFACT-5 (MUST): tagging, push/merge, GitHub release publication, npm staging, and human public npm approval each require separate explicit authorization. An npm maintainer approves the staged package with two-factor authentication. A published GitHub release or a successful staging job does not prove public npm availability. After approval, verify public version, stable `latest` tag, provenance link, downloaded integrity and digest, and a clean installed version result.
+- R-RELEASE-ARTIFACT-6 (MUST): a ready candidate does not authorize a global install change or live checkout repair. A later root or kit repair needs its own fresh preview and explicit authorization. A missing required seed, host, capability, or case blocks the associated release claim unless the current platform rule has an explicit valid time-bounded owner exception. Do not treat an old unrelated waiver as that exception.
+
+### Current Drift and Risk-Register Candidates
+
+Checkout-move implementation and installed-package proof remain open in [D-049](03-open-questions-and-risk-register.md#d-049-moved-checkout-setup-bypasses-project-identity-and-managed-block-ownership). Installed 2.0.5 does not provide the target move review. The 2.0.6 candidate rules are required proof, not passing test results or a released-package claim.
+
+| Item | Evidence | Why it matters |
+| --- | --- | --- |
+| Scoped package name is now required | The unscoped `make-docs` publish was blocked by npm's similarity guard; package metadata now uses `@brucewaynedecoy/make-docs` while preserving the `make-docs` binary. | Public docs and generated guidance must use scoped `npx @brucewaynedecoy/make-docs@next` until a future unscoped name strategy exists. |
+| Retired unused content-package placeholder | The owner approved removal of `packages/content/`. Rendered JSON content fragments are a current non-goal and have no release surface. | Packaging checks must prove that no live workspace, lockfile, code, or active authority claim remains. Future content-fragment work requires new design and PRD authority. |
+
+- The TypeScript package owns npm `next` and `latest`, the npm allowlist, packed-package validation, dry-run release checks, first-class `npx`, `pnpm dlx`, and `bunx` package-runner validation, and TypeScript-owned runtime/version reporting. Publish actions remain out of scope unless separately authorized.
+- Smoke-pack and template parity checks must prove the machine-served default and explicit optional local resource bodies independently while retaining the always-local router skeleton. Validation covers installed-provider absence, invalid or stale hashes, selected projection conflicts, deterministic URI resolution, offline diagnostics, and CLI/MCP parity; it must not treat an eager full project snapshot as the default.
+- Release-sensitive changes add fixtures across the [compatibility](./18-compatibility-classification-and-migration-safety.md) source-state and disposition matrix, including clean v1, clean v2 full-snapshot, provider-backed v2 with unavailable provider, stale hybrid cache, modified v1, malformed manifest/block, missing canonical files, ambiguous missing-manifest installs, and unknown shapes.
+- Packed npm validation exercises `packages/cli/template/` after copy/prepack, and package README, tarball allowlist wording, maintainer docs, and smoke-pack expectations agree with the template-first source-of-truth order in [06-template-contracts-and-generated-assets.md](./06-template-contracts-and-generated-assets.md).
+- Package validation must exercise each shipped static harness adapter through the installed package. A green unit or package-only check is not a public harness-method support claim without the direct installed-product proof required by [PRD 28](./28-shared-agentics-installation-and-harness-exposure.md) and [PRD 50](./50-proportionate-testing-and-human-centered-validation.md).
+- Package copy, smoke-pack, and dry-run checks prove the `.make-docs/**` tool resources owned by [21-project-tool-directory-and-resource-tiers.md](./21-project-tool-directory-and-resource-tiers.md) without moving runtime state into `docs/assets/**`.
+- [22-project-documentation-asset-model.md](./22-project-documentation-asset-model.md) owns package proof of managed project paths, while [47-persona-model.md](./47-persona-model.md) owns persona-fixture semantics. Packed validation covers `.make-docs/system/{contracts,prompts,references,templates}/**`, `.make-docs/archive/**`, `docs/assets/project/**`, and `docs/assets/<persona-slug>/testing/**`, proves on-demand paths are not emitted as empty placeholders, and treats legacy guide, Library, Playbook, Protocol, archive, history, breadcrumb, and former resource paths as migration inputs rather than shipped v2 targets.
+- Packed validation proves copied templates preserve required frontmatter and YAML/body handoff consistency under [23-generated-document-metadata-and-lifecycle-handoffs.md](./23-generated-document-metadata-and-lifecycle-handoffs.md).
+- Packed validation proves every default config template follows source-first copy rules and install/reconfigure flows preserve local `.make-docs/config.yaml` under [24-project-configuration-and-convention-overlay.md](./24-project-configuration-and-convention-overlay.md).
+- Packed npm validation keeps the public command taxonomy aligned with TypeScript behavior and proves remote package-runner behavior, TypeScript-owned runtime/version disclosure, required MCP availability, and CLI/MCP operation-contract parity before MCP surfaces are implementation-ready under [25-typescript-runtime-cli-mcp-operation-boundaries.md](./25-typescript-runtime-cli-mcp-operation-boundaries.md).
+- Package validation proves migrated CLI/shared-core operations, selected-skill install/update/remove behavior, managed old-script and wrapper classification, source-first template/dogfood/package copy, and smoke-pack coverage when shipped helper or skill assets change.
+- Package validation ships the registry schema with the built-in manifest, proves bare installs write no skill files, proves explicit first-party and alternate file-manifest installs, and rejects unpinned remote manifests or skill payloads before installation under [08-skills-catalog-and-distribution.md](./08-skills-catalog-and-distribution.md).
+- Packed validation proves explicit selected skills write one canonical shared payload per scope, expose selected harnesses through native skill directories, preserve skill-free bare installs, classify migrated duplicate payloads and legacy stubs, and cover symlink-preferred plus copy-mirror fallback behavior under [28-shared-agentics-installation-and-harness-exposure.md](./28-shared-agentics-installation-and-harness-exposure.md).
+- Packed validation proves Make Docs v2 ships no current Playbook or Protocol discovery/execution surface and does not include legacy `playbook_runs` in current run listings. Representative legacy assets remain migration fixtures whose bytes and Store rows are preserved unless a separately authorized disposition applies.
+- Packed validation proves no-default plugin behavior, explicit selected-plugin payload and native exposure or plugin-specific adapter behavior, plugin asset inclusion/exclusion rules, and exclusion of dynamic support registries, lab results, transcripts, scenarios, bootstrap assets, generated local run artifacts, and unreviewed plugin outputs from shipped template/package surfaces under [30-plugin-substrate-and-workflow-bundles.md](./30-plugin-substrate-and-workflow-bundles.md).
+- Packed validation covers adversarial prompts, references, plugins, CLI/MCP affordances, or installed-harness checks only when a downstream plan explicitly selects that surface. Package proof preserves template-first authoring, no-default exposure, prompt-rule coverage, plugin validation, and evidence-bound support claims under [14-lifecycle-workflow-and-coverage-passes.md](./14-lifecycle-workflow-and-coverage-passes.md).
+- Packed validation proves new backup writes use `.make-docs/backup/**`, fresh installs do not create root `.backup/**`, legacy root `.backup/**` is protected, and selected-agentics uninstall prunes reviewed empty managed Skill directories (including obsolete private-layout parents during upgrade) safely under [38-global-store-and-project-state.md](./38-global-store-and-project-state.md).
+- Packed validation proves generated plugin and skills-bundle outputs are included only when a reviewed package plan selects them as shipped assets, while local generated outputs, export-only artifacts, run state, dynamic support registries, and lab result assets stay out of templates and tarballs under [36-playbook-packaging-compiler-and-harness-adapters.md](./36-playbook-packaging-compiler-and-harness-adapters.md).
+- Packaged runner and CLI/MCP validation covers general lifecycle `runs`, bounded `run_evidence`, typed Store receipts, repository authority, and `run-capture-unavailable`; it proves no run state is written under `.make-docs/runs/**`, no document/evidence bodies or secrets enter the Store, and no operational state ships in templates or tarballs.
+
+## Package Projection Proof
+
+- Local CLI development may resolve sibling `packages/docs/template/`, but tarball and publish validation exercise the generated `packages/cli/template/` after copy/prepack. `npm run smoke:pack` and package dry-run are the required packaged-path proof surfaces. `npm run smoke:pack:local` is useful bounded evidence, but it does not replace the full release gate.
+- Package validation verifies the complete managed template set, including mixed-directory routers and starter structure, while proving project-authored dogfood content, local records, run evidence, and retired conformance assets are excluded from shipping.
+- If packaged-template drift appears, the fix starts in `packages/docs/template/` or the copy/package pipeline and regenerates `packages/cli/template/`; the bundled copy is never repaired by hand.
+- Package validation remains dry-run unless publication is separately authorized, and dogfood freshness requires targeted exact-parity evidence for files expected to match.
+- Performance governance package proof covers the four peer contract/prompt/reference/template resources and their selected router projections across `packages/docs/template/`, generated `packages/cli/template/`, root dogfood, and installed-project resolution. Project-authored profiles, results, work, benchmark outputs, and evidence remain excluded from shipped defaults.
+- A performance `pass`, `waived` outcome, characterization result, profile presence, or packaged evidence link does not by itself authorize publication, release recommendation, conformance, a supported tuple, or any broader support claim. Those decisions remain with their existing release and support authorities.
+- Release recommendation is blocked until the final recovery gate validates the fixed sequence of upstream template authority, generated package projection, root dogfood parity, and installed-project behavior for a fresh install plus representative legacy migrations across source states, dispositions, and selected facets. The same gate covers fail-closed classification, quiescence, backup/rollback, update/uninstall preservation, path traversal and symlink rejection, privacy-safe Store behavior, and Windows, macOS, and Linux fixtures.
+
+### No-Scripts Package Proof
+
+- Every migrated deterministic domain has focused operation tests and shared CLI/MCP semantics; operation logic is testable without the full parser or transport.
+- Selected-skill install, update, removal, and stale-footprint tests cover rewritten skills plus removed or wrapper script assets. Audit, backup, uninstall, and migration fixtures distinguish managed old scripts, managed wrappers, locally modified managed files, and custom scripts.
+- When shipped helper or skill assets change, validation proves source-first edits, scoped dogfood reseeding, bundled-template refresh, packed npm behavior, and that no selected first-party skill depends on a missing script or missing replacement.
+
+Release validation must prove that the packed CLI receives its managed template payload from `packages/docs/template/`, that the dogfood projection is intentionally synchronized where applicable, and that generated package copies are non-authoritative build artifacts.
+
+### Asset Layout Package Acceptance
+
+R-ASSET-PACK-1 (MUST): the package acceptance matrix proves two retained defaults and custom merging, CLI-free discovery, no eager assets directory, root-only configured-harness routers on demand, and absence of obsolete empty families across source, package, install, upgrade, and repeat. Include real file trees, not only Git-tracked paths.
+
+R-ASSET-PACK-2 (MUST): prove exact destination and link mapping for legacy system, archive, artifact, Library, and Playbook cohorts; collisions, changed inputs, interruption, recovery, and repeated verification; and CLI/manual equivalence. Reuse the R3 Store failure and no-local-state boundary. A drafting pass records known baseline test failures without changing runtime code or treating them as a pass.
+
+## Installed Legacy-Project Candidate Proof
+
+- R-LEGACY-CANDIDATE-1 (MUST): setup, Skills, Store, migration, backup, or recovery changes require one tarball candidate to be built after focused and full CLI tests pass. Record the tarball identity and digest. Install and test that exact tarball in isolated homes with the repository unavailable. A source checkout or a different global install is not candidate proof.
+- R-LEGACY-CANDIDATE-2 (MUST): the fixed candidate matrix includes a pre-v2 project with Skills disabled, old managed instruction blocks, an incomplete zero-step pending operation with equal ledgers and no active lock, a complete partial operation, verified backup and rollback, repeat setup, and full-setup versus `setup skills` interaction parity. Use separate Store roots and disposable project copies.
+- R-LEGACY-CANDIDATE-3 (MUST): the candidate gate records before and after project and Store inventories. It proves user-owned files remain unchanged, backup copies and their Store index are verified before destructive writes, recovery advice is executable, and failure detail survives process restart. It must not use the affected real project as the first candidate test.
+- R-LEGACY-CANDIDATE-4 (MUST): no release recommendation or real-project recovery can use the candidate until the fixed matrix and agent Human Experience Review pass. Human feedback is optional unless separate accepted authority creates a human gate. A later real-project action needs separate approval and a fresh read-only state check.
+- R-LEGACY-CANDIDATE-5 (MUST): setup, Store-access, or harness changes add a persistent package-manager install to the fixed matrix. Invoke the normal linked `make-docs` command, record its launch path and resolved package bin, and prove the verifier accepts only the exact bin declared by the active package manifest. Reinstalling the same link form is not a recovery action unless the failed condition changes.
+- R-LEGACY-CANDIDATE-6 (MUST): the matrix covers fresh, v1, early-v2, partial, invalid-option, interrupted, and repeated setup; Store not configured, unavailable, unsafe, denied, and configured; independent machine, project, Skills, and resource subplans; first-party and generic MCP; and one active-task access refresh and retry. Use one exact tarball with the repository unavailable.
+- R-LEGACY-CANDIDATE-7 (MUST): candidate construction and proof do not require the Make Docs Store, MCP, a harness receipt, or successful setup in the maintainer checkout. Use direct package commands, isolated homes, disposable projects, and temporary Store roots. A Store failure is evidence for the matrix, not a reason to stop remediation.
+
+- R-LEGACY-CANDIDATE-8 (MUST): checkout-move changes require an authentic published `@brucewaynedecoy/make-docs@2.0.5` seed. Record its registry or approved archive source, package identity and version, published integrity, local SHA-256, and the runtime and package-manager versions that created it. A cache is acceptable only when those facts prove the same released artifact. An unavailable or unverified artifact blocks authentic upgrade proof. Current-source fixtures and hand-written Store rows can support unit or fault tests, but cannot replace that gate.
+- R-LEGACY-CANDIDATE-9 (MUST): the seed installs a disposable `buildos` root and a separately installed `kits/make-blueprint` target with distinct project IDs. Save the seed project and Store before the candidate runs. Add user prefix and suffix text outside both root instruction blocks, then rename the parent to `make-kit`. Normal candidate setup must explain the moved install before fresh choices. Root approval must leave the kit record untouched. A separate kit review must retain that kit's identity. Compare project bytes, project and checkout IDs, ledger bytes, history identities, and selected bindings. A second run must propose no move or fresh install.
+- R-LEGACY-CANDIDATE-10 (MUST): move proof includes unchanged blocks with outside edits, changed blocks, strict invalid-marker cases, changed fully owned content, config comments and identity errors, ambiguous or live source records, recreated source paths, target claims, source changes after preview, pending work, locks, caller target-root limits, and atomic path/evidence/receipt crash and retry cases. Preview, status, dry-run, cancellation, missing approval, and refusal must leave durable project and Store facts unchanged. Compare logical durable state; permitted short-lived access leases do not justify a raw database-file checksum as the sole no-change test.
+- R-LEGACY-CANDIDATE-11 (MUST): version-1 evidence can transition only through independently saved ownership proof under PRDs 15, 18, and 38. Test missing per-block proof and unknown evidence/schema refusal without a blind baseline reset or implicit schema migration. Keep authentic schema-1 whole-file router proof. A further relocation attempted with released 2.0.5 must fail closed on unfamiliar move verification evidence without losing rows or history. This refusal case does not establish downgrade support or claim that an immutable old binary refuses ordinary operations at an already-bound path.
+- R-LEGACY-CANDIDATE-12 (MUST): development proof and final release proof are distinct. After development proof, the 2.0.6 candidate uses CLI package and CLI workspace lock metadata at `2.0.6`; the private root remains `0.0.0`. Do not change unrelated dependencies for a version bump. Run required final-tree checks, then build one final tarball. Its package metadata and installed `make-docs --version` must report `2.0.6`. Repeat the authentic moved-checkout case and the full fixed candidate matrix against that exact final artifact with the source repository unavailable. Earlier development proof cannot satisfy this gate.
+- R-LEGACY-CANDIDATE-13 (MUST): new move fixtures use task-scoped temporary roots, `MAKE_DOCS_HOME`, or the existing explicit platform test adapters. They must not change the operator's `HOME`, `home`, or `CODEX_HOME`, use the real Store, write real machine settings, or repair the affected live project. Required agent Human Experience Review inspects the actual installed flow and records per-promise evidence, observations, conclusions, reviewer, limits, and next actions. Guided Progress Review is advisory. Unassisted Goal Testing remains a separate decision under PRDs 46 and 50; no run or gate follows from a rename repair alone. No benchmark or broader performance claim follows from correctness proof.
+
+## Bundled First-Party Skill Proof
+
+R-SKILL-PACK-1 (MUST): the CLI build embeds all seven first-party Skills and every required registry-declared support file directly from `packages/skills/<name>/` in compiled output, under [PRD 08](08-skills-catalog-and-distribution.md). Packaging consumes compiled output without a separate replicated Skill tree under `packages/cli` or `packages/docs`, including ignored, temporary, or generated mirrors. Package construction rejects missing or unsafe source entries; missing or corrupt embedded bundles fail without fallback. Packed first-party resolution uses those bytes without a network fetch, sibling checkout, or fallback to an old remote source.
+
+R-SKILL-PACK-2 (MUST): test each Skill alone, the complete effective first-party set, and no Skills from an extracted package with the repository unavailable and network denied. Compare source and embedded build/archive/extracted byte/hash inventories with installed bytes. Inspect the actual disk under `packages`, including ignored, temporary, or generated paths and empty folders, and reject duplicate Skill trees or obsolete empty mirror roots. Compiled artifacts and genuine project/global CLI-installed copies remain allowed. Prove the existing project/global scopes and supported Codex/Claude symlink and copy exposure. No-selection installs create no Skill files.
+
+R-SKILL-PACK-3 (MUST): package proof covers old-source managed upgrades without remote fetch, edited-file conflicts, reviewed adoption with changed and missing known files, ownership-only adoption, blockers, stale reviews, repeat, removal, interruption, and Store recovery. Tests may not prove offline behavior through a warm remote cache or a development-source fallback.
+
+R-SKILL-PACK-4 (MUST): retain the tested package identity and observed results, including the real installed CLI proof owned by [PRD 09](09-dogfood-and-maintainer-operations.md). The same package must contain the selected `naive-uat` adapter from its canonical Skill source and preserve the stable shared-workflow boundary in [PRD 46](46-naive-end-user-acceptance-testing.md).
+
+## Core Platform Candidate Proof
+
+- R-PLATFORM-PROOF-1 (MUST): full core capability parity is the target on Windows, macOS, and Linux for Store bootstrap and migration, checkout bind and move, locks and stale recovery, atomic mutation and recovery, setup and repair, resource operations, CLI and machine-readable output, MCP, and each admitted harness method.
+- R-PLATFORM-PROOF-2 (MUST): one exact package candidate is installed and exercised on each real host with the source repository unavailable. Unit tests and simulated platform cases are required, but they are not real-host support proof.
+- R-PLATFORM-PROOF-3 (MUST): the capability matrix reports current proof. It cannot reduce target scope. A missing core host or capability is a defect, not `not applicable`, unless an owner approves a time-bounded exception that names the host, capability, human effect, reason, owner, repair phase, and measurable end condition.
+- R-PLATFORM-PROOF-4 (MUST): W22 cannot close with an unapproved core parity gap. Public support text and release checks use the same matrix. A host-specific harness method is allowed only when the external harness lacks that host, and the exception has direct evidence and owner approval.
+- R-PLATFORM-PROOF-5 (MUST): each host case records the package identity and digest, native path behavior, operation result, recovery result, CLI and MCP parity, and Store-free continuation after one unsupported or refused capability. Unsupported behavior stops before mutation and returns one typed result with one safe next action.
+
+- R-PLATFORM-PROOF-6 (MUST): checkout-move candidate proof extends the existing fixed matrix rather than replacing it. Exercise the exact final 2.0.6 digest on real Windows, macOS, and Linux hosts with source unavailable and Node.js 24. Record exact runtime and package-manager versions. Retain persistent package-manager link, no-scripts, full smoke, installed CLI/MCP, native path, recovery, and Store-free continuation cases. Simulated path tests and development artifacts do not replace these results. Report every unrun required case as blocked unless R-PLATFORM-PROOF-3 has a valid explicit exception.
+
+## Requirement History
+
+### 2026-09-18 — W22 R0
+
+- Affected requirement or section: `Validation Matrix`, `Installed Legacy-Project Candidate Proof`, and `Core Platform Candidate Proof`
+- Previous contract: Cross-platform fixtures and installed-package checks existed, but a proof matrix could still be mistaken for the supported target and real three-host core parity was not one release rule.
+- Replacement contract: Windows, macOS, and Linux core parity is mandatory, with one exact installed candidate on each real host and bounded owner-approved exceptions only.
+- Rationale: Missing evidence or difficult implementation cannot silently narrow the product's platform promise.
+- Source: [W22 recovery design](../designs/2026-09-18-store-architecture-recovery-and-platform-neutral-foundation.md) and [W22 plan](../plans/2026-09-18-w22-r0-store-architecture-recovery-and-platform-neutral-foundation/00-overview.md)
+
+### 2026-09-14 — W19 R6 P3
+
+- Affected requirement or section: package validation, release proof, and package exclusions.
+- Previous contract: Package and release checks could rely on dynamic support registries, lab scenarios, results, transcripts, and bootstrap assets as harness-support evidence.
+- Replacement contract: Each shipped static adapter method needs direct installed-package proof. Dynamic conformance and lab assets are excluded from templates and tarballs.
+- Rationale: Unit and package checks alone do not prove that a real installed harness can use a declared method.
+- Source: [P3 design](../designs/2026-09-14-static-harness-adapters-and-conformance-retirement.md) and [P3 plan](../plans/2026-09-12-w19-r6-unified-setup-and-harness-access/03-static-harness-adapters-and-conformance-retirement.md)
+
+### 2026-09-15 — W19 R7
+
+- Affected requirement or section: `Installed Legacy-Project Candidate Proof`
+- Previous contract: Package proof covered representative legacy migration, Skills, backup, rollback, and recovery, but it did not define one fixed installed-candidate matrix for the exact duplicate-interview and incomplete-plan failures.
+- Replacement contract: One identified tarball must pass the pre-v2, managed-block, recovery-state, backup, repeat, and interview-parity matrix in isolated homes before real-project use or release recommendation.
+- Rationale: The current package and global install matched, yet the installed path still presented a different interview and stranded a project behind invalid recovery advice.
+- Source: [W19 R7 design](../designs/2026-09-15-setup-interview-and-recovery-correction.md) and [plan](../plans/2026-09-15-w19-r7-setup-interview-and-recovery-correction/00-overview.md)
+
+### 2026-09-09 — W19 R5 Standard Skill Locations
+
+- Prior requirement: private Make Docs Skill payload roots or generic shared-root installation guidance.
+- Replacement: the scope/harness standard-location matrix and safe old-path upgrade in [PRD 28](28-shared-agentics-installation-and-harness-exposure.md).
+- Rationale: remove the coordinator's repeated private-layer assumption. Standard agent paths own files; the Store owns state.
+- Source: [R5 design](../designs/2026-09-09-first-party-skills-and-managed-adoption.md#standard-layout-correction).
+
+
+### 2026-08-08 — Not assigned
+
+- Affected requirement or section: `Consolidated capability ownership`
+- Previous contract: Current requirements were also represented by standalone editorial PRDs 19, 26.
+- Replacement contract: The applicable current requirements are inline in this authority and its linked product owners; the standalone editorial records are retired from the active set.
+- Rationale: Active PRDs own product subjects and do not preserve editorial operations as product authority.
+- Source: [PRD Authority Maintenance](../../.make-docs/system/references/prd-change-management.md)
+
+
+### 2026-08-08 — Not assigned
+
+- Affected requirement or section: `Cross-cutting capability annotations`
+- Previous contract: Later capability decisions were recorded as nested Change Notes that pointed to standalone editorial PRDs.
+- Replacement contract: Current requirements remain inline in this owning PRD and related product authorities are linked by product subject.
+- Rationale: The active PRD set must describe current product authority rather than the editorial operation that produced it.
+- Source: [PRD Authority Maintenance](../../.make-docs/system/references/prd-change-management.md)
+
+### 2026-09-09 — W19 R4 Asset and Persona Recovery
+
+- Affected requirement or section: `Asset Layout Package Acceptance` and current asset, bootstrap, migration, or storage statements in this owner.
+- Previous contract: Package proof named docs/artifacts/, a local manifest, local backup state, and bundled Store removal with machine uninstall. Prior dated records retain their historical claims.
+- Replacement contract: Shared material uses `docs/assets/project/`; audience assets use on-demand Persona children; archives remain `.make-docs/archive/`. Short routing exposes defaults and configured harness files without a CLI. Reviewed layout moves use the R3 Store service and verify content and links. Existing local-state prose is aligned with the completed R3 boundary.
+- Rationale: Finish the missed consolidation requirement and remove active instructions that can restore legacy paths. This is the W19 R4 draft implementation target, not a runtime completion claim.
+- Source: [asset and Persona design](../designs/2026-09-09-project-assets-and-persona-discovery.md); [W19 R4 plan](../plans/2026-09-09-w19-r4-project-assets-and-persona-discovery/00-overview.md).
+
+### 2026-09-09 — W19 R5
+
+- Affected requirement or section: `Packaging Surface; Bundled First-Party Skill Proof`
+- Previous contract: The package allowlist exposed registry metadata and the docs template, with external delivery for several first-party payloads and a UAT-only bundled exception.
+- Replacement contract: The CLI bundles the complete declared first-party Skill inventory and proves offline independent installation and managed lifecycle behavior.
+- Rationale: Package existence alone does not prove standalone or offline Skill delivery.
+- Source: [First-Party Skills and Managed Adoption design](../designs/2026-09-09-first-party-skills-and-managed-adoption.md) and [W19 R5 plan](../plans/2026-09-09-w19-r5-first-party-skills-and-managed-adoption/00-overview.md).
+
+### 2026-09-16 — W19 R8
+
+- Affected requirement or section: `Validation Matrix` and `Installed Legacy-Project Candidate Proof`
+- Previous contract: Package proof covered an extracted candidate and legacy recovery, but it did not require the normal persistent package-manager link, optional Store states, independent setup subplans, generic MCP, or a Store-independent remediation path.
+- Replacement contract: One exact tarball is installed through a normal package manager and invoked through its linked command with the repository unavailable. The fixed matrix covers all setup, Store, harness, mid-task, and recovery states. Candidate construction and proof never require the broken Store or MCP surface.
+- Rationale: The normal global launcher was rejected before its link resolved, while the public error told the user to reinstall the same package form.
+- Source: [W19 R8 design](../designs/2026-09-16-store-access-bootstrap-and-remediation.md) and [plan](../plans/2026-09-16-w19-r8-store-access-bootstrap-and-remediation/00-overview.md)
+
+### 2026-10-31 — W22 R1
+
+- Affected requirement or section: `Installed Legacy-Project Candidate Proof`, `Core Platform Candidate Proof`, and `Candidate Artifact and Publication Identity`.
+- Previous contract: One exact installed candidate, fixed legacy/setup/Store cases, full smoke, real-host parity, and required agent Human Experience Review were already required. The authentic released 2.0.5 move seed, final-version proof order, old-reader refusal case, and tested-to-staged artifact identity were not explicit.
+- Replacement contract: Preserve those existing gates. Add authenticated 2.0.5 seed provenance, separate development from final 2.0.6 proof, require ownership-preserving root/kit move and refusal cases, and carry one final artifact identity through host proof, staging, and public verification. Keep advisory feedback separate from agent review and publication authority.
+- Rationale: A helper test or rebuilt package must not substitute for the actual upgrade and released artifact. Outside user edits must remain outside Make Docs ownership. Missing required proof remains visible.
+- Source: [W22 R1 reviewed plan](../plans/2026-10-31-w22-r1-checkout-move-and-block-ownership/00-overview.md), [package proof](../plans/2026-10-31-w22-r1-checkout-move-and-block-ownership/03-tests-and-package-proof.md), [release preparation](../plans/2026-10-31-w22-r1-checkout-move-and-block-ownership/04-release-206.md), and [work queue](../work/2026-10-31-w22-r1-checkout-move-and-block-ownership/00-index.md).
+
+## Source Anchors
+
+- [W22 R1 checkout move and block ownership plan](../plans/2026-10-31-w22-r1-checkout-move-and-block-ownership/00-overview.md)
+- [W22 R1 work backlog](../work/2026-10-31-w22-r1-checkout-move-and-block-ownership/00-index.md)
+
+- [W19 R8 Store Access Bootstrap and Remediation](../designs/2026-09-16-store-access-bootstrap-and-remediation.md)
+- [W19 R8 plan](../plans/2026-09-16-w19-r8-store-access-bootstrap-and-remediation/00-overview.md)
+- [W19 R7 setup interview and recovery correction](../designs/2026-09-15-setup-interview-and-recovery-correction.md)
+- [W19 R7 plan](../plans/2026-09-15-w19-r7-setup-interview-and-recovery-correction/00-overview.md)
+- `docs/designs/2026-08-12-make-docs-v2-product-boundary-and-missing-migration-recovery.md`
+- `docs/plans/2026-08-13-w19-r1-make-docs-v2-product-boundary-and-missing-migration-recovery/00-overview.md`
+- [Accepted Performance Testing Guardrails design](../designs/2026-08-12-performance-testing-guardrails.md)
+- [W19 R2 Performance Evidence Governance plan](../plans/2026-08-13-w19-r2-performance-evidence-governance/00-overview.md)
+- [PRD 48 — Performance Evidence Governance](./48-performance-evidence-governance.md)
+- `package.json`
+- `README.md`
+- `packages/cli/package.json`
+- `packages/cli/README.md`
+- `packages/cli/src/README.md`
+- `packages/cli/src/utils.ts`
+- `packages/docs/package.json`
+- `packages/docs/README.md`
+- `packages/skills/package.json`
+- `packages/cli/tests/consistency.test.ts`
+- `scripts/check-instruction-routers.sh`
+- `scripts/check-wave-numbering.sh`
+- `scripts/copy-template-to-cli.mjs`
+- `scripts/smoke-pack.mjs`
+- `docs/designs/2026-04-15-cli-publishing.md`
+- `docs/assets/archive/work/2026-04-16-w5-r2-cli-skill-installation/07-tests-and-validation.md`
+- `docs/prd/22-project-documentation-asset-model.md`
+- `docs/prd/23-generated-document-metadata-and-lifecycle-handoffs.md`
+- `docs/prd/24-project-configuration-and-convention-overlay.md`
+- `docs/prd/25-typescript-runtime-cli-mcp-operation-boundaries.md`
+- `docs/prd/08-skills-catalog-and-distribution.md`
+- `docs/prd/28-shared-agentics-installation-and-harness-exposure.md`
+- `docs/prd/34-playbook-authoring-contract-and-model.md`
+- `docs/prd/30-plugin-substrate-and-workflow-bundles.md`
+- `docs/prd/14-lifecycle-workflow-and-coverage-passes.md`
+- `docs/prd/38-global-store-and-project-state.md`
+- `docs/prd/36-playbook-packaging-compiler-and-harness-adapters.md`
+- `docs/designs/2026-06-29-playbook-packaging-and-harness-adapter-registry.md`
+- `docs/plans/2026-06-29-w18-r5-playbook-packaging-and-harness-adapter-registry/00-overview.md`
+- `docs/designs/2026-06-20-cli-separation-and-mcp-boundary.md`
+- `docs/designs/2026-06-20-no-scripts-migration-and-skill-refactor.md`
+- `docs/designs/2026-06-20-skill-purpose-registry-and-alternate-skills-manifest.md`
+- `docs/designs/2026-06-20-shared-agentics-installation-and-harness-redirection.md`
+- `docs/designs/2026-06-20-playbook-contract-and-run-playbook.md`
+- `docs/designs/2026-06-27-run-playbook-orchestration-and-harness-capabilities.md`
+- `docs/designs/2026-06-20-harness-plugin-substrate-and-workflow-bundles.md`
+- `docs/designs/2026-06-20-coverage-pass-extensions-and-adversarial-review.md`
+- `docs/plans/2026-06-23-w10-r6-cli-separation-and-mcp-boundary/00-overview.md`
+- `docs/plans/2026-06-23-w16-r3-no-scripts-migration-skill-refactor/00-overview.md`
+- `docs/plans/2026-06-23-w17-r1-skill-purpose-registry-alternate-skills-manifest/00-overview.md`
+- `docs/plans/2026-06-23-w17-r2-shared-agentics-installation-harness-redirection/00-overview.md`
+- `docs/plans/2026-06-23-w18-r1-playbook-contract-run-playbook/00-overview.md`
+- `docs/plans/2026-06-27-w18-r4-run-playbook-orchestration-and-harness-capabilities/00-overview.md`
+- `docs/plans/2026-06-23-w18-r2-harness-plugin-substrate-workflow-bundles/00-overview.md`
+- `docs/plans/2026-06-23-w18-r3-coverage-pass-extensions-adversarial-review/00-overview.md`

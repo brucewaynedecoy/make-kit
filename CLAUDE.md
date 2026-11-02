@@ -8,7 +8,7 @@ This repository is the `make-kit` monorepo. Its folder may still be named `build
 | `packages/core/` | The shared core (planned for Step 0; not here yet) | Repo-wide docs |
 | `packages/kit/` | The `make-kit` setup tool (planned; not here yet) | Repo-wide docs |
 | `kits/make-blueprint/` | Make Blueprint, formerly BuildOS v2 | `kits/make-blueprint/CLAUDE.md` |
-| `kits/make-docs/` | Make Docs (copied in at Step 0; not here yet) | `kits/make-docs/CLAUDE.md` |
+| `kits/make-docs/` | Make Docs, copied from the `v2.0.6` tag | `kits/make-docs/CLAUDE.md` |
 
 Where to go:
 

@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "targetRoot": "<REPO_ROOT>",
+  "targetRootStatus": "valid",
+  "prdRoot": "<REPO_ROOT>/docs/prd",
+  "prdSetStatus": "present",
+  "prdFilesScanned": 35,
+  "markdownFilesScanned": 586,
+  "markdownSourceCoverage": {
+    "prd": 35,
+    "design": 59,
+    "plan": 239,
+    "work": 253,
+    "custom": 0,
+    "customPaths": []
+  },
+  "structuredFilesScanned": 0,
+  "linksScanned": 1103,
+  "diagnostics": []
+}

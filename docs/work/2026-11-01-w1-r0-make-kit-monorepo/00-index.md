@@ -65,7 +65,7 @@ Each phase names its owning PRDs and its exit criteria. A phase closes only when
 
 | Phase | Owning PRDs | Exit criteria |
 | --- | --- | --- |
-| 01 Copy Day | [02](../../prd/02-architecture-overview.md), [05](../../prd/05-kit-conventions.md), [08](../../prd/08-build-and-release.md) | `npm ci`, the build and all Make Docs tests pass at the root. `npm pack --dry-run` for `@brucewaynedecoy/make-docs` lists the same files as 2.0.6. `make-docs run prd authority validate --target-root kits/make-docs` exits 0. |
+| 01 Copy Day | [02](../../prd/02-architecture-overview.md), [05](../../prd/05-kit-conventions.md), [08](../../prd/08-build-and-release.md) | `npm ci`, the build and all Make Docs tests pass at the root. `npm pack --dry-run` for `@brucewaynedecoy/make-docs` lists the same files as 2.0.6 when the content-hash part of the hashed `dist/` file names is ignored ([R-008](../../prd/03-open-questions-and-risk-register.md#r-008-build-output-of-207-differs-from-206)). `make-docs run prd authority validate --target-root kits/make-docs` exits 0. |
 | 02 Go Public | [08](../../prd/08-build-and-release.md) | The scan report has no findings. Each old commit ID returns "No commit found" on GitHub. The repository is public with the rulesets on. |
 | 03 CI | [08](../../prd/08-build-and-release.md) | `make-docs-ci.yml` passes on Linux, macOS and Windows on a pull request. |
 | 04 Routing Check Baseline | [02](../../prd/02-architecture-overview.md) | `docs/assets/maintainer/routing-check/<date>-baseline.md` holds 9 tasks × 2 tools × 2 runs, each marked `pass` or `miss`. |
@@ -91,7 +91,7 @@ Each phase records the four testing decisions in its own file. Human Experience 
 
 No performance candidate exists for Step 0. The plan's [Performance Evidence Plan](../../plans/2026-11-01-w1-r0-make-kit-monorepo/00-overview.md#performance-evidence-plan) records none, so no phase records performance lifecycle fields.
 
-The central evidence report of this backlog is `evidence.md` in this folder. It does not exist yet. The first phase that retains evidence creates it and adds a link to it here. Phase 8 checks the link in `A808`.
+The central evidence report of this backlog is [evidence.md](evidence.md) in this folder. Phase 1 created it. Phase 8 checks the link in `A808`.
 
 ## Owner Gates
 
