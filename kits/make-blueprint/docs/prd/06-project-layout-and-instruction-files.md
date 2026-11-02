@@ -29,11 +29,12 @@ This document covers:
 - What each folder holds, who owns it, and when it is created.
 - System docs served by the CLI, and the optional local copy in `.make/blueprint/`.
 - Every router location and what each router says.
-- The managed-block rules in full: tags, placement, order, content in both instruction files, block hashes, conflicts, malformed tags and uninstall.
+- Make Blueprint's managed-block rules: tags, placement, order, content in both instruction files, block hashes, conflicts, malformed tags and uninstall.
 - The promise that user text in `AGENTS.md` and `CLAUDE.md` survives setup, update and uninstall of either tool.
 
 Covered elsewhere:
 
+- The block, router, project-folder and machine-folder rules for every kit: the root [05 Kit Conventions](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks).
 - The handoff line's content and when it appears: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
 - The `setup`, `update` and uninstall commands, their output, and agent-tool files such as skill folders and MCP config: [07 Installation and Distribution](07-installation-and-distribution.md).
 - The `resource` command surface and the `make-blueprint://system/<type>/<path>` scheme: [08 CLI and MCP](08-cli-and-mcp.md).
@@ -93,8 +94,8 @@ Code anchors:
 | --- | --- | --- | --- | --- |
 | `AGENTS.md`, `CLAUDE.md` | Root routers. Each present tool's block, and the person's own text | `setup`, or already present | v2.0 | Shared; each tool owns only its block |
 | `.make/` | One folder per ecosystem tool, the shared router, and the two files that every kit shares | `setup` | v2.0 | Shared |
-| `.make/config.yaml` | Choices that every kit shares: the selected agent tools, skill install choices and the optional project display `name` | The shared core, at the first kit's `setup` | v2.0 | Shared, written only by the core; see [Project Config](#project-config) and [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
-| `.make/personas.yaml` | People and roles for every kit, one entry per slug | The shared core | v2.0 | Shared, written only by the core; see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| `.make/config.yaml` | Choices that every kit shares: the selected agent tools, skill install choices and the optional project display `name` | The shared core, at the first kit's `setup` | v2.0 | Shared, written only by the core. The root [Project Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files) section owns the file. See [Project Config](#project-config). |
+| `.make/personas.yaml` | People and roles for every kit, one entry per slug | The shared core | v2.0 | Shared, written only by the core. The root [Project Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files) section owns the file. |
 | `.make/blueprint/` | Make Blueprint's project settings and its router | `setup` | v2.0 | Make Blueprint |
 | `.make/blueprint/config.yaml` | Make Blueprint's own declarative settings: the project ID, source and conversion settings, facets, review settings and the codes that the project adds to built-in code lists | `setup` | v2.0 | The project; see [Project Config](#project-config) |
 | `.make/blueprint/system/` | An optional local copy of system docs in four typed folders | Only when a person asks for a local copy | v2.0 | Make Blueprint |
@@ -116,8 +117,8 @@ Requirements:
 - v2.0 `setup` creates `.make/`, `.make/blueprint/` with its `config.yaml`, `blueprint/`, `blueprint/sources/`, `blueprint/records/` and `blueprint/exports/`, and the routers listed in [Routers](#routers). Through the shared core, it also writes the setup choices to `.make/config.yaml`.
 - v2.0 `setup` creates no `blueprint/runs/` or `blueprint/playbooks/` folder. Those arrive with v2.3.
 - Every folder that `setup` creates holds at least its router, so git keeps the folder in a fresh clone.
-- `.make/` and `.make/blueprint/` hold no operational state: no block hashes, locks, journals, receipts, installation records or index files.
-- Only the shared core writes `.make/config.yaml` and `.make/personas.yaml`. Make Blueprint reads them and never writes them itself.
+- `.make/` and `.make/blueprint/` hold no operational state: no block hashes, locks, journals, receipts, installation records or index files ([root Store Boundary](../../../../docs/prd/05-kit-conventions.md#store-boundary)).
+- The root [Project Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files) section sets the writer of `.make/config.yaml` and `.make/personas.yaml`. Make Blueprint reads them and never writes them itself.
 - Make Blueprint manages `blueprint/sources/.gitignore` and `blueprint/sources/.gitattributes`. [12 Source Intake and Conversion](12-source-intake-and-conversion.md) owns what they list.
 - Git tracks `blueprint/exports/`. Export output is deterministic, so an unchanged export adds no diff. The xlsx workbook is binary, so git shows that it changed but not what changed; the CSV files show the detail.
 - Make Blueprint writes nothing under `docs/`, `.make-docs/` or `.make/docs/`.
@@ -150,15 +151,14 @@ Code anchors:
 
 `~/.make/blueprint/` holds Make Blueprint's Store database and, beside it, the local index, write lock and write journal of each checkout. All of it is operational state only. The Store database keeps project identity, installation records such as managed-block hashes, hashes of MCP connection keys and records of tool operations. Each checkout's index is its own file beside the Store database, not inside it, so deleting or rebuilding an index touches no other Store state. [09 Storage and Indexing](09-storage-and-indexing.md) owns the index, lock and journal, keyed by the project ID in `.make/blueprint/config.yaml` and by checkout.
 
-The environment setting `MAKE_BLUEPRINT_HOME` moves this folder. When it is set, Make Blueprint uses the folder it names in place of `~/.make/blueprint/`, with the same layout inside. It works like the `MAKE_DOCS_HOME` setting of Make Docs.
+The environment setting `MAKE_BLUEPRINT_HOME` moves this folder, with the same layout inside. It is the `MAKE_<KIT>_HOME` setting of the root [Machine Folders](../../../../docs/prd/05-kit-conventions.md#machine-folders) section. When it is set, Make Blueprint creates nothing in `~/.make/blueprint/`.
 
 Requirements:
 
-- Make Blueprint keeps its own Store database in `~/.make/blueprint/` and shares nothing else in `~/.make/` with Make Docs.
+- Make Blueprint finds its Store root in the order of the root [Machine Folders](../../../../docs/prd/05-kit-conventions.md#machine-folders) section and its [Machine Folder Layout](../../../../docs/prd/05-kit-conventions.md#machine-folder-layout) table, on macOS, Windows and Linux, and the same relative layout applies. In a Make Blueprint machine path, `~` means the user data root of that section.
+- Make Blueprint keeps its own Store in `~/.make/blueprint/`, as the root rule of one Store for each kit states.
 - Make Blueprint creates `~/.make/blueprint/` the first time a command needs the Store.
 - Deleting the local index in `~/.make/blueprint/` loses no project knowledge. Make Blueprint rebuilds it from the project files.
-- On Windows, `~` means the user's profile folder, and the same relative layout applies.
-- When `MAKE_BLUEPRINT_HOME` is set, every read and write of machine state uses that folder, and Make Blueprint creates nothing in `~/.make/blueprint/`.
 
 Code anchors:
 
@@ -170,17 +170,15 @@ Code anchors:
 
 ### System Docs and Local Copy
 
-System docs are the contracts, templates, references and prompts that guide agents in Make Blueprint work. The CLI serves them through `make-blueprint resource read make-blueprint://system/<type>/<path>`, where `<type>` is `contract`, `template`, `reference` or `prompt`. A local copy in the project is optional, as in Make Docs.
+System docs are the contracts, templates, references and prompts that guide agents in Make Blueprint work. The CLI serves them through `make-blueprint resource read make-blueprint://system/<type>/<path>`. The root [System Resources and Project Records](../../../../docs/prd/05-kit-conventions.md#system-resources-and-project-records) section and its [Resource Identity](../../../../docs/prd/05-kit-conventions.md#resource-identity) tables own the URI form, the optional local copy and the four type folders.
 
 Requirements:
 
-- Every system doc is readable through the CLI and through MCP with no local copy in the project.
-- A local copy, when a person asks for one, lives in `.make/blueprint/system/` in the typed folders `contracts/`, `templates/`, `references/` and `prompts/`.
+- A local copy, when a person asks for one, lives in `.make/blueprint/system/`.
 - `setup` creates no local copy unless a person asks for one.
 - Make Blueprint reads a valid local copy first. A valid local copy is one that the installed version of Make Blueprint wrote and that no one has changed since.
 - A local file that a person changed, or that is not from the installed version, never replaces the served doc without a notice that names the file.
 - The version and hash of each local copy file live in the Store, not in the project.
-- Routers tell agents to read a system doc through the CLI when no valid local copy exists.
 
 Code anchors:
 
@@ -204,7 +202,7 @@ Make Blueprint writes routers in the project root, in `.make/`, in `.make/bluepr
 | `blueprint/runs/` | v2.3 | What run notes and evidence files hold |
 | `blueprint/playbooks/` | v2.3 | What playbooks hold |
 
-Each router location gets the instruction files for the agent tools selected at `setup`, which `.make/config.yaml` keeps for every kit: `CLAUDE.md` for Claude Code, and `AGENTS.md` for Codex and GitHub Copilot CLI, as in Make Docs. When both files exist in one location, Make Blueprint's block is the same in both.
+Each router location gets the instruction files for the agent tools selected at `setup`, which `.make/config.yaml` keeps for every kit. The root [Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) section owns the file name for each agent tool and the short-router budget. When both files exist in one location, Make Blueprint's block is the same in both.
 
 Requirements:
 
@@ -230,16 +228,15 @@ A person who writes their own text in `AGENTS.md` or `CLAUDE.md` keeps that text
 
 #### Tags and Placement
 
+The root [Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) section and its [Block Markers](../../../../docs/prd/05-kit-conventions.md#block-markers) table own the marker format, the rule of one block for each kit in a file, the rule that every byte outside the block stays the same, and the rule that no kit writes its block inside the block of another kit.
+
 Requirements:
 
-- Make Blueprint's block starts with the line `<!-- make-blueprint:begin -->` and ends with the line `<!-- make-blueprint:end -->`. Make Docs keeps `<!-- make-docs:begin -->` and `<!-- make-docs:end -->`. The tag name is the CLI name. Tags carry no attributes, and each tag sits on its own line.
-- A file holds at most one block for each tool.
+- Make Blueprint's block starts with the line `<!-- make-blueprint:begin -->` and ends with the line `<!-- make-blueprint:end -->`. Make Docs keeps `<!-- make-docs:begin -->` and `<!-- make-docs:end -->`. Tags carry no attributes, and each tag sits on its own line.
 - When a file has no Make Blueprint block, Make Blueprint adds the block at the bottom of the file, after all existing content, separated from it by one blank line.
 - When the file does not exist, Make Blueprint creates it with only its block.
-- When the block exists, Make Blueprint replaces only the text between its own tags. Every byte before the begin tag and after the end tag stays the same.
+- When the block exists, Make Blueprint replaces only the text between its own tags.
 - Blocks keep their existing order and position. Make Blueprint never moves its own block or another tool's block.
-- User text can sit above, between or below the blocks, and Make Blueprint keeps it in place.
-- Make Blueprint never writes its block inside another tool's block.
 - Make Blueprint writes its block with the line endings the file already uses.
 
 #### Same Content in Both Files
@@ -263,7 +260,7 @@ Requirements:
 
 #### Malformed Tags
 
-Make Blueprint's tags in a file are malformed when there is a begin tag without an end tag, an end tag without a begin tag, an end tag before its begin tag, more than one pair, or a pair inside another tool's block. The same rules apply to the Make Docs tags, `<!-- make-docs:begin -->` and `<!-- make-docs:end -->`, in any file that Make Blueprint will touch.
+The root [Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) section defines a malformed block and the stop before any change. Make Blueprint applies that rule to its own tags and to the Make Docs tags, `<!-- make-docs:begin -->` and `<!-- make-docs:end -->`, in any file that Make Blueprint will touch.
 
 Requirements:
 
@@ -275,10 +272,9 @@ Requirements:
 
 Requirements:
 
-- Project uninstall removes Make Blueprint's block, its tags included, from each instruction file that Make Blueprint manages, and changes nothing else in the file.
+- Project uninstall removes Make Blueprint's block from each instruction file that Make Blueprint manages, as the root [Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) rule for `setup remove` states.
 - When the block body matches its stored hash, uninstall removes it. When a person edited the block, uninstall asks whether to remove it or keep it. A run that cannot ask keeps the edited block and reports it.
 - After the block is gone, uninstall deletes the file only when nothing but whitespace is left. Otherwise it keeps the file, with every other byte unchanged.
-- Uninstall never removes or changes another tool's block, even in a file that Make Blueprint created.
 - On a file that held user text before `setup`, `setup` followed by uninstall, with no other change, leaves the file byte for byte as it was before `setup`. A file that `setup` created and that holds nothing else afterwards is deleted.
 - Uninstall removes the block hashes for the removed blocks from the Store.
 
@@ -341,7 +337,7 @@ The project config file is `.make/blueprint/config.yaml`, a YAML file like `.mak
 
 | Setting | Meaning | Owner |
 | --- | --- | --- |
-| Project ID | A random ID made at `setup`. It keys this project's state in the machine Store. | [09 Storage and Indexing](09-storage-and-indexing.md) |
+| `projectId` | The project ID: a random ID made at `setup`. It keys this project's state in the machine Store. The root [Project Config](../../../../docs/prd/05-kit-conventions.md#project-config) section sets the key name and the identity order, this key first and the Store next, and the root [Kit Settings](../../../../docs/prd/07-setup-tool-and-shared-files.md#kit-settings) section keeps it in the kit's own config. | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | `sources.git_level` | The project's source git level: `all` (the default), `converted` or `none`. A source can override it with its own `git_level` field. | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | `sources.lfs_threshold_mb` | The size in MB from which an original that git tracks goes through Git LFS. The default is `50`. | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | `conversion.table_csv_min_rows` | The size above which a table inside a document becomes its own CSV file. Work phase 05 sets the default. | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
@@ -353,14 +349,14 @@ The project config file is `.make/blueprint/config.yaml`, a YAML file like `.mak
 
 [11 Record Types Reference](11-record-types-reference.md) lists the built-in codes of each of these three lists. Each `lists.*` setting holds only the codes that the project adds, such as domain words for its own kinds of capability.
 
-Choices that every kit shares do not sit in this file. They sit in `.make/config.yaml`, which the shared core reads and writes, and Make Blueprint only reads. A kit set up later reads them, so earlier choices are already selected.
+Choices that every kit shares do not sit in this file. They sit in `.make/config.yaml`, and the root [Shared Choices Settings](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-choices-settings) table owns its settings. Make Blueprint only reads that file, and it uses these settings:
 
-| Setting in `.make/config.yaml` | Meaning | Owner |
+| Setting in `.make/config.yaml` | Make Blueprint use | Owner |
 | --- | --- | --- |
-| Setup choices | The selected agent tools and skill install choices, used by every kit | [07 Installation and Distribution](07-installation-and-distribution.md) |
-| `name` | An optional project display name. `project status` shows it, and exports use it in their titles. | [08 CLI and MCP](08-cli-and-mcp.md), [15 Exports](15-exports.md) |
+| Setup choices | `setup` preselects the selected agent tools and the skill install choices | [07 Installation and Distribution](07-installation-and-distribution.md) |
+| `name` | `project status` shows the optional project display name, and exports use it in their titles. | [08 CLI and MCP](08-cli-and-mcp.md), [15 Exports](15-exports.md) |
 
-People and roles for every kit sit in `.make/personas.yaml`. [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns its entry format, and [10 Records and Identity](10-records-and-identity.md) owns the checks on record fields that name its slugs.
+People and roles for every kit sit in `.make/personas.yaml`. The root [People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) section owns its entry format, and [10 Records and Identity](10-records-and-identity.md) owns the checks on record fields that name its slugs.
 
 ### Store Records for Instruction Files
 
@@ -378,7 +374,7 @@ Code anchors:
 ## Integrations
 
 - `packages/core` provides the layout, resource and managed-block code. Make Blueprint passes its tags, folder names and router text. See [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
-- Make Docs uses the same managed-block code with its own tags, so both tools keep user text the same way. Make Docs' adoption of the uninstall fix is a dependency listed in [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md).
+- Make Docs uses the same managed-block code with its own tags, so both tools keep user text the same way. Make Docs 2.2.0 is the first Make Docs release with the uninstall fix ([root Core Versions and the Exact Pin](../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin), [root D-030](../../../../docs/prd/03-open-questions-and-risk-register.md#d-030-setup-remove-keeps-the-kit-block)). [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md#make-docs-capabilities-make-blueprint-depends-on) lists it as a dependency.
 - [07 Installation and Distribution](07-installation-and-distribution.md) runs the layout and block rules during `setup` and `setup remove`, and owns their output. `update` updates only the installed tool and does not run them.
 - [08 CLI and MCP](08-cli-and-mcp.md) serves system docs and reports layout or block problems in the `project status` command.
 - [09 Storage and Indexing](09-storage-and-indexing.md) keys the index, lock and journal by the project ID in `.make/blueprint/config.yaml` and by checkout, and keeps them beside the Store database in `~/.make/blueprint/`.
@@ -392,11 +388,11 @@ Code anchors:
 
 - **Bytes, not lines.** Keep user text byte for byte: prefix, new block, suffix. Do not reformat, trim or re-wrap anything outside the block. The round-trip test compares bytes.
 - **The separator belongs to the block.** When the block goes at the bottom of a file, the blank line before it is part of what uninstall removes. Otherwise a setup and uninstall cycle leaves an extra blank line.
-- **Make Docs today keeps the whole file on uninstall.** The current Make Docs code keeps the whole file, its block included, when the file has user text. Its PRD 15 says uninstall removes a clean block. The core carries the fix for both tools.
+- **Make Docs today keeps the whole file on uninstall.** The current Make Docs code keeps the whole file, its block included, when the file has user text. Its PRD 15 says uninstall removes a clean block. The core carries the fix for both tools, and Make Docs 2.2.0 is the first Make Docs release with it ([root D-030](../../../../docs/prd/03-open-questions-and-risk-register.md#d-030-setup-remove-keeps-the-kit-block)).
 - **Make Docs PRD 15 says uninstall "prunes no shared instruction file".** Make Blueprint deletes a file only when nothing is left in it, which is not a shared file at that point. Keep that distinction exact.
 - **Never guess in a non-interactive run.** Agents run `setup` without a terminal. A silent overwrite of an edited block loses the person's text. Keep the local block and report.
 - **Two tools, one file.** Make Docs and Make Blueprint can write the same root file in one session. Re-check the file before writing, and write it in one step.
-- **Two layouts for Make Docs.** Do not assume `.make/docs/` exists. Before the Make Docs move, its folders are `.make-docs/` and `~/.make-docs/`.
+- **Two layouts for Make Docs.** Do not assume `.make/docs/` exists. Before the Make Docs move, its folders are `.make-docs/` and `~/.make-docs/`. The move has no release yet ([root D-033](../../../../docs/prd/03-open-questions-and-risk-register.md#d-033-make-docs-project-folder-name), [root D-037](../../../../docs/prd/03-open-questions-and-risk-register.md#d-037-make-docs-machine-folder-name)).
 - **No state in the project.** It is tempting to keep block hashes in a project file. Make Docs moved its own state out of the project into its Store. Keep Make Blueprint's in its Store from the start.
 
 Code anchors:
@@ -405,12 +401,23 @@ Code anchors:
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/uninstall.ts`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/docs/prd/15-agent-instruction-ownership-and-managed-blocks.md`
 
+## Requirement History
+
+### 2026-11-01 — W1 R2
+
+- Affected requirement or section: `Machine Tree`
+- Previous contract: On Windows, `~` meant the `USERPROFILE` folder of the user, and the Store root was `~/.make/blueprint/` below it.
+- Replacement contract: Make Blueprint finds its Store root in the order of the root [Machine Folders](../../../../docs/prd/05-kit-conventions.md#machine-folders) section. On Windows, the user data root is `LOCALAPPDATA`, then `APPDATA`, then the home folder.
+- Rationale: Every kit keeps its machine folder in the same place, so a person on Windows finds the Make Blueprint Store where every kit keeps its Store, and the core uses one user data root for every kit ([root Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)).
+- Source: [Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md)
+
 ## Source Anchors
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/01-shared-core.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/02-cli-and-packaging.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/managed-block.ts`

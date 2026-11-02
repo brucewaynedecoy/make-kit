@@ -195,7 +195,7 @@ Code anchors:
 
 | Party | How the server and UI relate to it |
 | --- | --- |
-| [08 CLI and MCP](08-cli-and-mcp.md) | `serve` is a top-level command beside `mcp`, outside the operation catalog, and the core reserves the name for both tools (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)). 08 owns its grammar and options. It also owns the names of view-model calls, the profile that holds them and their MCP App resources, and the shared filter syntax. The `core` profile, which holds reading, search and status, is the natural home. |
+| [08 CLI and MCP](08-cli-and-mcp.md) | `serve` is a top-level Make Blueprint command beside `mcp`, outside the operation catalog. The core reserves no command name (see root [06 Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)). 08 owns its grammar and options. It also owns the names of view-model calls, the profile that holds them and their MCP App resources, and the shared filter syntax. The `core` profile, which holds reading, search and status, is the natural home. |
 | [09 Storage and Indexing](09-storage-and-indexing.md) | Owns the shared write lock, the write journal and how the index learns about changed files. In setup C, the local server for each user reaches the shared database through the database backend. |
 | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) | The MCP server in `packages/core` serves MCP App resources, as it does for Make Docs' backlog review view. |
 | [07 Installation and Distribution](07-installation-and-distribution.md) | The compiled view files ship inside the npm package and the signed single file. The server needs no Node on a machine that runs the single file. |
@@ -241,5 +241,6 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/mcp/resource-profiles.ts`
 - [Claude Code mods overview](https://code.claude.com/docs/en/plugins/mods/overview.md)

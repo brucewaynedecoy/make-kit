@@ -60,7 +60,7 @@ In setup A (v2.0), nothing else runs. The CLI and MCP server read and write proj
 
   Beside it, when installed: make-docs CLI. project check calls its read
   command to confirm Make Docs work item IDs and doc paths, and skips
-  them with a count until that command ships (O-001).
+  them with a count until it uses the Make Docs 2.1.0 read command (O-001).
 ```
 
 In setup B (v2.2), each user can also start a small local server with `make-blueprint serve`. It serves the Svelte web app to a browser on the same machine. The MCP server serves the same views as MCP App views (HTML views that the MCP server serves and the agent tool shows). Both kinds of view get their data from view-model read calls: one CLI or MCP read call for each view that returns the rows and totals the view shows. Files stay the truth.
@@ -125,7 +125,7 @@ These modules live in `packages/core/` of the make-kit monorepo and reach Make B
 | Shared project files | Reading and writing `.make/config.yaml` and `.make/personas.yaml`, the files that every kit in a project shares | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
 | Update and uninstall | Shared `update` and `uninstall` behavior | [07 Installation and Distribution](07-installation-and-distribution.md) |
 
-[05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns the full contents of `packages/core` and its release line.
+Root [06 Shared Core](../../../../docs/prd/06-shared-core.md#component-and-capability-map) owns the full contents of `packages/core` and its release line. The Owner column names the Make Blueprint PRD that owns Make Blueprint's use of each module.
 
 ### Make Blueprint Modules
 
@@ -182,7 +182,7 @@ Code anchors:
 | Operations to storage | All record writes pass through the storage interface. A short lock guards `ref` minting and index updates. A change to many records writes a journal first, so the CLI can finish or undo it after a crash. | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | Project folder to machine Store | Project knowledge lives in the project folder. Operational state, such as managed-block hashes, lives in the machine Store under `~/.make/blueprint/`. | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md), [09 Storage and Indexing](09-storage-and-indexing.md) |
 | Hand edits | People may edit record files by hand. `project check` finds bad edits, ref clashes, broken links and links to changed sources. | [10 Records and Identity](10-records-and-identity.md) |
-| Make Blueprint to Make Docs | Make Blueprint calls `make-docs`, when it is installed, to confirm Make Docs links in `project check`. Until Make Docs ships the read command for this, `project check` skips these links and says how many. It changes only its own managed block and its own Store. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| Make Blueprint to Make Docs | Make Blueprint calls `make-docs`, when it is installed, to confirm Make Docs links in `project check`. Until `project check` uses the read command that Make Docs 2.1.0 ships for this, it skips these links and says how many. It changes only its own managed block and its own Store. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | Make Blueprint to `packages/core` | Make Blueprint pins one exact published core version. A core change ships in a core release from the make-kit monorepo first. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 
 Requirements:
@@ -297,8 +297,8 @@ Code anchors:
 
 | Surface | Location | What it holds | Tracked in git | Owner |
 | --- | --- | --- | --- | --- |
-| Shared project config | `.make/config.yaml` | Choices that every kit in the project shares, such as the selected agent tools, and the optional project display `name`. A kit set up later reads it, so earlier choices are already selected. The shared core writes it. | Yes | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| Shared people and roles | `.make/personas.yaml` | One entry for each person, team, organization, agent or role, with a slug, a name, a primitive (`user` or `maintainer`), a kind and the kits it is enabled for. Record fields such as `owners`, `stakeholders` and `audience` hold its slugs. The shared core writes it. | Yes | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md), [10 Records and Identity](10-records-and-identity.md) |
+| Shared project config | `.make/config.yaml` | Choices that every kit in the project shares, such as the selected agent tools, and the optional project display `name`. A kit set up later reads it, so earlier choices are already selected. The shared core writes it. | Yes | Root [07 Setup Tool and Shared Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files), [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
+| Shared people and roles | `.make/personas.yaml` | One entry for each person, team, organization, agent or role, with the fields that [root 07](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) names, including `slug`, `label` and `primitive` (`user` or `maintainer`). Record fields such as `owners`, `stakeholders` and `audience` hold its slugs. The shared core writes it. | Yes | Root [07 Setup Tool and Shared Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields), [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md), [10 Records and Identity](10-records-and-identity.md) |
 | Project config | `.make/blueprint/config.yaml` | Make Blueprint's own declarative project settings, including facet definitions (named value lists such as legal entity, release or scope), source settings such as `sources.git_level` and `sources.lfs_threshold_mb`, and review settings such as `review.second_reviewer` | Yes | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md), [10 Records and Identity](10-records-and-identity.md), [13 Extraction and Review](13-extraction-and-review.md) |
 | Machine Store | `~/.make/blueprint/`, or the folder that `MAKE_BLUEPRINT_HOME` names | Operational state such as managed-block hashes in the Store database, and, beside it, each checkout's local index, write lock and write journal | No | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md), [09 Storage and Indexing](09-storage-and-indexing.md) |
 | Instruction files and routers | `AGENTS.md` and `CLAUDE.md` in the project root, `.make/`, `.make/blueprint/`, `blueprint/` and each top sub-folder of `blueprint/` | Router guidance. Make Blueprint writes its content between `<!-- make-blueprint:begin -->` and `<!-- make-blueprint:end -->`. | Yes | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
@@ -338,6 +338,7 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/02-cli-and-packaging.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/03-storage-and-identity.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/08-mcp-skills-and-status.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/cli.ts`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/mcp/tools.ts`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/store/database.ts`

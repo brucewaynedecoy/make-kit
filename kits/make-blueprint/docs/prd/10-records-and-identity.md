@@ -143,7 +143,7 @@ Requirements:
 
 ### People and Role Slugs
 
-People and roles for every Make Kit tool live in one shared project file, `.make/personas.yaml`. The shared core reads and writes it, and Make Blueprint only reads it (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)). Each entry has a slug, which is its short unique name, and a primitive: `user` for people or agents that use the project, or `maintainer` for people or agents that build, operate, maintain or extend it.
+People and roles for every Make Kit tool live in one shared project file, `.make/personas.yaml`. The shared core reads and writes it, and Make Blueprint only reads it (see root [07 Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles)). Each entry has a slug, which is its short unique name, and a primitive: `user` for people or agents that use the project, or `maintainer` for people or agents that build, operate, maintain or extend it.
 
 Records name entries by slug:
 
@@ -491,8 +491,8 @@ Make Docs links:
 
 | Code | What it finds | Level | Rule owner |
 | --- | --- | --- | --- |
-| `make-docs-link` | A work item ID or doc path that the Make Docs read command cannot resolve. Reported only once that command ships and `make-docs` is installed. | Error | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
-| `make-docs-skipped` | Make Docs links were not checked, because Make Docs has not shipped its read command for work item IDs and doc paths, or because `make-docs` is not installed. Says how many links it skipped. | Information | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| `make-docs-link` | A work item ID or doc path that the Make Docs read command cannot resolve. Reported only after `project check` uses the read command that Make Docs 2.1.0 ships, and only when `make-docs` is installed. | Error | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| `make-docs-skipped` | Make Docs links were not checked, because `project check` does not yet use the read command that Make Docs 2.1.0 ships for work item IDs and doc paths, or because `make-docs` is not installed. Says how many links it skipped. | Information | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 
 People and roles (see [People and Role Slugs](#people-and-role-slugs)):
 
@@ -516,7 +516,7 @@ Requirements:
 - `project check` never changes a file. Fixes come from other commands, such as `run record ref-fix`, `run source convert`, `run compare next` and `setup`.
 - It reports every problem it finds in one run and does not stop at the first.
 - It works with no network connection.
-- Until Make Docs ships its read command that confirms work item IDs and doc paths, `project check` skips every Make Docs link on every record and reports `make-docs-skipped` once, with the number of links it skipped. This skip is a temporary workaround, tracked as obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check), and it is not the intended lasting behavior. Once the command ships, `project check` confirms each link through it when `make-docs` is installed, reports `make-docs-link` for a link it cannot resolve, and reports `make-docs-skipped` with the count only when `make-docs` is not installed (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)).
+- Make Docs 2.1.0 ships the read command that confirms work item IDs and doc paths ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)). Until `project check` uses that command, it skips every Make Docs link on every record and reports `make-docs-skipped` once, with the number of links it skipped. This skip is a temporary workaround, tracked as obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check), and it is not the intended lasting behavior. After `project check` starts to use the command, it confirms each link through the command when `make-docs` is installed, reports `make-docs-link` for a link it cannot resolve, and reports `make-docs-skipped` with the count only when `make-docs` is not installed (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)).
 - Each problem names the record by `ref` and title, its `id` and file path, the field when there is one, the problem in plain words, and the next useful action.
 - Machine output carries, for each problem, the code, the level, the record `id` and `ref`, the file path, the field and the next action.
 - A stage PRD that adds a check rule adds it under `type-rule` or a code listed here, so this catalog stays complete.
@@ -542,7 +542,7 @@ Code anchors:
 | Source intake | Anchors, table CSV files, source hashes, converter versions, git levels, link resolution and the missing state of files kept out of git | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | Extraction and review | Draft creation, the `draft` to `active` and `rejected` changes, pending changes and their review, the second reviewer and duplicate hints | [13 Extraction and Review](13-extraction-and-review.md) |
 | Fit-gap and placement | Merges that supersede records, required fit-gap evidence, requirement marks, `run compare next`, and the analysis rules reported as `type-rule` | [14 Fit-Gap and Placement](14-fit-gap-and-placement.md) |
-| Make Docs | Work item IDs and doc paths on any record. `project check` skips them, and says how many, until Make Docs ships its read command (obligation O-001); then it confirms them through that command when `make-docs` is installed. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| Make Docs | Work item IDs and doc paths on any record. `project check` skips them, and says how many, until it uses the read command that Make Docs 2.1.0 ships (obligation O-001); then it confirms them through that command when `make-docs` is installed. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | Shared core | `.make/personas.yaml`, which the slugs in `owners`, `stakeholders`, `audience`, a persona record's `slug`, and an extraction record's `extracted_by` and `reviewer` are checked against | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | v1 import | v1 IDs that become refs and aliases, ref clashes among imported rows, links with no anchor, and superseded rows with no successor | [17 v1 Import](17-v1-import.md) |
 | Exports | Facet values and evidence links as export columns | [15 Exports](15-exports.md) |
@@ -581,6 +581,7 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/04-record-types.md`
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md`
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/02-records-and-storage.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/build-os/system/.os/contracts/entity-records-contract.md`

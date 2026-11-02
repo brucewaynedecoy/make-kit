@@ -307,7 +307,7 @@ Requirements:
 - `run place link` stores work item IDs and doc paths on a placement or on an integration record. It writes them at once, also on an `active` record, with no pending change, because a Make Docs link is not a fact about a system.
 - A placement may hold several work item IDs and doc paths, and several placements may name the same work item.
 - A placement with no work item is valid. The coverage read lists active placements with no work item as waiting for hand-off.
-- `project check` skips stored work item IDs and doc paths and reports how many it skipped, until Make Docs ships the read command that confirms them (obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns the link format and the confirmation.
+- `project check` skips stored work item IDs and doc paths and reports how many it skipped, until it uses the read command that Make Docs 2.1.0 ships to confirm them ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command), obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns the link format and the confirmation.
 
 Code anchors:
 
@@ -513,7 +513,7 @@ Code anchors:
 | Exports | The comparison's export files, including the fit-gap detail, fit-gap requirements and placements CSV files, the summaries by verdict and by domain, and the workbook, are built from comparison, fit-gap, placement, capability, requirement and domain records | [15 Exports](15-exports.md) |
 | Skills | One skill each for the model, compare, place and hand-off stages. The compare skill follows the fit-gap method. The hand-off skill sends the agent to Make Docs to create work items. | [16 Workflow and Skills](16-workflow-and-skills.md) |
 | v1 import | BuildOS v1 has no comparison, fit-gap or placement records. Imported systems and capabilities need the model stage, such as status lists and domains, before a comparison. | [17 v1 Import](17-v1-import.md) |
-| Make Docs | Owns work items in `docs/work/` and the docs they point to. Make Blueprint stores only their IDs and paths. `project check` skips them and reports how many until the Make Docs read command ships (obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| Make Docs | Owns work items in `docs/work/` and the docs they point to. Make Blueprint stores only their IDs and paths. `project check` skips them and reports how many until it uses the read command that Make Docs 2.1.0 ships (obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | Local server and UI | v2.2 views of comparisons, fit-gap and placement records, each fed by one view-model read call | [18 Local Server and UI](18-local-server-and-ui.md) |
 
 Code anchors:

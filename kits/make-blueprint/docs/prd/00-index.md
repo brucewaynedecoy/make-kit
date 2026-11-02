@@ -18,7 +18,7 @@ source:
 
 This PRD set is the product contract for Make Blueprint, the product formerly named BuildOS. Make Blueprint helps people and agents turn client sources into trusted, traceable records about one or more systems, compare those systems capability by capability, place each capability with an owning system, and link that placement forward to planned work in Make Docs.
 
-The set describes the whole product. v2.0 is the current release scope, and Step 0 is its prerequisite. Step 0 is repo-wide work in the make-kit monorepo that pulls the shared core out into `packages/core/`, planned in the repo-wide plan. Capabilities for v2.2, v2.3 and v3 appear in their owning PRDs as planned scope or as current limitations.
+The set describes the whole product. The [root PRD set](../../../../docs/prd/00-index.md) owns the rules that every kit shares, and this set links to those rules. v2.0 is the current release scope, and Step 0 is its prerequisite. Step 0 is repo-wide work in the make-kit monorepo that pulls the shared core out into `packages/core/`, in the release order of the [root release scope](../../../../docs/prd/01-product-overview.md#release-scope). Capabilities for v2.2, v2.3 and v3 appear in their owning PRDs as planned scope or as current limitations.
 
 The set is for the two Personas, the `user` and `maintainer` entries in the shared people and roles file, `.make/personas.yaml`. A Persona is an audience role for this product: `user` for the people and agents who do client work with Make Blueprint, and `maintainer` for the people and agents who build, install, operate and upgrade it. See [Audience Paths](#audience-paths).
 
@@ -58,7 +58,7 @@ PRDs 05 to 08 set the ground that every later PRD builds on. PRDs 09 to 11 fix t
 | [02 Architecture Overview](02-architecture-overview.md) | `core` | `active` | v2.0, with v2.2 and v3 shown as planned | [01](01-product-overview.md), [05](05-ecosystem-and-shared-core.md), [09](09-storage-and-indexing.md) | Topology, module map and owners, runtime boundaries, data flow and configuration surfaces |
 | [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md) | `core` | `active` | All releases | Every PRD | Open questions, rebuild risks, drift between PRDs and deferred obligations, each with an owning PRD |
 | [04 Glossary](04-glossary.md) | `core` | `active` | All releases | Every PRD | Canonical terms, including the shared record vocabulary |
-| [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) | `subsystem` | `active` | Step 0 and v2.0, with the shared `.make/config.yaml` and `.make/personas.yaml` | [06](06-project-layout-and-instruction-files.md), [07](07-installation-and-distribution.md), [14](14-fit-gap-and-placement.md) | Separate-or-together rule, `packages/core` contents and pin, the shared setup choices and people and roles files, tool discovery, the handoff line, Make Docs links and backlog ownership |
+| [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) | `subsystem` | `active` | Step 0 and v2.0, with the shared `.make/config.yaml` and `.make/personas.yaml` | [06](06-project-layout-and-instruction-files.md), [07](07-installation-and-distribution.md), [14](14-fit-gap-and-placement.md) | Separate-or-together rule, Make Blueprint's use of the shared core and files, the handoff line, Make Docs links and backlog ownership |
 | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) | `subsystem` | `active` | v2.0; `blueprint/runs/` and `blueprint/playbooks/` in v2.3 | [05](05-ecosystem-and-shared-core.md), [07](07-installation-and-distribution.md), [09](09-storage-and-indexing.md) | Project tree, machine tree, system docs and local copy, routers, managed blocks, conflicts and the project config |
 | [07 Installation and Distribution](07-installation-and-distribution.md) | `subsystem` | `active` | v2.0 | [05](05-ecosystem-and-shared-core.md), [06](06-project-layout-and-instruction-files.md), [08](08-cli-and-mcp.md) | `setup`, agent-tool setup and skills install, tool and project update, project and tool uninstall, npm and signed single files, offline use, start-time characterization |
 | [08 CLI and MCP](08-cli-and-mcp.md) | `subsystem` | `active` | v2.0; `serve` and the `view` domain in v2.2 | [09](09-storage-and-indexing.md), [10](10-records-and-identity.md), [16](16-workflow-and-skills.md) | Command groups and catalog, human and machine output, outcomes, MCP profiles, `allowWrite`, filter syntax, read-only SQL, system resources and `project status` |
@@ -77,7 +77,7 @@ PRDs 05 to 08 set the ground that every later PRD builds on. PRDs 09 to 11 fix t
 
 ## Source Anchors
 
-The set traces to the Make Blueprint design, the repo-wide design and two plans. The Make Blueprint design is the authority for every decision, and the register records the owner's decisions in detail. The baseline plan fixed the PRD catalog, the work phases and the evidence for each human promise. The maintenance plan carries the owner's decisions into the set and fixes the scope of the first work backlog.
+The set traces to the Make Blueprint design, the repo-wide design and three plans. The Make Blueprint design is the authority for every decision, and the register records the owner's decisions in detail. The baseline plan fixed the PRD catalog, the work phases and the evidence for each human promise. The maintenance plan carries the owner's decisions into the set and fixes the scope of the first work backlog. The shared rule links plan points each rule that every kit shares to its one owner in the root PRD set.
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` ([Make Blueprint v2 Architecture](../designs/2026-10-29-make-blueprint-v2-architecture.md))
 - The repo-wide [Make Kit Monorepo](../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design, in the repository root's `docs/designs/` folder
@@ -85,6 +85,8 @@ The set traces to the Make Blueprint design, the repo-wide design and two plans.
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/01-shared-core.md` to `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/09-v1-import-and-release.md` (phase files, each naming its owning PRDs)
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md` ([Make Blueprint v2 Owner Decision Maintenance Plan](../plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md))
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/07-work-backlog-scope.md` (phase map of the first work backlog)
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md` ([Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md))
+- The root [Make Kit PRD Index](../../../../docs/prd/00-index.md), for the rules that every kit shares
 - `README.md`
 - `.make-docs/config.yaml` (effective Personas for this repository)
 

@@ -14,7 +14,7 @@ source:
 
 This phase makes Make Blueprint a user of the published shared core, `@brucewaynedecoy/make-core`, so it never carries its own copy of core behavior. It creates the Make Blueprint package, pins one exact core version, and builds the thin adapters that pass Make Blueprint's names, tags and content to the core's managed blocks, tool discovery, handoff line and shared project files.
 
-This phase builds no core code. It depends on repo-wide work outside this backlog, set out in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#11-order-of-work) design: Step 0, which pulls the core into `packages/core/` and runs Make Docs on it, and the next step, which builds the `make-kit` setup tool and the shared `.make/config.yaml` and `.make/personas.yaml` support in the core.
+This phase builds no core code. It depends on repo-wide work outside this backlog, set out in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#11-order-of-work) design and, for the release order, in [root 01 Release Scope](../../../../../docs/prd/01-product-overview.md#release-scope): Step 0, which pulls the core into `packages/core/` and runs Make Docs on it, and the next step, the setup tool wave, which builds the `make-kit` setup tool and the shared `.make/config.yaml` and `.make/personas.yaml` support in the core.
 
 ## Overview
 
@@ -55,7 +55,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 ## Source Obligations, Scenarios, And Findings
 
 - Obligations: none. This phase consumes no `O-###` record.
-- Risks this phase addresses: [R-001: Core Release Friction](../../prd/03-open-questions-and-risk-register.md#r-001-core-release-friction), [R-002: Two Core Versions in One Project](../../prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) and [R-003: Both Tools Write One Root File at Once](../../prd/03-open-questions-and-risk-register.md#r-003-both-tools-write-one-root-file-at-once).
+- Risks this phase addresses: [root R-001: Core Release Friction](../../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction), [root R-002: Two Core Versions in One Project](../../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) and [R-003: Both Tools Write One Root File at Once](../../prd/03-open-questions-and-risk-register.md#r-003-both-tools-write-one-root-file-at-once).
 - Decisions carried: [Q-002](../../prd/03-open-questions-and-risk-register.md#q-002-handoff-line-refresh-mechanism), [Q-005](../../prd/03-open-questions-and-risk-register.md#q-005-broken-tags-in-a-shared-instruction-file), [Q-013](../../prd/03-open-questions-and-risk-register.md#q-013-exact-core-version-pin), [Q-060](../../prd/03-open-questions-and-risk-register.md#q-060-shared-setup-choices-across-kits), [Q-072](../../prd/03-open-questions-and-risk-register.md#q-072-shared-people-and-roles-file) and [Q-084](../../prd/03-open-questions-and-risk-register.md#q-084-small-command-and-status-defaults-found-while-writing-the-work-backlog), for the fix that the missing-handoff fact names.
 - Scenarios: none.
 - Findings: none.
@@ -80,7 +80,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 
 ### Dependencies
 
-- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design: a published `@brucewaynedecoy/make-core` from `packages/core/`. Until it is published, work uses the workspace link and no release build passes the check in t3.
+- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design and [root 06 Shared Core, Core Versions and the Exact Pin](../../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin): a published `@brucewaynedecoy/make-core` from `packages/core/`. Until it is published, work uses the workspace link and no release build passes the check in t3.
 - No earlier phase in this backlog.
 
 ### Closeout Notes
@@ -91,7 +91,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 - Optional experience handoff: not applicable. No person-facing surface changes in this stage.
 - Explicit human acceptance gate: none.
 - Evidence report: the `A101` to `A105` section of `evidence.md` in this backlog folder. To be recorded at closeout.
-- Phase / capability status: to be recorded at closeout. Planned: the stage closes when `A101` to `A105` pass. R-001 stays open until the pinned core is published before v2.0 release work starts.
+- Phase / capability status: to be recorded at closeout. Planned: the stage closes when `A101` to `A105` pass. [Root R-001](../../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction) stays open until the pinned core is published before v2.0 release work starts.
 
 ## Stage 2 - Tool Identity and Make Docs Folder Guard
 
@@ -112,7 +112,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 ### Dependencies
 
 - Stage 1 of this phase.
-- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design: core parts that take each tool's identity as input.
+- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design and [root 06 Kit Names as Inputs](../../../../../docs/prd/06-shared-core.md#kit-names-as-inputs): core parts that take each tool's identity as input.
 
 ### Closeout Notes
 
@@ -153,7 +153,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 ### Dependencies
 
 - Stage 2 of this phase.
-- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design: the core's tag-aware managed-block part, with the uninstall fix that takes out only the calling tool's block.
+- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#4-shared-core) design and [root 06 Shared Core, Core Versions and the Exact Pin](../../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin): the core's tag-aware managed-block part, with the uninstall fix that takes out only the calling tool's block.
 
 ### Closeout Notes
 
@@ -187,7 +187,8 @@ Human Experience Review stays separate from these four testing types. In this ph
 ### Dependencies
 
 - Stage 3 of this phase.
-- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#11-order-of-work) design: core tool discovery and the refresh request. A Make Docs release on the core that writes its own handoff line and answers the request; until it ships, the too-old path in t23 applies.
+- Repo-wide Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#11-order-of-work) design: core tool discovery and the refresh request, in core 0.1.0 ([root 01 Release Scope](../../../../../docs/prd/01-product-overview.md#release-scope)).
+- A later Make Docs release on the core, with no release number yet, that writes its own handoff line and answers the refresh request. This release is not part of Step 0 ([root Q-007](../../../../../docs/prd/03-open-questions-and-risk-register.md#q-007-make-docs-changes-in-step-0)). Until it ships, the too-old path in t23 applies.
 
 ### Closeout Notes
 
@@ -204,7 +205,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 ### Tasks
 
 - [ ] t25: Read the shared choices in `.make/config.yaml` through the core: the selected agent tools, the skill install choices and the optional project display `name`. Return them to `setup` as preselected choices, and write a changed choice back only through the core's write call, for every kit (Q-060, D-011) ([06 Project Layout and Instruction Files](../../prd/06-project-layout-and-instruction-files.md#project-config)).
-- [ ] t26: Read `.make/personas.yaml` through the core's reader (Q-072). Each entry has a `slug`, a `name`, a primitive (`user` or `maintainer`), a kind (`person`, `team`, `organization` or `agent`) and its enabled kits, and the built-in `user` and `maintainer` entries stay implicit. Expose a lookup by slug for the slug checks in Phase 4 ([05 Ecosystem and Shared Core](../../prd/05-ecosystem-and-shared-core.md#shared-core)).
+- [ ] t26: Read `.make/personas.yaml` through the core's reader (Q-072). Each entry has the fields that root 07 names: `slug`, `label` (the display name), `description`, `primitive` (`user` or `maintainer`), `kind` (`person`, `team`, `organization` or `agent`) and `kits` (its enabled kits). An entry has no `name` field. The built-in `user` and `maintainer` entries stay implicit. Expose a lookup by slug for the slug checks in Phase 4 ([05 Ecosystem and Shared Core](../../prd/05-ecosystem-and-shared-core.md#shared-core); [root 07 People and Roles Entry Fields](../../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields)).
 - [ ] t27: Extend the write guard from t8 so that no Make Blueprint code writes `.make/config.yaml` or `.make/personas.yaml` itself; only the core's own write calls reach them ([06 Project Layout and Instruction Files](../../prd/06-project-layout-and-instruction-files.md#project-tree)).
 - [ ] t28: Map the core's refusal of a `.make/personas.yaml` write that would repeat a slug to a typed `blocked` fact that names the clashing slug and entry, for the approval in Phase 6 and the import in Phase 9 ([05 Ecosystem and Shared Core](../../prd/05-ecosystem-and-shared-core.md#shared-core)).
 - [ ] t29: Write the shared-choices test with two kits: a `.make/config.yaml` written through the core by another kit's setup fixture is read as preselected choices, a changed choice is written back through the core, and a second kit fixture reads the change ([05 Ecosystem and Shared Core](../../prd/05-ecosystem-and-shared-core.md#separate-or-together)).
@@ -222,7 +223,7 @@ Human Experience Review stays separate from these four testing types. In this ph
 ### Dependencies
 
 - Stage 2 of this phase for the write guard.
-- Repo-wide work after Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#6-shared-setup-choices) design: the core's reader and writer for `.make/config.yaml` and `.make/personas.yaml`, and the [`make-kit` setup tool](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#5-the-make-kit-setup-tool).
+- Repo-wide work after Step 0 in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#6-shared-setup-choices) design: the core's reader and writer for `.make/config.yaml` and `.make/personas.yaml`, and the [`make-kit` setup tool](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md#5-the-make-kit-setup-tool). Root 07 owns the shared files ([root 07 Shared Setup Choices](../../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices); [root 07 Shared People and Roles](../../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles)).
 
 ### Closeout Notes
 

@@ -257,7 +257,7 @@ Human Experience Review is separate agent review work, not a testing type. The a
 - Stage 3 of this phase for source and fit-gap records.
 - [Phase 3](03-storage-and-identity.md): name lookup for source refs and the check engine.
 - [Phase 5](05-intake-and-conversion.md) fills the `broken` and `unavailable` states and resolves anchors, which completes the evidence promise.
-- The Make Docs read command from the repo-wide Step 0 Make Docs changes, which O-001 waits on. This phase does not wait for it.
+- The Make Docs read command, which O-001 waits on. It ships in Make Docs 2.1.0, a release in the repo-wide Step 0 Make Docs changes ([root Q-020](../../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)). This phase does not wait for it. When Make Docs 2.1.0 is on `latest`, a later plan revision consumes O-001 before this phase closes ([Q-102](../../prd/03-open-questions-and-risk-register.md#q-102-when-o-001-closes)). Until that revision, t33 and A429 stay as they are.
 
 ### Closeout Notes
 
@@ -287,7 +287,7 @@ Human Experience Review is separate agent review work, not a testing type. The a
 - A431: `make-blueprint run record create --type capability` with a title and a system `ref` writes one file at `blueprint/records/capability/<id>.md` with `status: draft`, prints the new `ref` and title, and `--json` carries both `id` and `ref`. With `--dry-run`, the same call writes no file and lists the same change.
 - A432: `run record show CAP-118` on the fixture shows the capability's requirements as records that link to it, and shows each evidence link with its state, such as `old-version`, beside the link.
 - A433: `run record list --filter 'type:requirement status:draft' --limit 2` returns two results, the total count and `truncated: true` in `--json`.
-- A434: `run record update` on an `active` fixture record returns `blocked`, exit code 3, names the reason, and the record file is byte-identical afterward. On a `draft`, a change to `title` changes only the `title` and `updated_at` lines in the file diff.
+- A434: `run record update` on an `active` fixture record returns `blocked`, exit code 1, names the reason, and the record file is byte-identical afterward. On a `draft`, a change to `title` changes only the `title` and `updated_at` lines in the file diff.
 - A435: `run record supersede REQ-042 --by CAP-118` is refused because the types differ. `run record archive` on a `rejected` record is refused and the output says that `rejected` is an end state.
 - A436: `run record schema fit-gap` lists every fit-gap field from PRD 11 with its need and allowed values, and `run record schema capability` lists the built-in `capability_type` codes and the project's own codes.
 - A437: `project check` on the fixture project reports each planted fault with its expected code, and reports nothing on the valid records.

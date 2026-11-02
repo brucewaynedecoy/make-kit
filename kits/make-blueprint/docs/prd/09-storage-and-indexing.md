@@ -41,9 +41,9 @@ Other PRDs own these related topics:
 | The filter syntax, the read-only SQL command, the `run` verbs, output formats and the `status` read model | [08 CLI and MCP](08-cli-and-mcp.md) |
 | The `.make/blueprint/` and `blueprint/` folders, the machine Store folder, the project config file and the project ID | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
 | The `setup` and `update` commands as a whole | [07 Installation and Distribution](07-installation-and-distribution.md) |
-| The shared `.make/personas.yaml` file and the core code that writes it | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| The shared `.make/personas.yaml` file and the core code that writes it | Root [07 Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) |
 | Original files, converted text and anchors under `blueprint/sources/` | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
-| The Store base in `packages/core` | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| The Store base in `packages/core` | Root [06 Store Base and Schema Version 6](../../../../docs/prd/06-shared-core.md#store-base-and-schema-version-6) |
 | The local server and its views | [18 Local Server and UI](18-local-server-and-ui.md) |
 
 Code anchors:
@@ -230,7 +230,7 @@ The index is a SQLite database built with the built-in `node:sqlite` module. It 
 | Title, summary and body text | `search`, with one matching rule for duplicate hints, fit-gap candidates and the similar-capabilities check |
 | Problems: files that do not parse, with the reason | `project check` and `project status` |
 
-The index lives in the machine Store under `~/.make/blueprint/`, keyed by the project ID in the `.make/blueprint/` config and by checkout. Each checkout has its own index file, separate from the Store database, so that deleting or rebuilding it touches no other Store state. [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) owns the exact folder and any override of the Store location.
+The index lives in the machine Store under `~/.make/blueprint/`, keyed by the project ID in the `.make/blueprint/` config and by checkout. Each checkout has its own index file, separate from the Store database, so that deleting or rebuilding it touches no other Store state. [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) owns the exact folder and any override of the Store location, and the root [Machine Folders](../../../../docs/prd/05-kit-conventions.md#machine-folders) section owns the order in which every kit finds its Store root.
 
 Requirements:
 
@@ -380,11 +380,11 @@ Requirements:
 | CLI and MCP | Exposes queries, SQL, the rebuild command and the status read model | [08 CLI and MCP](08-cli-and-mcp.md) |
 | Installation and distribution | Calls `upgrade_schema` when `setup` runs again in a project. `update` never calls it. | [07 Installation and Distribution](07-installation-and-distribution.md) |
 | Project layout | Supplies the Store folder and the project ID | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| Shared core | Supplies the Store base. The index, lock, journal and record storage stay in Make Blueprint. | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| Shared core | Supplies the Store base. The index, lock, journal and record storage stay in Make Blueprint. | Root [06 Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary), with Make Blueprint's use in [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | Source intake | Writes source records through the interface. Original files and converted text under `blueprint/sources/` are not records. | [12 Source Intake and Conversion](12-source-intake-and-conversion.md) |
 | Extraction and review | Writes extraction and draft records, finds duplicate hints through `search`, and approves or rejects many drafts through `apply`, in batches | [13 Extraction and Review](13-extraction-and-review.md) |
 | Fit-gap and placement | Runs merges and `target-only` generation through `apply`, finds candidate matches and similar capabilities through `search`, and reads requirement marks and content versions for `run compare next` and the out-of-date check | [14 Fit-Gap and Placement](14-fit-gap-and-placement.md) |
-| Shared core | Adds a persona record's entry to `.make/personas.yaml` when review approves the record | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| Shared core | Adds a persona record's entry to `.make/personas.yaml` when review approves the record | Root [07 Make Blueprint Use](../../../../docs/prd/07-setup-tool-and-shared-files.md#make-blueprint-use), with the approval rule in [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md#shared-core) |
 | Exports | Reads records through the interface. Record writes never change exports. | [15 Exports](15-exports.md) |
 | v1 import | Writes a whole import as one journaled change | [17 v1 Import](17-v1-import.md) |
 | Local server and UI | Reads view models through the interface and shares the write lock | [18 Local Server and UI](18-local-server-and-ui.md) |
@@ -403,7 +403,7 @@ Code anchors:
 - **Timestamp conflicts.** Two branches that change different fields of the same record both change `updated_at`, so git reports a conflict on that line. Expect it and make it easy to resolve. [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md) tracks how.
 - **Freshness traps.** A git checkout or merge can change many files at once and can set modification times in ways that a simple size and time check misses, such as two edits in one second that keep the size. The freshness check must not trust size and time alone when they cannot prove a file is unchanged.
 - **Checkout, not project.** Two worktrees of one project share a project ID. Keying the index by project ID alone mixes their records.
-- **State outside the project.** Lock and journal files inside the project folder get committed by mistake. They live in the machine Store.
+- **State outside the project.** Lock and journal files inside the project folder get committed by mistake. They live in the machine Store ([root Store Boundary](../../../../docs/prd/05-kit-conventions.md#store-boundary)).
 - **Windows file replacement.** Replacing a file that another program has open can fail on Windows. Atomic writes need a short retry, and a failed replace must leave the old file whole.
 - **Interface leaks.** An interface that returns file paths, assumes git, or relies on a directory scan cannot take a database backend. The in-memory backend exists to catch these leaks early.
 - **Upgrade noise.** A normal write of a record on an older schema version also upgrades it, so that one diff shows the upgrade lines too. Running `setup` again after each tool `update` keeps later diffs clean. `update` changes only the tool, so it never upgrades records.
@@ -426,6 +426,7 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/03-storage-and-identity.md`
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md`
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/02-records-and-storage.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/store/README.md`

@@ -23,7 +23,7 @@ The PRDs are the authority. The plan fixed the scope and the phase map, but it i
 
 Out of scope: the ten deferred register items Q-050 to Q-056, Q-059, Q-074 and Q-075, and all v2.2, v2.3 and v3 scope. PRD 18 enters v2.0 only through the shared write lock in [Phase 3](03-storage-and-identity.md) and the reserved `serve` command in [Phase 2](02-cli-and-packaging.md).
 
-Phase 01 depends on repo-wide work outside this backlog: Step 0 and the `make-kit` setup tool work in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design. That work pulls the shared core into `packages/core/` and builds the shared `.make/config.yaml` and `.make/personas.yaml` support that this backlog adopts.
+Phase 01 depends on repo-wide work outside this backlog: Step 0 and the `make-kit` setup tool work in the [Make Kit Monorepo](../../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design. [Root 01 Release Scope](../../../../../docs/prd/01-product-overview.md#release-scope) gives the order of Step 0, the setup tool wave and Make Blueprint v2.0. That work pulls the shared core into `packages/core/` and builds the shared `.make/config.yaml` and `.make/personas.yaml` support that this backlog adopts.
 
 Read the phase files in order, from 01 to 09. Each phase file names its owning PRDs, its Human Experience outcome, its four testing decisions and its stages in dependency order. Task IDs start at `t1` in each file. Acceptance IDs take the form `A<phase><nn>`, such as `A301`, and are unique across the backlog.
 

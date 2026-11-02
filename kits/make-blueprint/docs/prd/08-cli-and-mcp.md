@@ -35,7 +35,8 @@ Covered elsewhere:
 | --- | --- |
 | What `setup`, `update` and `uninstall` do, skills install, and where each agent tool keeps its MCP config | [07 Installation and Distribution](07-installation-and-distribution.md) |
 | Where a local copy of system resources lives, routers and managed blocks | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| What `packages/core` holds, including the base code of the MCP server, profiles and resource reading | [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
+| The CLI and MCP rules for every kit: the top level, outcomes and exit codes, JSON output and dry run, write intent, the project target, the MCP server, its profiles and `allowWrite`, and system resources | Root [05 Kit Conventions](../../../../docs/prd/05-kit-conventions.md#purpose) |
+| What `packages/core` holds, including the base code of the MCP server, profiles and resource reading | Root [06 Shared Core](../../../../docs/prd/06-shared-core.md#core-boundary), with Make Blueprint's use in [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) |
 | The local index, its location and tables, locks, the write journal and record format versions | [09 Storage and Indexing](09-storage-and-indexing.md) |
 | What `project check` checks, ref clashes and ref fixes, evidence link rules and facets | [10 Records and Identity](10-records-and-identity.md) |
 | Fields and links for each record type | [11 Record Types Reference](11-record-types-reference.md) |
@@ -54,7 +55,7 @@ Code anchors:
 
 ### Command Groups
 
-The CLI has the same seven top-level groups as Make Docs. An operation is one unit of work with a stable ID, a typed input and a typed result. Operations live in one operation catalog, and both the CLI and the MCP server are built from it. `setup`, `mcp`, `update` and `uninstall` are lifecycle commands outside the catalog, as in Make Docs.
+The CLI has the seven top-level commands of the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section. An operation is one unit of work with a stable ID, a typed input and a typed result. Operations live in one operation catalog, and both the CLI and the MCP server are built from it. `setup`, `mcp`, `update` and `uninstall` are lifecycle commands outside the catalog, as in Make Docs.
 
 | Group | What it does | Typical commands | In the operation catalog | Detail owner |
 | --- | --- | --- | --- | --- |
@@ -66,15 +67,15 @@ The CLI has the same seven top-level groups as Make Docs. An operation is one un
 | `update` | Updates the installed tool only. It changes no project; running `setup` again brings a project to the installed version. | `make-blueprint update` | No, a lifecycle command | [07 Installation and Distribution](07-installation-and-distribution.md) |
 | `uninstall` | Takes the installed CLI off the machine. It never changes a project folder. | `make-blueprint uninstall` | No, a lifecycle command | [07 Installation and Distribution](07-installation-and-distribution.md) |
 
-The design's shorthand `make-blueprint check` and `make-blueprint status` mean `make-blueprint project check` and `make-blueprint project status`. The CLI has no top-level aliases for them. As in Make Docs, project uninstall is `setup remove` and tool uninstall is the top-level `uninstall`, so the two scopes cannot be confused.
+The design's shorthand `make-blueprint check` and `make-blueprint status` mean `make-blueprint project check` and `make-blueprint project status`. The CLI has no top-level aliases for them. Project uninstall is `setup remove` and tool uninstall is the top-level `uninstall`, as the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section states, so the two scopes cannot be confused.
 
 Requirements:
 
-- `make-blueprint --help` lists exactly the seven groups `setup`, `project`, `resource`, `run`, `mcp`, `update` and `uninstall` in v2.0.
+- In v2.0, `make-blueprint --help` lists the seven top-level commands of the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section: `setup`, `project`, `resource`, `run`, `mcp`, `update` and `uninstall`.
 - `make-blueprint run` with no domain lists the nine domains. `make-blueprint run <domain>` with no verb lists that domain's verbs, each with a one-line description.
 - Every command accepts `--help` and prints usage, options and at least one example. `--help` and `--version` work in any folder and need no project and no machine Store.
 - An unknown group, domain or verb returns the `failed` outcome, changes nothing, and names the closest valid command. For example, `make-blueprint status` names `make-blueprint project status`.
-- `make-blueprint` with no command, inside a project that is set up, prints the same output as `make-blueprint project status`. In a folder that is not set up, it says what Make Blueprint is and names `make-blueprint setup` as the next action. It never writes, so it never offers to start setup. [07 Installation and Distribution](07-installation-and-distribution.md) owns what `setup` does.
+- `make-blueprint` with no command follows the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) rules for the bare command ([Q-098](03-open-questions-and-risk-register.md#q-098-bare-command-with-no-install)). Inside a project that is set up, it prints the same output as `make-blueprint project status` and changes no file. In a folder that is not set up, on a TTY, it starts guided `setup`, which shows the full plan and asks before it writes. In a folder that is not set up, with no TTY, it says what Make Blueprint is, names `make-blueprint setup` as the next action, writes nothing and exits 0. [07 Installation and Distribution](07-installation-and-distribution.md) owns what `setup` does.
 
 Code anchors:
 
@@ -221,7 +222,7 @@ Behavior owner: [15 Exports](15-exports.md), which defines the three export scop
 | --- | --- | --- | --- | --- |
 | `run import v1 <v1-project> [--apply]` | Imports one BuildOS v1 project. Without `--apply` it is a dry run that writes nothing. | write | `import_v1` | `setup` |
 
-Behavior owner: [17 v1 Import](17-v1-import.md). `<v1-project>` must be the current project folder, the one that holds `.make/blueprint/`, because the import writes into the v1 project folder itself, beside the v1 files, and a person runs `setup` there first. The command refuses any other folder. `run import v1` is the one preview-first command in v2.0: its default is the dry-run report, and `--apply` performs the write. The MCP tool takes `apply: true` for the write, and that call also needs `allowWrite: true`.
+Behavior owner: [17 v1 Import](17-v1-import.md). `<v1-project>` must be the current project folder, the one that holds `.make/blueprint/`, because the import writes into the v1 project folder itself, beside the v1 files, and a person runs `setup` there first. The command refuses any other folder. `run import v1` is the one preview-first command in v2.0: its default is the dry-run report, and `--apply` performs the write. The root [CLI Write Intent](../../../../docs/prd/05-kit-conventions.md#cli-write-intent) section allows this preview-first form, with `--apply` as its flag. The MCP tool takes `apply: true` for the write, and that call also needs `allowWrite: true`.
 
 #### Lifecycle Commands
 
@@ -229,18 +230,20 @@ These commands sit outside the operation catalog. [07 Installation and Distribut
 
 | Command | What it does | Main flags | MCP |
 | --- | --- | --- | --- |
-| `setup` | Installs Make Blueprint in the current project, or, run again, brings it to the installed version: blocks, routers, skills, handoff lines, record upgrades and new folders | `--agent <claude-code,codex,copilot-cli>` for the agent tools, which defaults to the choices in `.make/config.yaml`, `--scope <project,machine>` for skills and MCP entries, `--mcp-profile <name>` for the entry's profile, `--generic-mcp-client <label>` to print an entry for another MCP client, `--dry-run` to preview, `--yes` to approve a fully specified plan with no terminal, `--json` | `setup_plan` returns the same plan as `setup --dry-run --json` |
-| `setup remove` | Project uninstall: takes Make Blueprint's blocks, routers, skills and MCP entries out of one project and keeps all project knowledge | `--dry-run`, `--yes`, `--json` | None |
+| `setup` | Installs Make Blueprint in the current project, or, run again, brings it to the installed version: blocks, routers, skills, handoff lines, record upgrades and new folders | `--agent <claude-code,codex,copilot-cli>` for the agent tools, which defaults to the choices in `.make/config.yaml`, `--scope <project,machine>` for skills and MCP entries, `--mcp-profile <name>` for the entry's profile, `--generic-mcp-client <label>` to print an entry for another MCP client, `--dry-run` to preview, `--yes` to approve a fully specified plan with no terminal, `--target-root <path>`, `--json` | `setup_plan` returns the same plan as `setup --dry-run --json` |
+| `setup remove` | Project uninstall: takes Make Blueprint's blocks, routers, skills and MCP entries out of one project and keeps all project knowledge | `--dry-run`, `--yes`, `--target-root <path>`, `--json` | None |
 | `update` | Tool update only. It changes no project. | `--dry-run`, `--yes`, `--json` | None |
-| `uninstall` | Tool uninstall: takes the installed CLI off the machine and never touches a project | `--remove-store` to also remove `~/.make/blueprint/`, `--yes`, `--json` | None |
+| `uninstall` | Tool uninstall: takes the installed CLI off the machine and never touches a project | `--remove-store` to also remove `~/.make/blueprint/`, `--dry-run` to report what it would remove and remove nothing, `--yes`, `--json` | None |
 | `mcp` | Starts the stdio MCP server | `--profile <name>` | Not applicable |
+
+The root [Flags and Tool Inputs](../../../../docs/prd/05-kit-conventions.md#flags-and-tool-inputs) table, with the root [JSON Output and Dry Run](../../../../docs/prd/05-kit-conventions.md#json-output-and-dry-run) and [Project Target](../../../../docs/prd/05-kit-conventions.md#project-target) sections, owns the flags that every kit shares.
 
 Common options:
 
 | Option | Applies to | Meaning |
 | --- | --- | --- |
 | `--json` | Every command | Print the full machine result. See [Human and Machine Output](#human-and-machine-output). |
-| `--target-root <path>` | Every catalog command | The project root. The default is the nearest folder, from the current folder upward, that holds `.make/blueprint/`. |
+| `--target-root <path>` | Every command that acts on a project: every catalog command, `setup` and `setup remove` | The project root. The default is the nearest folder, from the current folder upward, that holds `.make/blueprint/`. This is the root project-target search for the kit's project config. |
 | `--dry-run` | Every write command | Report exactly what would change and write nothing |
 | `--filter <expr>` | `run record list`, `run source list`, `run review list`, `project check` | Select records with the [Filter Syntax](#filter-syntax). The option can repeat, and every term from every `--filter` must match. |
 | `--sort <field>` and `--limit <n>` | `run record list` | Order and count the results. A leading `-` sorts in descending order, as in `--sort -updated_at`. |
@@ -278,9 +281,9 @@ Every command produces one result. The CLI shows it in one of two forms. Human o
 
 Requirements:
 
-- When standard output is a terminal (a TTY), the default is human output. With `--json`, or when standard output is not a terminal, the CLI prints machine output. This follows Make Docs.
+- The CLI chooses human output or machine output by the root [JSON Output and Dry Run](../../../../docs/prd/05-kit-conventions.md#json-output-and-dry-run) rule for `--json` and a standard output that is not a TTY.
 - Human output and machine output for the same input carry the same outcome, the same changes, the same problems and the same next action.
-- With `--json`, standard output holds exactly one JSON document. Progress and diagnostic text go to standard error.
+- With `--json`, the CLI prints exactly one JSON document: on standard output for a `success`, `partial` or `blocked` result, and on standard error for a `failed` result (see [Outcomes and Exit Codes](#outcomes-and-exit-codes)). Progress and diagnostic text go to standard error.
 - Human output names records by `ref` and title. Machine output carries both `id` and `ref` for every record it names.
 - Human output leads with the outcome and what changed, then any problems, then the next action. It describes problems in terms of the person's work. Words for internal parts, such as index, lock, journal or hash, appear only in diagnostic detail or in an error that needs a person's decision.
 - Paths in every output are project-relative and use `/` on macOS, Windows and Linux.
@@ -301,10 +304,10 @@ Every result has exactly one of four outcomes. The outcome tells a person or an 
 | --- | --- | --- | --- |
 | `success` | The command did everything it was asked. Any problems it lists are warnings. | 0 | Normal result |
 | `partial` | The command finished, but some items were not done or have errors. Each such item is named, with its next action. | 1 | Normal result |
-| `blocked` | The command stopped before changing anything, because a person's decision or another command must come first. The blocker and the command that clears it are named. | 3 | Normal result |
-| `failed` | The command could not run: bad input, an unknown record, an unreadable file or an internal fault. Nothing changed, or the change was undone. | 2 | Error flag set |
+| `blocked` | The command stopped before changing anything, because a person's decision or another command must come first. The blocker and the command that clears it are named. | 1 | Normal result |
+| `failed` | The command could not run: bad input, an unknown record, an unreadable file or an internal fault. Nothing changed, or the change was undone. | 2 when the command could not start its work: a flag or an argument that is not valid, an unknown record, or a file that cannot be read. 1 for an internal fault. | Error flag set |
 
-Codes 0, 1 and 2 match Make Docs' path-hygiene check: 0 for clean, 1 for findings, 2 for input or file errors.
+The exit codes follow the root [Exit-Code Table](../../../../docs/prd/05-kit-conventions.md#exit-code-table) ([Q-096](03-open-questions-and-risk-register.md#q-096-exit-codes-follow-the-root-table)). The root [Outcomes and Exit Codes](../../../../docs/prd/05-kit-conventions.md#outcomes-and-exit-codes) section owns the streams: a machine-readable result goes to standard output, and a machine-readable error goes to standard error. On the CLI, a `failed` result is that error, in the root [Result and Error Shapes](../../../../docs/prd/05-kit-conventions.md#result-and-error-shapes), with the fields of the [Result Envelope](#result-envelope) beside `ok`, `code` and `message`.
 
 Examples:
 
@@ -329,7 +332,7 @@ Code anchors:
 
 ### MCP Server and Profiles
 
-`make-blueprint mcp [--profile <name>]` starts one stdio MCP server. A profile filters which tools a client sees, so each agent session gets a short tool list. The default profile is `all`. The server code and profile system come from `packages/core`; this PRD owns Make Blueprint's tool set and profile assignments.
+`make-blueprint mcp [--profile <name>]` starts one stdio MCP server. A profile filters which tools a client sees, so each agent session gets a short tool list. The root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) and [MCP Profiles and Write Permission](../../../../docs/prd/05-kit-conventions.md#mcp-profiles-and-write-permission) sections own the default profile `all`, the stop on an unknown profile, the rule that a profile filters tools and never grants access, and the stdio transport. The server code and profile system come from `packages/core` ([root Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)). This PRD owns Make Blueprint's tool set and profile assignments.
 
 | Profile | Tools for | Command families |
 | --- | --- | --- |
@@ -346,14 +349,13 @@ MCP tool names are snake_case and come from the operation ID by one rule: replac
 
 Requirements:
 
-- `make-blueprint mcp` with no profile serves every tool. `--profile` accepts only `core`, `setup`, `intake`, `extract`, `analyze` and `all`. Any other value stops the server before it starts, with exit code 2 and a list of the allowed profiles.
+- `--profile` accepts only `core`, `setup`, `intake`, `extract`, `analyze` and `all`. Another value is an input error, with exit code 2.
 - Every tool belongs to at least one of the five intent profiles. `all` is exactly the union of the five, with no extra tools. Tests fail when a tool has no profile.
 - A tool in several profiles has one name, one input schema, one description and one behavior in all of them.
-- A tool outside the active profile is not listed, and a call to it returns an unknown-tool error.
 - Every tool title starts with "Make Blueprint", so an agent that also has the Make Docs server can tell tools such as the two `project_status` tools apart.
 - Read tools carry the MCP read-only hint. Write tools do not.
 - A `failed` outcome sets the MCP error flag. `success`, `partial` and `blocked` results do not.
-- The server talks only over stdio and opens no network port. It writes only protocol messages to standard output; logs go to standard error.
+- The server opens no network port. It writes only protocol messages to standard output; logs go to standard error.
 - The server also lists and reads system resources as native MCP resources, in every profile, through the same resolver as `resource list` and `resource read`.
 
 Code anchors:
@@ -365,15 +367,15 @@ Code anchors:
 
 ### Write Permission (`allowWrite`)
 
-Every MCP tool of kind `write` takes a boolean argument, `allowWrite`. The agent must set it to `true` on each call that should change something. This gives the agent tool and the person a clear point to approve writes, like Make Docs.
+Every MCP tool of kind `write` takes a boolean argument, `allowWrite`, as the root [MCP Profiles and Write Permission](../../../../docs/prd/05-kit-conventions.md#mcp-profiles-and-write-permission) section states. The agent must set it to `true` on each call that should change something.
 
 Requirements:
 
-- The input schema of every write tool includes `allowWrite`. Read tools and `derived` tools do not.
+- Read tools and `derived` tools take no `allowWrite`.
 - A write tool called without `allowWrite: true` changes nothing and returns `blocked` with the code `write-not-allowed`. The result says which argument to set and what the call would have changed.
 - A write tool called with `dryRun: true` needs no `allowWrite`. It returns the changes it would make and writes nothing.
 - `allowWrite` covers only the call that carries it. The server keeps no write session between calls.
-- The CLI has no `allowWrite` flag. A person who runs a write command intends the write, and `--dry-run` previews it. `run import v1` is preview-first, as stated in the catalog.
+- The CLI has no `allowWrite` flag. The command that a person runs is the write intent, as the root [CLI Write Intent](../../../../docs/prd/05-kit-conventions.md#cli-write-intent) section states, and `--dry-run` previews it. `run import v1` is preview-first, as the catalog states and as the root rule for preview-first write commands allows ([Q-097](03-open-questions-and-risk-register.md#q-097-preview-first-write-commands)).
 
 Code anchors:
 
@@ -382,24 +384,23 @@ Code anchors:
 
 ### Agent-Tool Registration
 
-`setup` writes one MCP server entry for each selected agent tool, following the Make Docs pattern. Each entry starts `make-blueprint mcp` and passes a connection ID and a connection key in its environment. The connection ID names one reviewed connection between one agent tool and Make Blueprint. The connection key proves that the caller is that connection.
+`setup` writes one MCP server entry for each selected agent tool, by the rules of the root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) section. Each entry starts `make-blueprint mcp` and passes a connection ID and a connection key in its environment. The connection ID names one reviewed connection between one agent tool and Make Blueprint. The connection key proves that the caller is that connection.
 
 | Agent tool | Entry | Shape |
 | --- | --- | --- |
-| Codex | TOML table `[mcp_servers.make_blueprint]` | `command`, `args = ["mcp"]`, and a `[mcp_servers.make_blueprint.env]` table with both connection variables |
-| Claude Code | JSON key `mcpServers.make-blueprint` | `command`, `args: ["mcp"]`, and `env` with both connection variables |
-| GitHub Copilot CLI | JSON key `mcpServers.make-blueprint` | `type: "local"`, `command`, `args: ["mcp"]`, `env` with both connection variables, and `tools: ["*"]` |
+| Codex | TOML table `[mcp_servers.make-blueprint]` | `command`, `args = ["mcp", "--profile", "<name>"]`, and a `[mcp_servers.make-blueprint.env]` table with both connection variables |
+| Claude Code | JSON key `mcpServers.make-blueprint` | `command`, `args: ["mcp", "--profile", "<name>"]`, and `env` with both connection variables |
+| GitHub Copilot CLI | JSON key `mcpServers.make-blueprint` | `type: "local"`, `command`, `args: ["mcp", "--profile", "<name>"]`, `env` with both connection variables, and `tools: ["*"]` |
 | Another MCP client | Printed by `setup` for the person to copy | The same `command`, `args` and `env` |
 
-The connection variables are `MAKE_BLUEPRINT_MCP_CONNECTION_ID` and `MAKE_BLUEPRINT_MCP_CONNECTION_KEY`. When a person picks a profile for an agent tool, the entry's arguments become `["mcp", "--profile", "<name>"]`.
+The entry name is `make-blueprint` in every agent tool. The connection variables are `MAKE_BLUEPRINT_MCP_CONNECTION_ID` and `MAKE_BLUEPRINT_MCP_CONNECTION_KEY`. Every entry runs `["mcp", "--profile", "<name>"]`, and `setup` writes `all` as the name when the person picks no profile.
 
 Requirements:
 
-- The connection ID is a random UUID. The connection key holds at least 256 random bits.
-- The machine Store under `~/.make/blueprint/` keeps only the SHA-256 hash of the key, with the connection ID, the agent tool and whether the connection is active. The key itself lives only in the agent tool's own config.
+- The connection ID is a random UUID. The root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) section owns the form of the connection key, the key hash in the machine config and the constant-time key check.
+- The machine Store under `~/.make/blueprint/` keeps the key hash with the connection ID, the agent tool and whether the connection is active. The key itself lives only in the agent tool's own config.
 - `setup` output, logs and Store records show the key as a redacted value. The one exception is the entry printed for another MCP client, which the person must copy.
 - When the server is started without a recognized connection ID and key, tools that need the machine Store return `blocked` with the code `connection-not-recognized` and name `make-blueprint setup` as the fix. `resource_list` and `resource_read` still work. The server does not crash.
-- The key check compares hashes in constant time.
 - A person who runs the CLI directly needs no connection key.
 - [07 Installation and Distribution](07-installation-and-distribution.md) owns the setup flow that writes and takes out these entries, and where each agent tool keeps its config.
 
@@ -488,7 +489,7 @@ Code anchors:
 
 ### System Resources
 
-Make Blueprint serves its system docs (contracts, templates, references and prompts) from inside the CLI, so a project needs no copy of them. Each resource has a stable URI in the scheme `make-blueprint://system/<type>/<path>`, where `<type>` is `contract`, `template`, `reference` or `prompt`, and `<path>` is a relative POSIX path. Examples are `make-blueprint://system/reference/filter-syntax.md` and `make-blueprint://system/template/requirement.md`. The subject PRDs own what each resource says.
+Make Blueprint serves its system docs (contracts, templates, references and prompts) from inside the CLI, so a project needs no copy of them. Each resource has a stable URI in the scheme `make-blueprint://system/<type>/<path>`. The root [System Resources and Project Records](../../../../docs/prd/05-kit-conventions.md#system-resources-and-project-records) section and its [Resource Identity](../../../../docs/prd/05-kit-conventions.md#resource-identity) tables own the URI form, the four types, the origins and the URI families. Examples are `make-blueprint://system/reference/filter-syntax.md` and `make-blueprint://system/template/requirement.md`. The subject PRDs own what each resource says.
 
 `resource read` reads a valid local copy first, when the project has one, and otherwise reads the copy built into the installed CLI. `resource ensure` writes a local copy of one resource. [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) owns where local copies live (`.make/blueprint/system/`).
 
@@ -645,7 +646,7 @@ In v2.1, the `run package` domain makes and takes in system packages. [20 System
 Requirements:
 
 - v2.0 has no `package` domain. The name is reserved: `make-blueprint run package` in v2.0 returns `failed` and says system packages come in v2.1.
-- `package_make` and `package_add` are dry runs by default. A write needs both `apply: true` and `allowWrite`, as `import_v1` does.
+- `package_make` and `package_add` are dry runs by default. A write needs both `apply: true` and `allowWrite`, as `import_v1` does. `run package make` and `run package add` are preview-first commands, as the root [CLI Write Intent](../../../../docs/prd/05-kit-conventions.md#cli-write-intent) section allows.
 
 Code anchors:
 
@@ -655,7 +656,7 @@ Code anchors:
 
 In v2.2, a person starts the local server for setup B, and later setup C, with the `serve` command. [18 Local Server and UI](18-local-server-and-ui.md) owns what the server does.
 
-`make-blueprint serve` is a top-level lifecycle command beside `mcp`. Like `mcp`, it starts a long-running process, and a per-user server in setups B and C is not tied to one project folder. It sits outside the operation catalog and has no MCP tool. The shared core reserves the name `serve` for both tools, so the seven shared groups keep their Make Docs meaning, and Make Docs can take the same command from the core if it ever needs a server (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)).
+`make-blueprint serve` is a top-level lifecycle command beside `mcp`. Like `mcp`, it starts a long-running process, and a per-user server in setups B and C is not tied to one project folder. It sits outside the operation catalog and has no MCP tool. `serve` is a Make Blueprint command, and the core reserves no command name ([root Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)). The root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section lets a kit add one top-level lifecycle command that starts a long-running process ([Q-101](03-open-questions-and-risk-register.md#q-101-long-running-lifecycle-command)).
 
 Requirements:
 
@@ -676,7 +677,7 @@ In v2.2, each UI view gets its data from one view-model read call. [18 Local Ser
 | CLI | `make-blueprint run view <view> [--filter <expr>] [--sort <field>] [--limit <n>] [--page <n>]` | `make-blueprint run view fit-gap --filter 'comparison:CMP-001 verdict:gap'` |
 | Operation ID | `view.<view>` | `view.fit-gap` |
 | MCP tool | `view_<view>`, in the `core` profile | `view_fit_gap` |
-| MCP App resource | `ui://make-blueprint/<view>/v<N>.html`, versioned like Make Docs' MCP App views | `ui://make-blueprint/fit-gap/v1.html` |
+| MCP App resource | `ui://make-blueprint/<view>/v<N>.html`, in the `ui://<kit-cli>/` family of the root [Resource Identity](../../../../docs/prd/05-kit-conventions.md#resource-identity) tables, versioned like Make Docs' MCP App views | `ui://make-blueprint/fit-gap/v1.html` |
 
 Requirements:
 
@@ -697,9 +698,9 @@ Each catalog operation declares these facts. The CLI command, the MCP tool and t
 
 | Fact | Rule | Example |
 | --- | --- | --- |
-| Operation ID | `<domain>.<verb>` in lowercase, dot-separated, with hyphens inside multiword verbs. It stays stable and is never reused for another operation. | `compare.target-only` |
+| Operation ID | `<domain>.<verb>`. The root [Run Command Paths](../../../../docs/prd/05-kit-conventions.md#run-command-paths) section owns the identifier form and the rule that identifiers are stable and append-only. | `compare.target-only` |
 | CLI command | `project <verb>` or `resource <verb>` for those groups, and `run <domain> <verb>` for the nine run domains | `run compare target-only` |
-| MCP tool name | The operation ID with each `.` and `-` replaced by `_` | `compare_target_only` |
+| MCP tool name | The operation ID with each `.` and `-` replaced by `_`, which keeps the verb. This rule gives the one name map that the root [Run Command Paths](../../../../docs/prd/05-kit-conventions.md#run-command-paths) section asks for. | `compare_target_only` |
 | Kind | `read`, `derived` or `write` | `write` |
 | Profiles | One or more of `core`, `setup`, `intake`, `extract`, `analyze` | `analyze` |
 | Input schema | Typed arguments shared by the CLI and MCP | `comparison` |
@@ -712,6 +713,7 @@ Every result, from the CLI or MCP, carries these fields. Envelope field names us
 
 | Field | Holds |
 | --- | --- |
+| `ok` | `true` for `success`, `partial` and `blocked`, and `false` for `failed`, as in the root [Result and Error Shapes](../../../../docs/prd/05-kit-conventions.md#result-and-error-shapes). An MCP result of a `failed` call has no `ok` field and sets the MCP error flag. |
 | `resultVersion` | The version of the envelope shape |
 | `operation` | The operation ID, such as `project.status` |
 | `outcome` | `success`, `partial`, `blocked` or `failed` |
@@ -722,7 +724,7 @@ Every result, from the CLI or MCP, carries these fields. Envelope field names us
 | `nextAction` | A plain sentence, the reason, the exact CLI command, and the MCP tool name with its arguments |
 | `data` | The operation's own result |
 
-Problem codes are stable kebab-case strings. Each subject PRD names the codes for its checks, such as a ref clash or a broken link. This PRD names the surface codes: `unknown-command`, `unknown-record`, `ambiguous-ref`, `write-not-allowed`, `connection-not-recognized`, `not-set-up`, `unknown-filter-key`, `unknown-filter-value`, `sql-not-read-only` and `unknown-resource`. The envelope is published as a reference resource, so agents and tests can check results against it.
+Problem codes are stable kebab-case strings. Each subject PRD names the codes for its checks, such as a ref clash or a broken link. This PRD names the surface codes: `unknown-command`, `unknown-record`, `ambiguous-ref`, `write-not-allowed`, `connection-not-recognized`, `not-set-up`, `unknown-filter-key`, `unknown-filter-value`, `sql-not-read-only` and `unknown-resource`. A `failed` result also carries `code`, the code of the problem that stopped the command, and `message`, as the root error shape needs. The envelope is published as a reference resource, so agents and tests can check results against it.
 
 ### Filter Grammar
 
@@ -750,13 +752,15 @@ The `data` part of the `project.status` result holds one object for each section
 
 ### MCP Server Entry
 
+These examples show the profile `all`, which `setup` writes when the person picks no profile.
+
 Codex, in TOML:
 
 ```toml
-[mcp_servers.make_blueprint]
+[mcp_servers.make-blueprint]
 command = "<path-to-make-blueprint>"
-args = ["mcp"]
-[mcp_servers.make_blueprint.env]
+args = ["mcp", "--profile", "all"]
+[mcp_servers.make-blueprint.env]
 MAKE_BLUEPRINT_MCP_CONNECTION_ID = "<connection-id>"
 MAKE_BLUEPRINT_MCP_CONNECTION_KEY = "<connection-key>"
 ```
@@ -768,7 +772,7 @@ Claude Code, in JSON:
   "mcpServers": {
     "make-blueprint": {
       "command": "<path-to-make-blueprint>",
-      "args": ["mcp"],
+      "args": ["mcp", "--profile", "all"],
       "env": {
         "MAKE_BLUEPRINT_MCP_CONNECTION_ID": "<connection-id>",
         "MAKE_BLUEPRINT_MCP_CONNECTION_KEY": "<connection-key>"
@@ -781,6 +785,8 @@ Claude Code, in JSON:
 GitHub Copilot CLI uses the same JSON entry with `"type": "local"` and `"tools": ["*"]` added. The Store record for each connection holds the connection ID, the agent tool, whether it is active and the SHA-256 hash of the key.
 
 ### Resource URI
+
+The root [Resource Identity](../../../../docs/prd/05-kit-conventions.md#resource-identity) tables own this form for every kit.
 
 ```text
 make-blueprint://system/<type>/<path>
@@ -799,13 +805,14 @@ Code anchors:
 
 | Party | How this subsystem connects |
 | --- | --- |
-| `packages/core` | Provides the MCP server base, the profile system, resource reading, the Store base and agent-tool setup. Make Blueprint passes its own CLI name, tool names, profiles and URI scheme. See [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md). |
+| Root [05 Kit Conventions](../../../../docs/prd/05-kit-conventions.md#purpose) | Owns the CLI and MCP rules for every kit. This PRD states the Make Blueprint commands, tools, profiles and output detail that follow those rules. |
+| `packages/core` | Provides the MCP server base, the profile system, resource reading, the Store base and agent-tool setup, as the root [Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary) section states. Make Blueprint passes its own CLI name, tool names, profiles and URI scheme. See [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md). |
 | Agent tools | Claude Code, Codex and GitHub Copilot CLI start `make-blueprint mcp` from the entry that `setup` writes, or run CLI commands in a shell. See [07 Installation and Distribution](07-installation-and-distribution.md). |
 | Storage and index | Every write command goes through the storage interface, its lock and its journal. Filters, SQL and status read the derived index. In every file setup, each checkout has one write lock, shared by the CLI, the MCP server and the local server, which setup B adds. See [09 Storage and Indexing](09-storage-and-indexing.md). |
 | Records and checks | `project check` runs the checks that [10 Records and Identity](10-records-and-identity.md) defines, and record arguments resolve `id`, `ref` and aliases by its rules. |
 | Workflow PRDs | Each `run` domain's verbs behave as their subject PRD defines: [12 Source Intake and Conversion](12-source-intake-and-conversion.md), [13 Extraction and Review](13-extraction-and-review.md), [14 Fit-Gap and Placement](14-fit-gap-and-placement.md), [15 Exports](15-exports.md) and [17 v1 Import](17-v1-import.md). |
 | Stage skills | Each stage skill starts from `project status`, calls the commands of its stage, and points to resources by URI. Skills ship no scripts. See [16 Workflow and Skills](16-workflow-and-skills.md). |
-| Make Docs | `project check` confirms work item IDs and doc paths through one Make Docs read command, as [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) defines. Until that command ships, and whenever `make-docs` is not installed, it skips Make Docs links and reports how many it skipped. The skip is temporary and is tracked as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). Creating or changing work items stays a Make Docs job. Both servers can sit in one agent tool, and some tool names, such as `project_status` and `resource_read`, exist on both; tool titles and the server name tell them apart. |
+| Make Docs | `project check` confirms work item IDs and doc paths through one Make Docs read command, as [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) defines. Make Docs 2.1.0 ships that command ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)). Until `project check` uses that command, and whenever `make-docs` is not installed, it skips Make Docs links and reports how many it skipped. The skip is temporary and is tracked as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). Creating or changing work items stays a Make Docs job. Both servers can sit in one agent tool, and some tool names, such as `project_status` and `resource_read`, exist on both; tool titles and the server name tell them apart. |
 | Local server and UI (v2.2) | `serve` starts the local server. Each view gets its data from one `run view` call (see [View-Model Calls (v2.2)](#view-model-calls-v22)), and [18 Local Server and UI](18-local-server-and-ui.md) names the views. MCP App views are served as `ui://make-blueprint/` resources by the same MCP server. |
 | Later record types (v2.3) | Test case, run, result and playbook records use the `run record` verbs. Any stage verbs they need join this catalog with the v2.3 design. |
 
@@ -836,12 +843,39 @@ Code anchors:
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/mcp/tools.ts` (`verifyDerivedMcpToolParity`)
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/mcp-connection.ts` (`matchMcpConnection`)
 
+## Requirement History
+
+### 2026-11-01 — W1 R2
+
+- Affected requirement or section: `Agent-Tool Registration`
+- Previous contract: The Codex entry was the TOML table `[mcp_servers.make_blueprint]`. Every entry ran `["mcp"]`, and its arguments became `["mcp", "--profile", "<name>"]` only when the person picked a profile.
+- Replacement contract: The entry name is `make-blueprint` in every agent tool, Codex included. Every entry runs `["mcp", "--profile", "<name>"]`, and `setup` writes `all` when the person picks no profile.
+- Rationale: The root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) rule gives every kit one entry name and one argument form in every agent tool ([root D-025](../../../../docs/prd/03-open-questions-and-risk-register.md#d-025-agent-tool-entry-name-has-two-spellings), [root D-027](../../../../docs/prd/03-open-questions-and-risk-register.md#d-027-agent-tool-entries-always-run-profile-all)). A TOML bare key can hold `-`, so `[mcp_servers.make-blueprint]` is valid TOML.
+- Source: [Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md)
+
+### 2026-11-01 — W1 R2
+
+- Affected requirement or section: `Outcomes and Exit Codes`
+- Previous contract: `success` exited 0, `partial` 1, `failed` 2 and `blocked` 3 ([Q-010](03-open-questions-and-risk-register.md#q-010-exit-codes)). The result envelope had no `ok` field.
+- Replacement contract: The exit codes follow the root [Exit-Code Table](../../../../docs/prd/05-kit-conventions.md#exit-code-table): `success` 0; `partial` and `blocked` 1; `failed` 2 when the command could not start its work and 1 for an internal fault. The envelope has `ok`, and a `failed` result on the CLI uses the root error shape on standard error.
+- Rationale: A script that runs two kits reads one exit-code table. Skills read the `outcome` field, so a separate code for `blocked` adds little ([Q-096](03-open-questions-and-risk-register.md#q-096-exit-codes-follow-the-root-table)).
+- Source: [Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md)
+
+### 2026-11-01 — W1 R2
+
+- Affected requirement or section: `Command Groups`
+- Previous contract: Bare `make-blueprint` in a folder that is not set up named `make-blueprint setup`, never wrote and never offered to start setup.
+- Replacement contract: On a TTY, bare `make-blueprint` in a folder that is not set up starts guided `setup`, which shows the full plan and asks before it writes. With no TTY, it prints a hint that names `make-blueprint setup` and exits 0.
+- Rationale: A person who knows Make Docs gets the same first step from every kit, as the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section states ([Q-098](03-open-questions-and-risk-register.md#q-098-bare-command-with-no-install)).
+- Source: [Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md)
+
 ## Source Anchors
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/02-cli-and-packaging.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/08-mcp-skills-and-status.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/cli.ts`

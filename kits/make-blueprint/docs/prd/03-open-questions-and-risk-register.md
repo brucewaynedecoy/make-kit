@@ -194,7 +194,7 @@ Each item is a place where two PRDs in this set disagree. When the owning PRDs a
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Closed | An optional project `name` in the shared `.make/config.yaml` | Owner: [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) for the project config, with the mapping in [17 v1 Import](17-v1-import.md). Done in W1 R1. |
+| Closed | An optional project `name` in the shared `.make/config.yaml` | Owner: root [07 Setup Tool and Shared Files, Shared Choices Settings](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-choices-settings) for the `name` setting, [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) for its Make Blueprint use, with the mapping in [17 v1 Import](17-v1-import.md). Done in W1 R1. |
 
 **Issue**: 17 writes v1 `instance.name` as "the project's display name in project settings" and counts it as one of four stated defaults. The [Project Config](06-project-layout-and-instruction-files.md#project-config) table in 06 has no display name setting, so the value has no home.
 
@@ -407,6 +407,8 @@ Questions are in the order they block the work backlog. Items near the top block
 **To close**: The owner confirms.
 
 **Resolution**: Owner accepted on 2026-10-30: 0 success, 1 partial, 2 failed, 3 blocked; skills read the `outcome` field.
+
+**Update (2026-11-01)**: Make Blueprint follows the [root 05 Exit-Code Table](../../../../docs/prd/05-kit-conventions.md#exit-code-table) in place of the 0, 1, 2, 3 mapping above ([Q-096](#q-096-exit-codes-follow-the-root-table)). Skills still read the `outcome` field of the result.
 
 ### Q-011 Source Tree Folders
 
@@ -1054,6 +1056,8 @@ Reason: the git diff shows exactly what changed, no link breaks, and a record ch
 
 **Resolution**: Owner accepted on 2026-10-30.
 
+**Update (2026-11-01)**: The core reserves no command name ([root 06 Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)). `serve` stays a top-level Make Blueprint command beside `mcp`, which [08 CLI and MCP](08-cli-and-mcp.md#the-serve-command-v22) and [18 Local Server and UI](18-local-server-and-ui.md) own. [Q-101](#q-101-long-running-lifecycle-command) records that `serve` is an eighth top-level command.
+
 ### Q-050 Bringing a Record Back From an End State
 
 | Status | Decision | Follow-Up |
@@ -1230,7 +1234,7 @@ Code anchors:
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Closed | Kits share `.make/config.yaml` for common choices | Done in W1 R1 for 05, 06 and 07; the core work belongs to the repo-wide plan. |
+| Closed | Kits share `.make/config.yaml` for common choices | Done in W1 R1 for 05, 06 and 07. Root [07 Setup Tool and Shared Files, Shared Setup Choices](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices) owns the file rules. |
 
 **Question**: When Make Docs, Make Blueprint or another kit is set up in a project after another kit, how does it know the choices already made, such as the selected agent tools?
 
@@ -1436,7 +1440,7 @@ Owner addendum on 2026-10-30:
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Closed | One shared `.make/personas.yaml` for every kit, written by the core and read by each kit | Owner: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) for the shared file, [10 Records and Identity](10-records-and-identity.md) for checks, [11 Record Types Reference](11-record-types-reference.md) for persona records, with the import in [17 v1 Import](17-v1-import.md). The Make Docs Persona move belongs to the repo-wide plan in the [Make Kit Monorepo](../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design. Done in W1 R1. The open details are [Q-077](#q-077-shared-people-and-roles-file-details). |
+| Closed | One shared `.make/personas.yaml` for every kit, written by the core and read by each kit | Owner: root [07 Setup Tool and Shared Files, Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) for the shared file, and root [07 People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) for its fields. [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) keeps Make Blueprint's use of the file, [10 Records and Identity](10-records-and-identity.md) the checks, [11 Record Types Reference](11-record-types-reference.md) the persona records and [17 v1 Import](17-v1-import.md) the import. The move of the Make Docs Persona list is root [Q-027](../../../../docs/prd/03-open-questions-and-risk-register.md#q-027-persona-list-move-for-existing-projects). Done in W1 R1. The open details are [Q-077](#q-077-shared-people-and-roles-file-details). |
 
 **Question**: `owners`, `stakeholders` and `audience` name people and roles, and Make Docs keeps its own Persona list. Where are people and roles defined, so that every kit reads the same list?
 
@@ -1451,6 +1455,8 @@ Owner addendum on 2026-10-30:
 **Open details for planning**: Make Docs Personas also carry a `label` and a `description`, and Make Docs keeps the built-in `user` and `maintainer` entries and its reserved slugs, so the entry format must hold them. Projects that keep Personas in `.make-docs/config.yaml` need a move path. What happens to an entry when its persona record is later rejected, archived or superseded also needs a rule.
 
 **Resolution**: Owner accepted on 2026-10-30, as above. The open details for planning stay with the W1 R1 change plan and the repo-wide plan.
+
+**Update (2026-11-01)**: The entry fields are `slug`, `label`, `description`, `primitive`, `kind` and `kits`, with no `name` field ([root Q-023](../../../../docs/prd/03-open-questions-and-risk-register.md#q-023-persona-entry-fields)). `label` is the display name, in place of the `name` in the Recommendation above. The kinds are `person`, `team`, `organization` and `agent` ([Q-077](#q-077-shared-people-and-roles-file-details) rule 6). Each open detail for planning now has an owner. Root [07 People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) states the `label` and the `description`, and root [07 Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) states the built-in entries and the reserved slugs. Root [Q-027](../../../../docs/prd/03-open-questions-and-risk-register.md#q-027-persona-list-move-for-existing-projects) holds the move path, which the setup tool wave answers. [10 People and Role Slugs](10-records-and-identity.md#people-and-role-slugs) states what happens to the entry of an archived, superseded or rejected persona record.
 
 ### Q-073 Integration Records
 
@@ -1520,7 +1526,7 @@ Owner addendum on 2026-10-30:
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Closed | Eight rules for creating, claiming and keeping entries in `.make/personas.yaml` | Owner: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md), [10 Records and Identity](10-records-and-identity.md), [11 Record Types Reference](11-record-types-reference.md), [13 Extraction and Review](13-extraction-and-review.md) and [17 v1 Import](17-v1-import.md), with the file itself in the repo-wide plan for the [Make Kit Monorepo](../../../../docs/designs/2026-10-30-make-kit-monorepo.md) design. Done in W1 R1 for the Make Blueprint PRDs. The repo-wide plan carries rules 1, 2, 5 and 6 into the core. |
+| Closed | Eight rules for creating, claiming and keeping entries in `.make/personas.yaml` | Owner: root [07 Setup Tool and Shared Files, Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) for rules 1, 2 and 5, and root [07 People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) for the kinds of rule 6. [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) links to them and keeps the approval and import parts. [10 Records and Identity](10-records-and-identity.md), [11 Record Types Reference](11-record-types-reference.md), [13 Extraction and Review](13-extraction-and-review.md) and [17 v1 Import](17-v1-import.md) keep the other rules. Done in W1 R1 for the Make Blueprint PRDs. |
 
 **Question**: [Q-072](#q-072-shared-people-and-roles-file) settles one shared `.make/personas.yaml`. Which details of that file are still open? These are the open details:
 
@@ -1552,6 +1558,8 @@ The core rules (1, 2, 5 and 6) go into the repo-wide plan for the shared file. E
 **Resolution**: Owner accepted the eight rules on 2026-10-30. 05 states rules 1, 2, 5 and 6 as core behavior. 10 states rules 3, 4 and 7 as checks. 11 states the persona record link and the extraction fields. 13 states the reviewer rule. 17 states rules 6 and 8 for the import.
 
 **Update (2026-10-30)**: The owner accepted two details that the PRD workers settled. A persona record claims its entry only while the record is `active`, so a record that supersedes it can claim the same entry ([10 Records and Identity](10-records-and-identity.md#people-and-role-slugs)). The v1 import gives an owner slug that the v1 owner list does not name a `maintainer` entry, with the slug as its name and the kind `team` ([17 v1 Import](17-v1-import.md)).
+
+**Update (2026-11-01)**: Root [07 Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) states rules 1, 2 and 5, and root [07 People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) states the four kinds of rule 6. [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) keeps the approval and import parts of these rules, such as the `blocked` result of an approval or an import that causes a slug clash. 17 keeps the mapping of v1 kinds. In the earlier Update, "with the slug as its name" means that the slug is the entry's `label`, because an entry has no `name` field ([root Q-023](../../../../docs/prd/03-open-questions-and-risk-register.md#q-023-persona-entry-fields)).
 
 ### Q-078 Built-In Code Lists and Their Extension Setting
 
@@ -1874,35 +1882,151 @@ Also: `source-unregistered` skips files that converted text links to, such as th
 
 **Resolution**: Owner accepted the recommendation on 2026-10-31.
 
+### Q-096 Exit Codes Follow the Root Table
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option A: Make Blueprint follows the root exit-code table and the root result and error shapes | Owner: [08 CLI and MCP, Outcomes and Exit Codes](08-cli-and-mcp.md#outcomes-and-exit-codes) and [08 Result Envelope](08-cli-and-mcp.md#result-envelope). Rule owner: root [05 Kit Conventions, Exit-Code Table](../../../../docs/prd/05-kit-conventions.md#exit-code-table) and root [05 Result and Error Shapes](../../../../docs/prd/05-kit-conventions.md#result-and-error-shapes). [Q-010](#q-010-exit-codes) has an Update that links here. |
+
+**Question**: [08 Outcomes and Exit Codes](08-cli-and-mcp.md#outcomes-and-exit-codes) maps `success` 0, `partial` 1, `failed` 2 and `blocked` 3, as the owner accepted in [Q-010](#q-010-exit-codes). The [08 Result Envelope](08-cli-and-mcp.md#result-envelope) has no `ok` field. The [root 05 Exit-Code Table](../../../../docs/prd/05-kit-conventions.md#exit-code-table) has the codes 0, 1 and 2, and a `blocked` result exits 1. [Root 05 Result and Error Shapes](../../../../docs/prd/05-kit-conventions.md#result-and-error-shapes) puts `ok: true` on a success and the error shape on stderr. Does Make Blueprint follow root 05 (option A)? Or does Make Blueprint keep Q-010 while root 05 adds code 3 for `blocked` for every kit, with a new Make Docs gap (option B)?
+
+**Why it matters**: A script that runs two kits reads two exit-code tables. Backlog task t5 and five acceptance criteria in work phases 04, 05, 06 and 08 use code 3.
+
+**Recommendation**: Option A. Skills read the `outcome` field, so code 3 adds little, and one table serves every kit. `success` exits 0, `partial` exits 1 and `blocked` exits 1. `failed` exits 2 when the command could not start, such as for a bad flag or argument, an unknown record or a file that the command cannot read, and 1 for an internal fault. The result envelope has `ok`, which is `true` for `success`, `partial` and `blocked`. A `failed` result uses the root error shape on stderr. A missing `allowWrite` stays `blocked` with `write-not-allowed`, because the operation does not run.
+
+**To close**: The owner chooses an option, and 08 states it.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option A, as recommended.
+
+### Q-097 Preview-First Write Commands
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option B: keep the preview-first form, and root 05 adds a rule for a write whose plan is the review step, with one flag name for every kit | Owner: [08 CLI and MCP, `run import`](08-cli-and-mcp.md#run-import), [08 System Package Commands (v2.1)](08-cli-and-mcp.md#system-package-commands-v21), [17 v1 Import](17-v1-import.md) and [20 System Packages](20-system-packages.md). Root item: [Q-036 Preview-First Write Commands](../../../../docs/prd/03-open-questions-and-risk-register.md#q-036-preview-first-write-commands), with the rule in root [05 Kit Conventions, CLI Write Intent](../../../../docs/prd/05-kit-conventions.md#cli-write-intent). [Q-047](#q-047-v1-import-as-an-mcp-tool) keeps its decision. |
+
+**Question**: `run import v1`, `run package make` and `run package add` are dry runs by default and write only with `--apply`. Their MCP tools need `apply: true` and `allowWrite` ([08 `run import`](08-cli-and-mcp.md#run-import), [08 System Package Commands (v2.1)](08-cli-and-mcp.md#system-package-commands-v21), [20 System Packages](20-system-packages.md), [Q-047](#q-047-v1-import-as-an-mcp-tool)). In 20, the person's `--apply` after the plan is the review. [Root 05 CLI Write Intent](../../../../docs/prd/05-kit-conventions.md#cli-write-intent) says that a write command writes with no `--allow-write` or `--apply` flag, and that `--dry-run` is the one way to run it with no write. Root [D-021](../../../../docs/prd/03-open-questions-and-risk-register.md#d-021-path-hygiene-uses-its-own-output-and-write-flags) counts the Make Docs `repair --apply` as a gap. Do these commands follow root 05, so that they write by default, `--dry-run` previews and the skills run the dry run first (option A)? Or do they keep the preview-first form while root 05 adds a rule for a write whose plan is the review step, with one flag name for every kit (option B)?
+
+**Why it matters**: Under the root rule, a person who runs the import or a package take-in with no flag writes at once and skips the plan review.
+
+**Recommendation**: Option B. The plan review is a promise of 17 and 20. Root D-021 then needs a second look in the root register.
+
+**To close**: The owner chooses an option.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option B, as recommended. The `--apply` and `apply: true` text in 08, 17, 20 and [04 Glossary](04-glossary.md) stays as it is. Root [Q-036](../../../../docs/prd/03-open-questions-and-risk-register.md#q-036-preview-first-write-commands) records the root 05 rule and the second look at root D-021.
+
+### Q-098 Bare Command With No Install
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option A: bare `make-blueprint` follows root 05 | Owner: [08 CLI and MCP, Command Groups](08-cli-and-mcp.md#command-groups), with the rule in root [05 Kit Conventions, CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level). |
+
+**Question**: In a folder that is not set up, bare `make-blueprint` names `make-blueprint setup`, never writes and never offers setup ([08 Command Groups](08-cli-and-mcp.md#command-groups)). [Root 05 CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) says that, with no install and a TTY, the bare command starts guided setup, and that, with no install and no TTY, it prints a hint and exits 0. Does Make Blueprint follow root 05 (option A)? Or does Make Blueprint keep its rule while root 05 changes (option B)?
+
+**Why it matters**: A person who knows Make Docs expects the same first step from every kit.
+
+**Recommendation**: Option A. Guided `setup` shows the full plan and asks before it writes, so the person stays in control.
+
+**To close**: The owner chooses an option, and 08 states it.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option A, as recommended.
+
+### Q-099 Router Places in Kit Terms
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option B: root 05 states the router places in kit terms, and root 07 adds the `.make/` router to its project files. Make Blueprint keeps its router list. | Owner: [06 Project Layout and Instruction Files, Routers](06-project-layout-and-instruction-files.md#routers) and [06 Project Tree](06-project-layout-and-instruction-files.md#project-tree). Root item: [Q-037 Router Places in Kit Terms](../../../../docs/prd/03-open-questions-and-risk-register.md#q-037-router-places-in-kit-terms), with the rules in root [05 Kit Conventions, Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) and root [07 Setup Tool and Shared Files, Project Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files). |
+
+**Question**: [06 Routers](06-project-layout-and-instruction-files.md#routers) writes routers in the project root, `.make/`, `.make/blueprint/`, `blueprint/` and its top sub-folders. It writes nothing under `docs/` and puts no router in `.make/blueprint/system/`. The [06 Project Tree](06-project-layout-and-instruction-files.md#project-tree) has `.make/AGENTS.md` and `.make/CLAUDE.md`, with one block for each kit. [Root 05 Routers and Managed Blocks](../../../../docs/prd/05-kit-conventions.md#routers-and-managed-blocks) lists the project root, `docs/`, the project tool directory, `system/` and its four type folders, and each selected docs folder. [Root 07 Project Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#project-files) has no `.make/` router. Does Make Blueprint add routers in `.make/blueprint/system/` and its four type folders (option A)? Or does root 05 state the router places in kit terms (the root, the kit's tool directory and the kit's own content folders), while root 07 adds the `.make/` router to its project files (option B)?
+
+**Why it matters**: The root list reads as the Make Docs places. Every kit with a `.make/<kit>/` folder writes a block in the `.make/` router, but no root PRD owns it.
+
+**Recommendation**: Option B. Make Blueprint keeps its list.
+
+**To close**: The owner chooses an option.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option B, as recommended. 06 keeps its router list. Root [Q-037](../../../../docs/prd/03-open-questions-and-risk-register.md#q-037-router-places-in-kit-terms) records the root 05 and root 07 change.
+
+### Q-100 Nested Config Key Style
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option B: the camelCase rule covers top-level keys, and each kit sets the style of its nested keys. Make Blueprint keeps snake_case for its nested keys. | Owner: [06 Project Layout and Instruction Files, Project Config](06-project-layout-and-instruction-files.md#project-config). Root item: [Q-038 Nested Config Key Style](../../../../docs/prd/03-open-questions-and-risk-register.md#q-038-nested-config-key-style), with the rule in root [05 Kit Conventions, Project Config](../../../../docs/prd/05-kit-conventions.md#project-config). |
+
+**Question**: [06 Project Config](06-project-layout-and-instruction-files.md#project-config) uses `sources.git_level`, `sources.lfs_threshold_mb`, `conversion.table_csv_min_rows`, `review.second_reviewer`, `lists.capability_type`, `lists.option_scope` and `lists.integration_method`. The top-level keys are single words. [Root 05 Project Config](../../../../docs/prd/05-kit-conventions.md#project-config) says "Config keys use camelCase". Root [D-034](../../../../docs/prd/03-open-questions-and-risk-register.md#d-034-config-key-styles-are-mixed) counts the top-level Make Docs key `prd_authority`. Are the nested keys renamed to camelCase, such as `sources.gitLevel` (option A)? Or does root 05 say that the rule covers top-level keys and that each kit sets the style of its nested keys (option B)?
+
+**Why it matters**: When the rule covers nested keys, seven Make Blueprint settings change, with every PRD and task that names them.
+
+**Recommendation**: Option B. Make Blueprint keeps snake_case for its nested keys, to match record fields such as `git_level`.
+
+**To close**: The owner chooses an option.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option B, as recommended. The seven settings keep their names. Root [Q-038](../../../../docs/prd/03-open-questions-and-risk-register.md#q-038-nested-config-key-style) records the root 05 change.
+
+### Q-101 Long-Running Lifecycle Command
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option B: root 05 lets a kit add a top-level lifecycle command that starts a long-running process, named in that kit's PRDs. For Make Blueprint, this command is `serve`. | Owner: [08 CLI and MCP, The `serve` Command (v2.2)](08-cli-and-mcp.md#the-serve-command-v22) and [18 Local Server and UI](18-local-server-and-ui.md). Root item: [Q-039 Long-Running Lifecycle Command](../../../../docs/prd/03-open-questions-and-risk-register.md#q-039-long-running-lifecycle-command), with the rule in root [05 Kit Conventions, CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level). [Q-049](#q-049-where-serve-sits) has an Update that links here. |
+
+**Question**: [08 The `serve` Command (v2.2)](08-cli-and-mcp.md#the-serve-command-v22) adds `make-blueprint serve` beside `mcp` in v2.2 ([Q-049](#q-049-where-serve-sits)). [Root 05 CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) says that `<kit-cli> --help` lists exactly seven top-level commands, and [root 06 Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary) says that the core reserves no command name. Does the server go under an existing command, such as `mcp` (option A)? Or does root 05 let a kit add a top-level lifecycle command that starts a long-running process, named in that kit's PRDs (option B)?
+
+**Why it matters**: v2.2 would break the seven-command rule.
+
+**Recommendation**: Option B. The v2.0 help still lists seven commands. The core reserves no command name under either option.
+
+**To close**: The owner chooses an option.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option B, as recommended. `serve` stays a top-level Make Blueprint command in v2.2. Root [Q-039](../../../../docs/prd/03-open-questions-and-risk-register.md#q-039-long-running-lifecycle-command) records the root 05 change.
+
+### Q-102 When O-001 Closes
+
+| Status | Decision | Follow-Up |
+| --- | --- | --- |
+| Closed | Option A: when Make Docs 2.1.0 is on `latest`, a later Make Blueprint plan revision consumes O-001 before work phase 04 closes, after the JSON output of the 2.1.0 read command is known | Owner: [O-001](#o-001-confirm-make-docs-links-in-project-check), with the Make Docs link rules in [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md). Root owners: root [Q-020 Release of the Link Read Command](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command) for the read command, and root [01 Product Overview, Release Scope](../../../../docs/prd/01-product-overview.md#release-scope) for the release order. |
+
+**Question**: The [O-001](#o-001-confirm-make-docs-links-in-project-check) target is the first Make Blueprint plan revision after the Make Docs release with the read command. Work phase [04](../work/2026-10-30-w1-r1-make-blueprint-v2/04-record-types.md) builds only the skip, and work phase [09](../work/2026-10-30-w1-r1-make-blueprint-v2/09-v1-import-and-release.md) says that v2.0 ships with the skip. Root [Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command) ships the read command in Make Docs 2.1.0, release 2 of Step 0, and [root 01 Release Scope](../../../../docs/prd/01-product-overview.md#release-scope) starts Make Blueprint v2.0 work after Step 0 closeout. So the read command exists before v2.0 work starts. When Make Docs 2.1.0 is on `latest`, does a later Make Blueprint plan revision consume O-001 before work phase 04 closes (option A)? Or does v2.0 keep its scope, with O-001 closed after v2.0 (option B)?
+
+**Why it matters**: v2.0 could confirm Make Docs links, and keep the skip only when `make-docs` is absent or older than 2.1.0.
+
+**Recommendation**: Option A, after the JSON output of the 2.1.0 read command is known.
+
+**To close**: The owner chooses an option.
+
+**Resolution**: Owner accepted on 2026-11-01. The owner chose option A, as recommended. O-001 stays `Deferred` until that plan revision consumes it.
+
 ## Rebuild Risks
 
 ### R-001 Core Release Friction
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Owner: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md). Work phase 01. |
+| Closed | Moved to root R-001 | Owner: root [R-001 Core Release Friction](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction). |
 
-**Issue**: A core change needs a core release of `@brucewaynedecoy/make-core`, from `packages/core/` in the make-kit monorepo, before a Make Blueprint release can use it. Step 0, which is repo-wide work, and the Make Docs changes that Make Blueprint needs sit on the critical path for v2.0.
+**Issue**: Root [R-001 Core Release Friction](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction) states the issue.
 
-**Why it matters**: A late core release holds every v2.0 release build.
+**Why it matters**: Root [R-001](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction) states why the risk matters.
 
-**Recommendation**: Plan core work first, use the workspace link only in development, and have release builds fail on a workspace link or an unpublished core.
+**Recommendation**: Root [R-001](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction) states the recommendation.
 
-**To close**: The pinned core is published before v2.0 release work starts.
+**To close**: Root [R-001](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction) states when the risk closes.
+
+**Resolution**: From 2026-11-01, the root register owns this risk, as root decision [Q-006 Root PRD Set](../../../../docs/prd/03-open-questions-and-risk-register.md#q-006-root-prd-set) states. The root item stays `Open`. This item keeps its number so that old links resolve.
 
 ### R-002 Two Core Versions in One Project
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Owner: [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md). Work phase 01. |
+| Closed | Moved to root R-002 | Owner: root [R-002 Two Core Versions in One Project](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project). |
 
-**Issue**: Each tool pins its own core, so Make Docs and Make Blueprint can run different core versions in one project.
+**Issue**: Root [R-002 Two Core Versions in One Project](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) states the issue.
 
-**Why it matters**: A change to the block tag format, block order, the handoff-line rule, the presence rule, the `.make/` layout or the format of the shared `.make/config.yaml` and `.make/personas.yaml` in one core version breaks the other tool.
+**Why it matters**: Root [R-002](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) states why the risk matters.
 
-**Recommendation**: Treat those on-disk contracts as breaking changes, and test both tools on different core versions.
+**Recommendation**: Root [R-002](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) states the recommendation.
 
-**To close**: A cross-version test runs in the install matrix.
+**To close**: Root [R-002](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project) states when the risk closes.
+
+**Resolution**: From 2026-11-01, the root register owns this risk, as root decision [Q-006 Root PRD Set](../../../../docs/prd/03-open-questions-and-risk-register.md#q-006-root-prd-set) states. The root item stays `Open`. This item keeps its number so that old links resolve.
 
 ### R-003 Both Tools Write One Root File at Once
 
@@ -2233,20 +2357,21 @@ Code anchors:
 | Title | Confirm Make Docs links in project check |
 | Status | Deferred |
 | Summary | `project check` confirms Make Docs work item IDs and doc paths through a Make Docs read command and stops skipping them. |
-| Source authority | [Q-024](#q-024-make-docs-link-check-interface); [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md); [10 Records and Identity](10-records-and-identity.md) |
+| Source authority | [Q-024](#q-024-make-docs-link-check-interface); [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md); [10 Records and Identity](10-records-and-identity.md); root [Q-020 Release of the Link Read Command](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command) |
 | Owner | The Make Kit repository owner |
 | Target coordinate | Owner-routed: the first Make Blueprint plan revision after the Make Docs release that carries the read command |
-| Future trigger | Make Docs ships one read command with JSON output that confirms work item IDs and doc paths |
-| Dependencies | The Step 0 Make Docs changes in the repo-wide plan |
+| Future trigger | Make Docs 2.1.0 ships one read command with JSON output that confirms work item IDs and doc paths (root [Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)) |
+| Dependencies | Make Docs 2.1.0, release 2 of the Step 0 order in root [01 Product Overview, Release Scope](../../../../docs/prd/01-product-overview.md#release-scope) |
 | Acceptance exit criteria | `project check` confirms Make Docs links through that command; the skip message and skip count are gone; tests cover a project with and without Make Docs installed |
-| Related requirements and findings | Make Docs link rules in 05 and the `project check` catalog in 10 |
-| History / disposition note | Created on 2026-10-30 from the owner's answer to Q-024. The skip is a temporary workaround and must not become the normal behavior. |
+| Related requirements and findings | Make Docs link rules in 05 and the `project check` catalog in 10; [Q-102](#q-102-when-o-001-closes) for when this obligation closes |
+| History / disposition note | Created on 2026-10-30 from the owner's answer to Q-024. The skip is a temporary workaround and must not become the normal behavior. On 2026-11-01, root Q-020 put the read command in Make Docs 2.1.0, so the trigger and the dependency name that release, and the owner set when the obligation closes in [Q-102](#q-102-when-o-001-closes). |
 
 ## Source Anchors
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/00-overview.md`
 - `docs/plans/2026-10-30-w1-r1-make-blueprint-v2-maintenance/00-overview.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md` to `docs/prd/19-system-integrations.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/docs/prd/15-agent-instruction-ownership-and-managed-blocks.md`
 - `<user-home>/Developer/Source/Tyler/Projects/build-os/docs/prd/03-open-questions-and-risk-register.md`

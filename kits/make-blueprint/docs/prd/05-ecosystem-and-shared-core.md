@@ -11,9 +11,9 @@ source:
 
 ## Purpose
 
-Make Blueprint and Make Docs are two products from one owner. They follow one ecosystem pattern for folders, instruction files, the machine Store, CLI shape and MCP profiles. This document owns the rules that keep the two products separate but able to work together.
+Make Blueprint and Make Docs are two products from one owner. They follow one ecosystem pattern for folders, instruction files, the machine Store, CLI shape and MCP profiles. The root [05 Kit Conventions](../../../../docs/prd/05-kit-conventions.md#purpose) owns that pattern for every kit. This document owns the Make Blueprint rules that keep the two products separate but able to work together.
 
-It owns four things. The first is the separate-or-together rule (Northstar principle 1) as testable requirements. The second is the shared TypeScript package `packages/core`: what it holds, what stays in Make Blueprint, and how Make Blueprint depends on it. The third is the handoff line that each tool's root block carries when the other tool is present. The fourth is the link from Make Blueprint records forward to Make Docs work items and doc paths, with the rule that Make Docs owns the backlog.
+It owns four things. The first is the separate-or-together rule (Northstar principle 1) as testable Make Blueprint outcomes. The second is Make Blueprint's use of the shared TypeScript package `packages/core`: the names that Make Blueprint gives to the core, what stays in Make Blueprint, and how Make Blueprint depends on the core. The root [06 Shared Core](../../../../docs/prd/06-shared-core.md#purpose) owns what the core holds, and the root [07 Setup Tool and Shared Files](../../../../docs/prd/07-setup-tool-and-shared-files.md#purpose) owns the shared `.make/config.yaml` and `.make/personas.yaml` files ([root Q-006 Root PRD Set](../../../../docs/prd/03-open-questions-and-risk-register.md#q-006-root-prd-set)). The third is the handoff line that each tool's root block carries when the other tool is present. The fourth is the link from Make Blueprint records forward to Make Docs work items and doc paths, with the rule that Make Docs owns the backlog.
 
 Code anchors:
 
@@ -25,17 +25,21 @@ Code anchors:
 This document covers:
 
 - The separate-or-together requirements for a project with Make Blueprint alone, Make Docs alone, or both.
-- The contents and boundary of `packages/core`, its release line, and how Make Blueprint pins and links it.
+- Make Blueprint's use of `packages/core`: the names that Make Blueprint gives to the core, what stays in Make Blueprint, and the Make Blueprint parts of the core pin.
 - The handoff line: its content, when it appears and disappears, and what a person sees when the other tool is too old to write it.
-- How Make Blueprint finds a Make Docs install (tool discovery).
-- The two project files that every kit shares, `.make/config.yaml` and `.make/personas.yaml`, which the core reads and writes.
+- How Make Blueprint uses tool discovery to find a Make Docs install.
+- Make Blueprint's use of the two project files that every kit shares, `.make/config.yaml` and `.make/personas.yaml`.
 - Make Docs links on records, and how the `project check` command (see [08 CLI and MCP](08-cli-and-mcp.md)) confirms them, or skips them with a count.
 - Backlog ownership and the Azure Boards export.
 - The Make Docs capabilities that Make Blueprint depends on.
 
 Covered elsewhere:
 
-- Folder layout, routers and the full managed-block rules: [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md).
+- The rules that every kit follows for the CLI shape, outcomes and exit codes, the MCP server and its profiles, resource URIs, routers and managed blocks, project and machine folders, and the Store boundary: the root [05 Kit Conventions](../../../../docs/prd/05-kit-conventions.md).
+- What the core holds, its boundary, the kit names that each kit gives to it, tool discovery, the Store base and the exact core pin: the root [06 Shared Core](../../../../docs/prd/06-shared-core.md).
+- The `make-kit` setup tool, and the fields and write rules of `.make/config.yaml` and `.make/personas.yaml`: the root [07 Setup Tool and Shared Files](../../../../docs/prd/07-setup-tool-and-shared-files.md).
+- Package names, release tags and the shared publish workflow: the root [08 Build and Release](../../../../docs/prd/08-build-and-release.md).
+- Folder layout, routers and Make Blueprint's managed-block rules: [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md).
 - The `setup`, `setup remove`, `update` and `uninstall` commands, agent-tool setup and distribution: [07 Installation and Distribution](07-installation-and-distribution.md).
 - Command names, MCP profiles and the `resource` surface: [08 CLI and MCP](08-cli-and-mcp.md).
 - The placement record and the hand off stage inside the fit-gap flow: [14 Fit-Gap and Placement](14-fit-gap-and-placement.md). The `work_items` and `docs` field reference: [11 Record Types Reference](11-record-types-reference.md).
@@ -52,10 +56,10 @@ Code anchors:
 | Component | What it does | Release | Detail owner |
 | --- | --- | --- | --- |
 | Separate-or-together rule | Lets each tool install, run and leave a project on its own, and makes handoff work when both are present | Step 0 and v2.0 | This document |
-| `packages/core` | Shared code both tools build on, kept in `packages/core/` of the make-kit monorepo and published as `@brucewaynedecoy/make-core` | Step 0 | This document |
+| `packages/core` | Shared code both tools build on, kept in `packages/core/` of the make-kit monorepo and published as `@brucewaynedecoy/make-core` | Step 0, with the code for the shared `.make/` files in the setup tool wave | Root [06 Shared Core](../../../../docs/prd/06-shared-core.md#component-and-capability-map); Make Blueprint's use in this document |
 | Core dependency line | Pins the published core in Make Blueprint, with a workspace link for development only | v2.0 | This document |
-| Tool discovery | Finds the other ecosystem tool on the machine and in the project | Step 0 (core) and v2.0 | This document |
-| Handoff line | One line in each root block that names what the other tool owns | Step 0 (core) and v2.0 | This document; block mechanics in [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
+| Tool discovery | Finds the other ecosystem tool on the machine and in the project | Step 0 (core) and v2.0 | Root [06 Tool Discovery](../../../../docs/prd/06-shared-core.md#tool-discovery); Make Blueprint's use in this document |
+| Handoff line | One line in each root block that names what the other tool owns | v2.0 for the Make Blueprint line; a later Make Docs release for the Make Docs line ([root Q-007](../../../../docs/prd/03-open-questions-and-risk-register.md#q-007-make-docs-changes-in-step-0)) | This document; block mechanics in [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
 | Make Docs links | Work item IDs and doc paths on records of any type, checked through `make-docs` | v2.0 | This document; fields in [10 Records and Identity](10-records-and-identity.md) and [11 Record Types Reference](11-record-types-reference.md) |
 | Backlog boundary | Keeps the backlog, its edits and its exports in Make Docs | v2.0 | This document |
 
@@ -74,9 +78,9 @@ Requirements:
 - When either tool leaves a project through its project uninstall, `setup remove`, the remaining tool's root block no longer carries the handoff line, and the remaining tool's block and all user text are otherwise unchanged.
 - Tool uninstall, `uninstall`, takes a tool off the machine and never touches a project. [07 Installation and Distribution](07-installation-and-distribution.md) owns both commands.
 - If a tool leaves a project without `setup remove` (for example, its folders and block are deleted by hand), the next `setup` of the remaining tool removes the stale handoff line. `update` updates only the installed tool and does not touch the project.
-- Neither tool requires the other to be installed, to run a given version, or to share its CLI. Each tool keeps its own CLI, its own project folder, its own Store and its own managed block.
-- A tool set up after the other reads the shared `.make/config.yaml`, so the choices already made, such as the selected agent tools, are preselected. A changed choice is written back there for every kit. [07 Installation and Distribution](07-installation-and-distribution.md) owns the setup steps.
-- Both tools read people and roles from the one shared `.make/personas.yaml`, so a Make Docs Persona and a Make Blueprint audience role with the same slug are one entry.
+- Make Blueprint follows the rule for every kit in the root [Separate or Together](../../../../docs/prd/01-product-overview.md#separate-or-together) section.
+- Make Blueprint `setup` preselects the choices in the shared `.make/config.yaml`, as the root [Shared Setup Choices](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices) section states. [07 Installation and Distribution](07-installation-and-distribution.md) owns the setup steps.
+- Make Blueprint reads people and roles from the shared `.make/personas.yaml`, as the root [Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) section states.
 - Make Blueprint works beside Make Docs in either Make Docs layout and does not wait for the Make Docs move to `.make/docs/` and `~/.make/docs/`.
 
 Evidence: the install matrix in [07 Installation and Distribution](07-installation-and-distribution.md) runs on fresh projects for Make Blueprint alone, Make Docs alone, both in each order, and then removes one. It checks that handoff lines appear and disappear. A Human Experience Review covers first-run setup output.
@@ -91,24 +95,24 @@ Code anchors:
 
 ### Shared Core
 
-`packages/core` is a TypeScript package in `packages/core/` of the make-kit monorepo, published as `@brucewaynedecoy/make-core`. Make Docs and Make Blueprint both build on it. Each tool passes in its own names, such as its CLI name, its managed-block tags and its folder under `.make/` and `~/.make/`, so the core holds behavior and no product content.
+`packages/core` is a TypeScript package in `packages/core/` of the make-kit monorepo, published as `@brucewaynedecoy/make-core`. Make Docs and Make Blueprint both build on it. The root [06 Shared Core](../../../../docs/prd/06-shared-core.md#component-and-capability-map) owns its parts and its [boundary](../../../../docs/prd/06-shared-core.md#core-boundary), and the rule that each kit gives its own names to the core ([Kit Names as Inputs](../../../../docs/prd/06-shared-core.md#kit-names-as-inputs)). Make Blueprint gives these names to the core:
 
-| Core part | What it holds | Detail owner |
-| --- | --- | --- |
-| Layout and paths | Project and machine folder targets `.make/<tool>/` and `~/.make/<tool>/`, the earlier Make Docs folders as a supported layout, and path handling on macOS, Windows and Linux | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| Resources | Reading system docs (contracts, templates, references and prompts) by stable URI, served from inside the CLI, with an optional local copy read first when it is valid | This document; surface in [08 CLI and MCP](08-cli-and-mcp.md); local copy in [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| MCP server and profiles | The stdio MCP server, the profile system that filters which tools a client sees, and the `allowWrite` gate | [08 CLI and MCP](08-cli-and-mcp.md) |
-| Store base | Opening, locking and versioning the tool's machine Store database, project identity, installation records such as managed-block hashes, and records of tool operations | This document; records, index, locks and journal in [09 Storage and Indexing](09-storage-and-indexing.md) |
-| Agent-tool setup | Skills install and MCP config for Claude Code, Codex and GitHub Copilot CLI | [07 Installation and Distribution](07-installation-and-distribution.md) |
-| Managed blocks | Tag-aware blocks in `AGENTS.md` and `CLAUDE.md`, block hashes, conflicts, malformed-tag checks, writing the handoff line into the block, and uninstall that keeps user text | [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) for block mechanics; this document for the handoff line's content and when it appears |
-| Tool discovery | Finding the other ecosystem tool's CLI on the machine and its block in the project | This document |
-| Update and uninstall | Shared tool update and uninstall behavior, and project uninstall of managed files | [07 Installation and Distribution](07-installation-and-distribution.md) |
-| Shared project files | Reading and writing `.make/config.yaml` and `.make/personas.yaml` for every kit | This document; file layout in [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md) |
-| Reserved command names | The top-level `serve` command name, kept beside `mcp` for both tools | This document; the command in [08 CLI and MCP](08-cli-and-mcp.md) |
+| Core input | Make Blueprint value |
+| --- | --- |
+| CLI name | `make-blueprint` |
+| npm package name | `@brucewaynedecoy/make-blueprint` |
+| Resource URI prefix | `make-blueprint://system/` |
+| Links to Store records | `make-blueprint://store/` |
+| MCP app resources | `ui://make-blueprint/` |
+| Project folder | `.make/blueprint/` |
+| Machine folder and its setting | `~/.make/blueprint/`, and `MAKE_BLUEPRINT_HOME` to set another folder |
+| MCP entry name and MCP server name | `make-blueprint` |
+| Connection environment names | `MAKE_BLUEPRINT_MCP_CONNECTION_ID` and `MAKE_BLUEPRINT_MCP_CONNECTION_KEY` |
+| Managed-block tag | `<!-- make-blueprint:begin -->` and `<!-- make-blueprint:end -->` |
 
-`.make/config.yaml` holds the choices that every kit in a project needs, such as the selected agent tools, and an optional project display `name`. Settings for one kit stay in that kit's own file, such as `.make/blueprint/config.yaml`.
+The root [Shared Setup Choices](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices) and [Shared Choices Settings](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-choices-settings) sections own `.make/config.yaml` and its settings. Make Blueprint shows the optional project `name` from that file in `project status` and in export titles ([06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md#project-config), [08 CLI and MCP](08-cli-and-mcp.md#project-status), [15 Exports](15-exports.md)).
 
-`.make/personas.yaml` holds the people and roles for every kit. Each entry has a `slug`, a `name`, a primitive, a kind and the kits it is enabled for. The primitive is `user` or `maintainer`, and either can be a person or an agent. The kind is `person`, `team`, `organization` or `agent`. An entry enabled for Make Docs gets guides written for it. Make Docs keeps its own Persona list in this file too, so the entry format also holds what Make Docs needs: a label, a description, the built-in `user` and `maintainer` entries, and its reserved slugs.
+`.make/personas.yaml` holds the people and roles for every kit. The root [Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) section owns the file, and the root [People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) section owns its entry fields. Make Blueprint names the display name of an entry by its `label` field.
 
 These stay in Make Blueprint, in `kits/make-blueprint/`:
 
@@ -117,22 +121,16 @@ These stay in Make Blueprint, in `kits/make-blueprint/`:
 - The Make Blueprint tool set for each MCP profile, the profile names `core`, `setup`, `intake`, `extract`, `analyze` and `all`, and the status read model ([08 CLI and MCP](08-cli-and-mcp.md)).
 - The content that Make Blueprint passes to the core: router and block text, system docs, the nine skills (the seven stage skills, `blueprint-report` and `blueprint-convert`), and the `make-blueprint://system/<type>/<path>` resource scheme.
 - The Make Docs link check (this document).
+- The `serve` command (v2.2). It is a Make Blueprint command, and [08 CLI and MCP](08-cli-and-mcp.md#the-serve-command-v22) owns it. The core reserves no command name ([root Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary)).
 
 Requirements:
 
-- `packages/core` depends on no Make Blueprint module and on no Make Docs product module. Records and storage stay in Make Blueprint.
-- The core contains no product content of either tool, such as templates, skills or router text. Each tool passes its own.
-- Every core part takes the calling tool's identity as input: CLI name, block tags, project folder, machine folder, resource URI scheme and MCP server name. No core part assumes the name `make-docs`.
-- Make Blueprint carries no modified copy of core code. A change to core behavior ships in a core release before a Make Blueprint release uses it.
-- Make Docs runs on the same core release line, so both tools share one implementation of managed blocks, layout, resources, the MCP server, agent-tool setup, update and uninstall.
-- The core reads and writes `.make/config.yaml` and `.make/personas.yaml`. Each kit only reads them and asks the core for any change.
-- The core creates `.make/personas.yaml` on its first write to it. The built-in `user` and `maintainer` entries stay implicit defaults, as in Make Docs today, so the core does not write them.
-- A slug is unique across the whole of `.make/personas.yaml`, whatever its primitive. The core refuses a write that would give two entries the same slug. The approval or import that asked for the write returns the `blocked` outcome (see [08 CLI and MCP](08-cli-and-mcp.md)) and names the clash.
-- The core's write to `.make/personas.yaml` is part of the same journaled change as the approval or the import that asked for it, so a crash never leaves the file and the records out of step. The write journal lets the CLI finish or undo a change to many files after a crash. [09 Storage and Indexing](09-storage-and-indexing.md) owns it.
-- Every entry's kind is `person`, `team`, `organization` or `agent`. [17 v1 Import](17-v1-import.md) maps v1 owner kinds to these four.
-- When a reviewer approves a persona record, the core adds the record's entry to `.make/personas.yaml` as a `user` entry, or the record claims an unclaimed `user` entry with the same slug, as [10 Records and Identity](10-records-and-identity.md) defines. The persona record points to that slug. The v1 import writes v1 owners there as `maintainer` entries, through the core ([17 v1 Import](17-v1-import.md)).
+- The core follows the root [Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary) and [Kit Names as Inputs](../../../../docs/prd/06-shared-core.md#kit-names-as-inputs) rules, with the Make Blueprint names in the table above.
+- Make Blueprint carries no modified copy of core code.
+- The core writes `.make/config.yaml` and `.make/personas.yaml` for Make Blueprint by the rules in the root [Shared Setup Choices](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices), [Shared People and Roles](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-people-and-roles) and [People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) sections.
+- When the core refuses a write to `.make/personas.yaml` because two entries would have the same slug, the approval or the import that asked for the write returns the `blocked` outcome (see [08 CLI and MCP](08-cli-and-mcp.md)) and names the clash.
+- When a reviewer approves a persona record, the core adds the record's entry to `.make/personas.yaml` as a `user` entry, or the record claims an unclaimed `user` entry with the same slug, as [10 Records and Identity](10-records-and-identity.md) defines. The persona record points to that slug. The v1 import writes v1 owners there as `maintainer` entries, through the core, and [17 v1 Import](17-v1-import.md) maps v1 owner kinds to the entry kinds.
 - Record fields name entries by slug: `owners` and `stakeholders` point to `maintainer` entries, and `audience` points to `user` entries. [10 Records and Identity](10-records-and-identity.md) owns the checks on these slugs.
-- The core reserves the top-level `serve` command for both tools, beside `mcp` and outside each tool's operation catalog. No tool uses the name for anything else.
 
 Code anchors:
 
@@ -149,13 +147,11 @@ Code anchors:
 
 ### Core Dependency Line
 
-Make Blueprint uses the published core package, `@brucewaynedecoy/make-core`. During development it may use a workspace link (the npm workspace link to `packages/core/` in the same monorepo), so work can start while a core release is pending.
+Make Blueprint uses the published core package, `@brucewaynedecoy/make-core`, at one exact version. The root [Core Versions and the Exact Pin](../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin) section owns the exact pin, the workspace link for development builds, and the release build that fails when the core resolves to a workspace link or to an unpublished version.
 
 Requirements:
 
-- Each Make Blueprint release names one exact published core version. The npm package installs that version, and each signed single file contains that version.
-- Development builds may resolve the core through the workspace link.
-- A release build (the npm publish and every signed single file) resolves the core only from the published package at the pinned version. The release build fails when the core resolves to a workspace link or to an unpublished version.
+- Each signed single file contains the pinned core version, as the npm package does. A release build of a signed single file follows the same pin rule as the npm publish.
 - A person or a test can read, from the installed CLI, which Make Blueprint version and which core version it contains.
 
 Code anchors:
@@ -166,13 +162,11 @@ Code anchors:
 
 ### Tool Discovery
 
-Tool discovery is the core part that tells one tool whether the other is present. It has two checks: whether the other tool's block is in the project's root instruction files, and whether the other tool's CLI can be run on this machine.
+Tool discovery is the core part that tells one tool whether the other is present. The root [Tool Discovery](../../../../docs/prd/06-shared-core.md#tool-discovery) section owns its two checks, its offline work, its work in both Make Docs layouts and the version read.
 
 Requirements:
 
-- Discovery works offline and never installs, updates or starts a long-running copy of the other tool.
-- Discovery finds a Make Docs install in either Make Docs layout.
-- When discovery finds the other tool's CLI, it also reads that tool's version, so a caller can tell whether the other tool supports a needed capability.
+- `setup`, `setup remove` and `project check` run tool discovery to find Make Docs.
 - Make Blueprint never runs a command of the other tool that changes that tool's install or its packages.
 
 Code anchors:
@@ -193,6 +187,7 @@ Requirements:
 - When both tools are present, both root blocks carry their handoff lines after either tool's `setup`, with no other step by the person.
 - When either tool's `setup remove` takes it out of the project, the other tool's root block loses its handoff line, with no other step by the person.
 - When the installed Make Docs is too old to write its handoff line, Make Blueprint still writes its own line.
+- Make Docs writes its handoff line from a later Make Docs release that has no number yet ([root Release Scope](../../../../docs/prd/01-product-overview.md#release-scope), [root Q-007](../../../../docs/prd/03-open-questions-and-risk-register.md#q-007-make-docs-changes-in-step-0)). Until that release, every Make Docs install takes the too-old path.
 - When the Make Docs block has no handoff line, `setup` output and the `project status` command (see [08 CLI and MCP](08-cli-and-mcp.md)) say so and tell the person to update Make Docs with its own update command and then run `make-blueprint setup` again. That second `setup` sends the refresh request, so the updated Make Docs writes its line. Work phase 01 confirms the exact Make Docs command that the output names.
 - The handoff line appears in every root instruction file that carries the tool's block, with the same text.
 
@@ -234,13 +229,13 @@ Code anchors:
 
 ### Make Docs Link Check
 
-The `project check` command (see [08 CLI and MCP](08-cli-and-mcp.md)) confirms Make Docs links through one Make Docs read command with JSON output that confirms work item IDs and doc paths. Until Make Docs ships that command, `project check` skips every Make Docs link and says how many it skipped. The skip is a temporary workaround, tracked as the deferred obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check) (owed work with a stable number), and must not become the normal behavior. [10 Records and Identity](10-records-and-identity.md) owns the rest of `project check`.
+The `project check` command (see [08 CLI and MCP](08-cli-and-mcp.md)) confirms Make Docs links through one Make Docs read command with JSON output that confirms work item IDs and doc paths. Make Docs 2.1.0 ships that command ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)). Until `project check` confirms links through it, `project check` skips every Make Docs link and says how many it skipped. The skip is a temporary workaround, tracked as the deferred obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check) (owed work with a stable number), and must not become the normal behavior. [10 Records and Identity](10-records-and-identity.md) owns the rest of `project check`.
 
 | Situation | What `project check` does | Effect on the check result |
 | --- | --- | --- |
 | `make-docs` found with the read command | Calls the read command for each work item ID and doc path, and reports each link that does not resolve | A link that does not resolve is a finding, named by record `ref`, field and value |
 | `make-docs` not found | Skips every Make Docs link and reports how many it skipped and why | Not a finding and not an error |
-| `make-docs` found without the read command | Skips every Make Docs link, reports how many it skipped, and names the Make Docs version that enables the check once one exists. Until the read command ships, every project with `make-docs` is in this row. | Not a finding and not an error |
+| `make-docs` found without the read command | Skips every Make Docs link, reports how many it skipped, and names Make Docs 2.1.0 as the version that ships the read command. Until `project check` confirms links through that command, every project with `make-docs` is in this row. | Not a finding and not an error |
 | Project has no Make Docs block | Treats Make Docs as not present for links and reports skipped links as above | Not a finding and not an error |
 
 Requirements:
@@ -252,7 +247,7 @@ Requirements:
 - The check works offline.
 - The same check gives the same result through the CLI and through MCP.
 
-The check does not use `make-docs run work item resolve`, because that operation resolves wave and phase coordinates and paths but not every doc path or task-level ID. The one read command ships with the Step 0 Make Docs changes. Once it ships, `project check` confirms Make Docs links through it, and the skip message and skip count go away, as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check) states.
+The check does not use `make-docs run work item resolve`, because that operation resolves wave and phase coordinates and paths but not every doc path or task-level ID. The read command ships in Make Docs 2.1.0, release 2 of the Step 0 order in the root [Release Scope](../../../../docs/prd/01-product-overview.md#release-scope). When `project check` confirms Make Docs links through it, the skip message and skip count go away, as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check) states.
 
 Evidence: automated tests of the Make Docs link check with and without `make-docs` installed, in work phase `04-record-types.md`.
 
@@ -271,7 +266,7 @@ Requirements:
 - Make Blueprint has no work item record type and no command that creates, edits, closes, orders or exports work items.
 - Make Blueprint writes no file under `docs/`.
 - The hand off skill tells the agent to use Make Docs to create or change work items, and then to store the resulting IDs and doc paths on placement records through Make Blueprint. [16 Workflow and Skills](16-workflow-and-skills.md) owns the skill.
-- Make Blueprint ships no Azure Boards export. The BuildOS v1 Azure Boards export belongs to Make Docs, because Make Docs owns the backlog.
+- Make Blueprint ships no Azure Boards export. The BuildOS v1 Azure Boards export belongs to Make Docs, because Make Docs owns the backlog. The root [Release Scope](../../../../docs/prd/01-product-overview.md#release-scope) lists it as later Make Docs scope.
 
 Code anchors:
 
@@ -282,19 +277,19 @@ Code anchors:
 
 ### Make Docs Capabilities Make Blueprint Depends On
 
-Make Blueprint depends on these capabilities of the core and Make Docs. Each one ships in a core release or a Make Docs release from the make-kit monorepo, and the repo-wide plan schedules the Step 0 changes.
+Make Blueprint depends on these capabilities of the core and Make Docs. Each one ships in a core release, a Make Docs release or the setup tool wave from the make-kit monorepo. The root [Release Scope](../../../../docs/prd/01-product-overview.md#release-scope) sets their order.
 
-| Dependency | What Make Blueprint needs | Needed for | Behavior until it ships |
-| --- | --- | --- | --- |
-| Core release (Step 0) | A published `@brucewaynedecoy/make-core` from `packages/core/` that holds the parts in [Shared Core](#shared-core), takes each tool's own names and tags, supports `.make/<tool>/` and `~/.make/<tool>/` as layout targets, provides tool discovery, and reads and writes `.make/config.yaml` and `.make/personas.yaml` | Every v2.0 release build | Development uses a workspace link. No v2.0 release ships. |
-| Make Docs on the core | A Make Docs release that runs on the core with its current behavior, apart from the uninstall block fix | One shared implementation of managed blocks in one file | Make Blueprint can still release on the core, but the two tools use different block code. |
-| Handoff line in the Make Docs root block | Make Docs writes its handoff line when Make Blueprint is present, removes it when Make Blueprint leaves, and responds to the refresh request from Make Blueprint | The separate-or-together outcome | Make Blueprint writes its own line. `setup` and `project status` tell the person to update Make Docs with its own update command and then run `make-blueprint setup` again (see [Handoff Line](#handoff-line)). |
-| Uninstall block fix | Make Docs uninstall removes only its own block, keeps user text, and deletes a file only when nothing is left | The promise that user text survives uninstall of either tool | Today Make Docs keeps the whole file, its block included, when the file has user text. User text stays safe, but its block stays behind. |
-| Move to `.make/docs/` and `~/.make/docs/` | Make Docs project and machine folders under `.make/` | One folder pattern for both tools, and both blocks in `.make/AGENTS.md` and `.make/CLAUDE.md` | Make Blueprint works beside `.make-docs/` and `~/.make-docs/`. It does not wait for the move. |
-| Link resolution | One Make Docs read command with JSON output that confirms work item IDs and doc paths, part of the Step 0 Make Docs changes | The Make Docs link check | `project check` skips Make Docs links and says how many and why, tracked as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). |
-| Shared setup choices | Make Docs `setup` reads and writes its shared choices, such as the selected agent tools, in `.make/config.yaml` through the core | Choices made once for every kit | Make Blueprint reads and writes `.make/config.yaml` through the core. Make Docs `setup` asks its own questions again. |
-| Personas in `.make/personas.yaml` | Make Docs keeps its Persona list in `.make/personas.yaml`, with its label, description, built-in entries and reserved slugs, in place of `.make-docs/config.yaml` | One list of people and roles for both tools | Make Blueprint uses `.make/personas.yaml` alone. A Persona that Make Docs keeps only in `.make-docs/config.yaml` is not an entry that Make Blueprint records can name. |
-| Azure Boards export | The export lives in Make Docs | Clients who track the backlog in Azure Boards | Not offered by Make Blueprint. |
+| Dependency | Release | What Make Blueprint needs | Needed for | Behavior until it ships |
+| --- | --- | --- | --- | --- |
+| Core release | Core 0.1.0, in Step 0 ([root Core Versions and the Exact Pin](../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin)) | A published `@brucewaynedecoy/make-core` from `packages/core/` that holds the eight core areas, takes each tool's own names and tags, supports `.make/<tool>/` and `~/.make/<tool>/` as layout targets, and provides tool discovery. Core 0.1.0 holds no code for the shared `.make/` files. | Every v2.0 release build | Development uses a workspace link. No v2.0 release ships. |
+| Core code for the shared `.make/` files | A later core release, in the setup tool wave | A published core release that reads and writes `.make/config.yaml` and `.make/personas.yaml` | Every v2.0 release build | Development uses a workspace link. No v2.0 release ships. |
+| Make Docs on the core, with tag-aware blocks and the uninstall fix | Make Docs 2.2.0 ([root Q-007](../../../../docs/prd/03-open-questions-and-risk-register.md#q-007-make-docs-changes-in-step-0), [root Q-035](../../../../docs/prd/03-open-questions-and-risk-register.md#q-035-scope-of-the-uninstall-fix-in-220)) | A Make Docs release that runs on the core with its current behavior and tag-aware managed blocks, and whose uninstall removes only its own block, keeps user text, and deletes a file only when nothing is left | One shared implementation of managed blocks in one file, and the promise that user text survives uninstall of either tool | Make Blueprint can still release on the core, but the two tools use different block code. Make Docs keeps the whole file, its block included, when the file has user text. User text stays safe, but the Make Docs block stays behind. |
+| Handoff line in the Make Docs root block | A later Make Docs release, with no number yet ([root Q-007](../../../../docs/prd/03-open-questions-and-risk-register.md#q-007-make-docs-changes-in-step-0)) | Make Docs writes its handoff line when Make Blueprint is present, removes it when Make Blueprint leaves, and responds to the refresh request from Make Blueprint | The separate-or-together outcome | Make Blueprint writes its own line. `setup` and `project status` tell the person to update Make Docs with its own update command and then run `make-blueprint setup` again (see [Handoff Line](#handoff-line)). |
+| Move to `.make/docs/` and `~/.make/docs/` | A later Make Docs release, with no number yet ([root D-033](../../../../docs/prd/03-open-questions-and-risk-register.md#d-033-make-docs-project-folder-name), [root D-037](../../../../docs/prd/03-open-questions-and-risk-register.md#d-037-make-docs-machine-folder-name)) | Make Docs project and machine folders under `.make/` | One folder pattern for both tools, and both blocks in `.make/AGENTS.md` and `.make/CLAUDE.md` | Make Blueprint works beside `.make-docs/` and `~/.make-docs/`. It does not wait for the move. |
+| Link resolution | Make Docs 2.1.0 ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command)) | One Make Docs read command with JSON output that confirms work item IDs and doc paths | The Make Docs link check | `project check` skips Make Docs links and says how many and why, tracked as [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). |
+| Shared setup choices | Setup tool wave | Make Docs `setup` reads and writes its shared choices, such as the selected agent tools, in `.make/config.yaml` through the core | Choices made once for every kit | Make Blueprint reads and writes `.make/config.yaml` through the core. Make Docs `setup` asks its own questions again. |
+| Personas in `.make/personas.yaml` | Setup tool wave ([root Make Docs Personas](../../../../docs/prd/07-setup-tool-and-shared-files.md#make-docs-personas)) | Make Docs keeps its Persona list in `.make/personas.yaml`, with its label, description, built-in entries and reserved slugs, in place of `.make-docs/config.yaml` | One list of people and roles for both tools | Make Blueprint uses `.make/personas.yaml` alone. A Persona that Make Docs keeps only in `.make-docs/config.yaml` is not an entry that Make Blueprint records can name. |
+| Azure Boards export | A later Make Docs release, with no number yet | The export lives in Make Docs | Clients who track the backlog in Azure Boards | Not offered by Make Blueprint. |
 
 Requirements:
 
@@ -324,19 +319,29 @@ Code anchors:
 
 ## Rebuild Notes
 
-- **Two core versions in one project.** Each tool pins its own core version, so Make Docs and Make Blueprint can run different core versions in the same project. The on-disk contracts that both tools read must stay compatible across core versions: the block tag format, block placement and order, the handoff-line rule, the presence rule and the `.make/` layout. Treat a change to any of them as a breaking core release that both tools adopt.
+- **Two core versions in one project.** Make Docs and Make Blueprint can run different core versions in one project, so a change to an on-disk contract that both tools read is a breaking core release ([root R-002 Two Core Versions in One Project](../../../../docs/prd/03-open-questions-and-risk-register.md#r-002-two-core-versions-in-one-project)).
 - **Do not make `update` the refresh trigger by accident.** In Make Docs today, `update` updates the installed tool through its package manager, and project sync is `setup`. A refresh request from the other tool must touch only the root block in the current project. It must not update the other tool's install.
 - **Each tool writes only its own block.** It is tempting to let the arriving tool write both handoff lines. Do not. The other tool's block is outside its ownership, and its hash lives in the other tool's Store.
 - **Skipped is not passed.** When `project check` skips Make Docs links, say so with a count. A silent skip reads like a clean result.
-- **No product content in the core.** Router text, templates and skills belong to each tool. If the core starts to hold one tool's content, the other tool inherits it.
-- **Core release friction.** A core change needs a core release before a Make Blueprint release can use it. The monorepo lets the core change and the kit change land together, but the release step stays. Plan core work early, and use the workspace link only for development.
-- **Make Docs folder move.** Do not hard-code `.make-docs/` or `.make/docs/`. Use the core's layout part, which knows both.
+- **No product content in the core.** Router text, templates and skills belong to each tool, as the root [Core Boundary](../../../../docs/prd/06-shared-core.md#core-boundary) and [Rebuild Notes](../../../../docs/prd/06-shared-core.md#rebuild-notes) state.
+- **Core release friction.** A core change needs a core release before a Make Blueprint release can use it ([root R-001 Core Release Friction](../../../../docs/prd/03-open-questions-and-risk-register.md#r-001-core-release-friction)).
+- **Make Docs folder move.** Use the core's layout part, which knows both Make Docs folders, and do not hard-code `.make-docs/` or `.make/docs/` ([root D-033 Make Docs Project Folder Name](../../../../docs/prd/03-open-questions-and-risk-register.md#d-033-make-docs-project-folder-name)).
 
 Code anchors:
 
 - `docs/designs/2026-10-29-make-blueprint-v2-architecture.md` (Alternatives Considered: one merged CLI, Make Blueprint inside the make-docs monorepo; Consequences: core release friction)
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/self/update-tool.ts`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/managed-block.ts`
+
+## Requirement History
+
+### 2026-11-01 — W1 R2
+
+- Affected requirement or section: `Shared Core`
+- Previous contract: A `.make/personas.yaml` entry had a `slug`, a `name`, a primitive, a kind and the kits that it is enabled for.
+- Replacement contract: The root [People and Roles Entry Fields](../../../../docs/prd/07-setup-tool-and-shared-files.md#people-and-roles-entry-fields) section owns the entry fields: `slug`, `label`, `description`, `primitive`, `kind` and `kits`. `label` is the display name, and an entry has no `name` field.
+- Rationale: Two identifier fields on one entry could disagree, so the root register sets one identifier field and one display field for every kit ([root Q-023 Persona Entry Fields](../../../../docs/prd/03-open-questions-and-risk-register.md#q-023-persona-entry-fields)).
+- Source: [Make Blueprint Shared Rule Links Maintenance Plan](../plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md)
 
 ## Source Anchors
 
@@ -345,6 +350,7 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/01-shared-core.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/02-cli-and-packaging.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/04-record-types.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/managed-block.ts`

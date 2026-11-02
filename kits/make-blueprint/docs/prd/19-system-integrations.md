@@ -143,7 +143,7 @@ Requirements:
 
 - Make Blueprint only links to Make Docs work. Creating, changing or closing a work item, and writing any doc, is a Make Docs job, as the [Hand-Off Boundary](14-fit-gap-and-placement.md#hand-off-boundary) in 14 states.
 - An integration record may hold several doc paths and work item IDs, and several records may name the same work item.
-- `project check` skips these links and reports how many it skipped, until Make Docs ships the read command that confirms them (obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns the link format and the confirmation.
+- `project check` skips these links and reports how many it skipped, until it uses the read command that Make Docs 2.1.0 ships to confirm them ([root Q-020](../../../../docs/prd/03-open-questions-and-risk-register.md#q-020-release-of-the-link-read-command), obligation [O-001](03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check)). [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md) owns the link format and the confirmation.
 
 ### Later Scope
 

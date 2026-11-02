@@ -89,12 +89,12 @@ Requirements:
 
 Requirements:
 
-- For each selected agent tool, `setup` writes one MCP server entry that starts `make-blueprint mcp`. The entry is named after the CLI: `make-blueprint`, or `make_blueprint` where the agent tool's format needs it.
+- For each selected agent tool, `setup` writes one MCP server entry that starts `make-blueprint mcp`. The entry name is `make-blueprint` in every agent tool, Codex included, as the root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) section states. [08 CLI and MCP](08-cli-and-mcp.md#mcp-server-entry) shows the entry shape.
 - The entry's command is the absolute path of the installed `make-blueprint` executable: the npm-installed binary, or the signed single file.
-- The entry carries a connection ID and key in its environment, as Make Docs does. The Store keeps only a hash of the key, and no output prints the key.
+- The entry carries a connection ID and key in its environment. The root [MCP Server](../../../../docs/prd/05-kit-conventions.md#mcp-server) section owns the key form, the key hash in the machine config and the constant-time check. No output prints the key.
 - `setup` changes only its own entry in the agent tool's config file and keeps every other entry and setting in that file.
 - `setup` writes the entry at the scope the person chooses, machine or project, where the agent tool supports that scope.
-- The entry uses the `all` MCP profile unless the person chooses another. [08 CLI and MCP](08-cli-and-mcp.md) owns the profiles.
+- The entry runs `make-blueprint mcp --profile <name>`, with the `all` MCP profile when the person chooses no profile. [08 CLI and MCP](08-cli-and-mcp.md) owns the profiles.
 - For an MCP client that Make Blueprint does not configure itself, Make Blueprint can print a config entry for the person to add by hand.
 
 #### Skills Install
@@ -140,10 +140,11 @@ Code anchors:
 
 Requirements:
 
-- `update` finds how Make Blueprint was installed. For a package manager install, it runs that manager's update command and reports the result. For a package runner, it says that nothing is installed to update. When the install source is a signed single file, or cannot be told, it changes nothing in the install and names the exact steps to update.
+- `update` finds the install manager and hands the update to it, as the root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) and [Tool Update and Uninstall](../../../../docs/prd/06-shared-core.md#tool-update-and-uninstall) sections state. For a package runner, it says that nothing is installed to update. When the install source is a signed single file, or cannot be told, it changes nothing in the install and names the exact steps to update.
 - `update` never guesses which package manager owns the install.
-- `update` upgrades the machine Store's own schema when needed and keeps all existing Store data.
-- `update` changes no project file: no block, router, skill, MCP entry, record or folder.
+- When `update` changes nothing and names manual steps, it exits 1, as the root [Outcomes and Exit Codes](../../../../docs/prd/05-kit-conventions.md#outcomes-and-exit-codes) section states for a command that leaves a manual step.
+- `update` upgrades the machine Store's own schema when needed and keeps all existing Store data. The root [Store Base and Schema Version 6](../../../../docs/prd/06-shared-core.md#store-base-and-schema-version-6) section owns the Store base and its version counter.
+- `update` changes no project file, as the root [Tool Update and Uninstall](../../../../docs/prd/06-shared-core.md#tool-update-and-uninstall) section states.
 - After `update` installs a newer version, its output names `make-blueprint setup` as the command that brings each project to that version.
 
 #### Project Update
@@ -183,12 +184,12 @@ Requirements:
 
 #### Tool Uninstall
 
+The root [CLI Top Level](../../../../docs/prd/05-kit-conventions.md#cli-top-level) section owns `uninstall` and its `--remove-store` flag. The root [Tool Update and Uninstall](../../../../docs/prd/06-shared-core.md#tool-update-and-uninstall) section owns the kept Store, the rule that tool uninstall changes no project folder, and the report of each machine-scope MCP entry and skill folder that still names the kit.
+
 Requirements:
 
 - Tool uninstall removes the installed CLI through the package manager that installed it. For a signed single file, or an install source it cannot tell, it changes nothing and names the file to delete.
-- Tool uninstall keeps `~/.make/blueprint/` unless the person separately chooses to remove it. Approval of the uninstall alone never removes the Store.
-- Tool uninstall changes no project folder.
-- Tool uninstall reports each machine-scope MCP entry and skill folder that still refers to Make Blueprint, and how to remove it.
+- Tool uninstall keeps `~/.make/blueprint/` unless the person passes `--remove-store`.
 
 Code anchors:
 
@@ -231,7 +232,8 @@ Make Blueprint ships in two forms from the same source and version: an npm packa
 Requirements:
 
 - Make Blueprint is published on npm as `@brucewaynedecoy/make-blueprint`, with the binary `make-blueprint`.
-- The package depends on the shared core, published as `@brucewaynedecoy/make-core`, at one exact pinned version (see [05 Ecosystem and Shared Core](05-ecosystem-and-shared-core.md)).
+- The package depends on the shared core, published as `@brucewaynedecoy/make-core`, at one exact pinned version, as the root [Core Versions and the Exact Pin](../../../../docs/prd/06-shared-core.md#core-versions-and-the-exact-pin) section states.
+- The package releases through the shared publish workflow with the tag prefix `make-blueprint` ([root Release Tags and Packages](../../../../docs/prd/08-build-and-release.md#release-tags-and-packages), [root Publish](../../../../docs/prd/08-build-and-release.md#publish)).
 - The npm package needs Node 24 or later, for the built-in `node:sqlite` module.
 - The package contains the CLI, the MCP server, the pinned core version, the nine skills, all system docs and the built-in converters.
 
@@ -309,11 +311,11 @@ Code anchors:
 | Signed single file | Changes nothing; names the steps to install a newer signed file | Changes nothing; names the file to delete |
 | Cannot be told | Changes nothing; names the candidate commands | Changes nothing; names the candidate commands |
 
-The core's install-source detection comes from Make Docs, which also recognizes Homebrew.
+The root [Tool Update and Uninstall](../../../../docs/prd/06-shared-core.md#tool-update-and-uninstall) section owns the install-source detection in the core, which also knows Homebrew.
 
 ### Agent-Tool Files
 
-The core's agent-tool setup knows where each agent tool keeps its files. These are the current values from Make Docs. The core owns the exact list.
+The core's agent-tool setup knows where each agent tool keeps its files ([root Component and Capability Map](../../../../docs/prd/06-shared-core.md#component-and-capability-map)). These files belong to the agent tools, and Make Blueprint writes only its own entries in them ([root Machine Folders](../../../../docs/prd/05-kit-conventions.md#machine-folders)). These are the current values:
 
 | Agent tool | Instruction file | Project skill folder | Machine skill folder | Project MCP config | Machine MCP config |
 | --- | --- | --- | --- | --- | --- |
@@ -323,26 +325,11 @@ The core's agent-tool setup knows where each agent tool keeps its files. These a
 
 ### MCP Config Entry
 
-A Claude Code entry has this shape. Codex uses the same content in TOML under `mcp_servers.make_blueprint`.
-
-```json
-{
-  "mcpServers": {
-    "make-blueprint": {
-      "command": "<absolute path to make-blueprint>",
-      "args": ["mcp"],
-      "env": {
-        "<connection ID variable>": "<connection ID>",
-        "<connection key variable>": "<connection key>"
-      }
-    }
-  }
-}
-```
+[08 MCP Server Entry](08-cli-and-mcp.md#mcp-server-entry) shows the entry shape for each agent tool.
 
 ### Config and Store
 
-`setup` records the selected agent tools and skill choices in the shared `.make/config.yaml`, through the core, so every kit set up later sees them (see [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md)). Make Blueprint's own settings stay in `.make/blueprint/config.yaml`. `setup` records what it installed, with hashes, and the hash of each connection key in the Store in `~/.make/blueprint/`.
+`setup` records the selected agent tools and skill choices in the shared `.make/config.yaml`, through the core, by the rules of the root [Shared Setup Choices](../../../../docs/prd/07-setup-tool-and-shared-files.md#shared-setup-choices) section (see also [06 Project Layout and Instruction Files](06-project-layout-and-instruction-files.md#project-config)). Make Blueprint's own settings stay in `.make/blueprint/config.yaml`. `setup` records what it installed, with hashes, and the hash of each connection key in the Store in `~/.make/blueprint/`. The root [Store Base and Schema Version 6](../../../../docs/prd/06-shared-core.md#store-base-and-schema-version-6) section owns the Store base and its version counter ([root Q-031](../../../../docs/prd/03-open-questions-and-risk-register.md#q-031-store-version-counter-for-base-and-kit-tables)).
 
 Code anchors:
 
@@ -394,6 +381,7 @@ Code anchors:
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/01-shared-core.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/02-cli-and-packaging.md`
 - `.make-docs/archive/plans/2026-10-29-w1-r0-make-blueprint-v2/09-v1-import-and-release.md`
+- `docs/plans/2026-11-01-w1-r2-shared-rules-links/00-overview.md`
 - `docs/prd/01-product-overview.md`
 - `docs/prd/02-architecture-overview.md`
 - `<user-home>/Developer/Source/Tyler/Projects/make-docs/packages/cli/src/harness-access/registry.ts`
