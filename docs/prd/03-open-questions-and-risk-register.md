@@ -1334,7 +1334,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 
 | Status | Decision | Follow-Up |
 | --- | --- | --- |
-| Open | None yet | Mitigation: the scan, [Q-022](#q-022-work-email-in-commit-history) and [Q-026](#q-026-old-commit-ids-on-github). Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public`. |
+| Closed | Scan every file and every commit on every ref before the public step. Done on 2026-11-02: acceptance criteria `A205` to `A208` passed, and the repository is public. | Mitigation: the scan, [Q-022](#q-022-work-email-in-commit-history) and [Q-026](#q-026-old-commit-ids-on-github). Owner: [08 Build and Release, Public Repository](08-build-and-release.md#public-repository). Step 0 work phase `02-go-public`. |
 
 **Issue**: A public repository shows its whole git history. A secret, client data, a local home-folder path or the work email in any commit becomes public. A known finding, fixed on 2026-11-02: client names were in committed files and in earlier commits on `main`, and the history was rewritten ([Q-040](#q-040-client-names-in-the-committed-history)).
 
@@ -1343,6 +1343,8 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 **Recommendation**: Before the public step, scan every tracked file and every commit for secrets, client data, local home-folder paths and the work email. Check again that each of the 6 old commit IDs returns "No commit found" on GitHub.
 
 **To close**: The scan report has no findings, the old commit IDs do not open, and the repository is public.
+
+**Resolution**: Closed on 2026-11-02. In Phase 2 of the Step 0 backlog, `A205` to `A208` passed ([02 Go Public](../work/2026-11-01-w1-r0-make-kit-monorepo/02-go-public.md), [scan report](../assets/maintainer/public-scan/2026-11-02-scan.md)). Each of the 14 old commit IDs returns "No commit found" on GitHub (`A205`). The final scan of the merged `main` at `ece63dd` and of every ref on GitHub found 0 real findings (`A206`). `main` did not change between that scan and the public step (`A207`). The repository is public since 2026-11-03T04:44:46Z (`A208`). Limit: no check can prove that no copy of the history exists elsewhere.
 
 ### R-005 Agents Pick the Wrong Project
 
