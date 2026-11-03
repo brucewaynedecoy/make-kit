@@ -2,11 +2,11 @@
 
 Make Kit is a small family of command-line tools for working on a project with AI agents. Each tool is called a kit. A kit runs as a CLI and as an MCP server that your agent tool starts, and it adds its own block to the agent instruction files, such as `AGENTS.md` and `CLAUDE.md`, so agents know how to use it. Every kit installs and runs on its own, and kits installed together will share one core library and a couple of project settings files.
 
-This repository holds the kits, the shared core and the setup tool. Most of it is still on paper. Nothing here installs yet.
+This repository holds the kits, the shared core and the setup tool. Apart from Make Docs, most of it is still on paper. Nothing is released from here yet.
 
 ## The kits
 
-**Make Docs** keeps a project's designs, plans, PRDs and work backlog under `docs/`, and gives agents one path from an idea to finished, recorded work. It's a live product, published on npm as `@brucewaynedecoy/make-docs`. For now it's built in its own repository, and it moves into `kits/make-docs/` during Step 0.
+**Make Docs** keeps a project's designs, plans, PRDs and work backlog under `docs/`, and gives agents one path from an idea to finished, recorded work. It's a live product, published on npm as `@brucewaynedecoy/make-docs`. Its code has lived in `kits/make-docs/` since copy day, copied from the `v2.0.6` tag. Until the switch point, its releases still come from the old `make-docs` repository. The npm package name and the install commands stay the same.
 
 **Make Blueprint** turns a pile of client sources, such as documents, spreadsheets, slide decks, notes and meeting transcripts, into records about the systems a client runs today and the ones it plans to run. Every fact links back to the exact place in its source. From those records it compares systems capability by capability, records which system should own each capability and how it gets delivered, and links that decision to planned work in Make Docs. Each record is one Markdown file, so changes get reviewed in git like code.
 
@@ -18,7 +18,7 @@ Make Blueprint used to be called BuildOS. Version 2.0 is designed and planned in
 AGENTS.md, CLAUDE.md    map of the repo for agents, plus the Make Docs block
 docs/                   repo-wide docs: the core, the setup tool, rules shared by kits
 kits/make-blueprint/    Make Blueprint, with its own docs/
-kits/make-docs/         Make Docs (arrives in Step 0)
+kits/make-docs/         Make Docs, copied from v2.0.6, with its own docs/
 packages/core/          the shared core (planned)
 packages/kit/           the make-kit setup tool (planned)
 ```

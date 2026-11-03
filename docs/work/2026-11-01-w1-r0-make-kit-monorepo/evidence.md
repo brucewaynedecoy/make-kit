@@ -12,7 +12,7 @@ Phase 1 (Copy Day) is complete on 2026-11-02. 15 of its 15 acceptance cases pass
 - A113 passes with one recorded exception: 6 code anchors link to GitHub, not into `kits/make-docs/`.
 - A104 passes. The scan found 344 home-folder paths in one test fixture archive, and one evidence screenshot also showed a home path. The client-term scan found a 4th client name in 27 kit files and 7 file names, and 13 external-drive paths in 9 kit files. The owner accepted all fixes on 2026-11-02, and the rescan finds 0 hits. Client names in already committed files and earlier commits are outside this commit ([Q-040](../../prd/03-open-questions-and-risk-register.md#q-040-client-names-in-the-committed-history)).
 
-Phase 2 (Go Public) Stage 1 is closed on 2026-11-02. 4 of its 4 acceptance cases pass: A201 to A204 all pass. Stage 2 is open: A205 passes, A206 has the phase-branch scan with 0 findings and waits for the t10 scan, and A207 waits for the public step.
+Phase 2 (Go Public) is complete on 2026-11-02. 10 of its 10 acceptance cases pass: A201 to A210 all pass. The repository is public since 2026-11-03T04:44:46Z, and the `main` and release tag rulesets are active.
 
 ## Phase 1: Copy Day
 
@@ -483,12 +483,13 @@ When this note was written, `gitleaks` was not installed: `command -v gitleaks` 
 
 ### Stage 2 - History Scan and Old Commit IDs
 
-Tasks t5 to t8 are done. t9 is not needed, because no history rewrite is needed. t10 waits for the merge of the phase pull request. The scan report is [2026-11-02 Public Scan Report](../../assets/maintainer/public-scan/2026-11-02-scan.md).
+Tasks t5 to t8 and t10 are done. t9 is not needed, because no history rewrite is needed. The scan report is [2026-11-02 Public Scan Report](../../assets/maintainer/public-scan/2026-11-02-scan.md).
 
 - t5: the coordinating agent ran `gh api repos/brucewaynedecoy/make-kit/commits/<id>` for each of the 14 old commit IDs from the owner. The scan report lists each ID with its group and its result.
 - t6: the coordinating agent ran the scan on 2026-11-02. The scan covered every blob, file name, commit message, author name and committer name on every ref, the files inside `.tgz` and `.gz` archives, and 5 uncommitted files: the 3 Stage 1 files and the changed `02-go-public.md` and `evidence.md`. The repository has 0 tags. The owner gave the client terms as local inputs, and no repository file holds them.
 - t7: `make-docs project surface ensure assets --target-root .` reported `State: applied`. It created `docs/assets/` and the asset router files `docs/assets/AGENTS.md` and `docs/assets/CLAUDE.md`, and it kept all other router files. The scan report is at `docs/assets/maintainer/public-scan/2026-11-02-scan.md`.
 - t8: the scan found 0 real findings, so no file needed a fix.
+- t10: after PR 8 merged at 2026-11-03T04:32:16Z, the coordinating agent fetched every branch and every pull request ref on GitHub ([Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step)) and ran the scan again on the merged `main` at `ece63dd59d816fa53d8a49f85ede6a6f6dfb976e`. The [t10 section of the scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md#final-scan-of-the-merged-main-t10) has the results.
 
 #### A205 Old Commit IDs on GitHub
 
@@ -500,11 +501,62 @@ Tasks t5 to t8 are done. t9 is not needed, because no history rewrite is needed.
 #### A206 Zero Findings on the Merged main
 
 - Claim: the t10 result in the scan report names the commit of the merged `main` and reports zero findings for secrets, local home-folder paths, the work email and client data.
-- Result: pending. The phase-branch scan has 0 findings. The final scan (t10) has not run.
-- Facts: the phase-branch scan covered `main` at `ee6b3c01feb7bfbd8ed2662075baabbf523f3d61`, the same commit as the phase branch, plus the 5 uncommitted files. It had 304 raw `gitleaks` hits and 30 raw path hits, and 0 raw hits in the other checks. The triage shows that each `gitleaks` hit is the same digest value in a `projectKey` field, and each path hit is a made-up placeholder in a test or a doc example. So the real findings are 0. The [scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md) has the details.
-- Limits: the phase commit also adds the scan report, the 2 asset router files and the Stage 2 changes to `02-go-public.md` and `evidence.md`. Before the commit, the coordinating agent scanned all 8 files of the commit with checks 2, 4, 5 and 6 of the scan report, with 0 hits. The t10 scan reads them again on the merged `main`.
+- Result: pass.
+- Facts for the t10 scan: it covered the merged `main` at `ece63dd59d816fa53d8a49f85ede6a6f6dfb976e` and every ref on GitHub: `main`, `w1-r0-p2-go-public-fixes`, the 5 Dependabot branches and 13 pull request refs, with 24 commits in all and 0 tags. It had 304 raw `gitleaks` hits and 30 raw path hits, with the same triage as the phase-branch scan, and 0 raw hits in the other checks. The commit records hold 3 addresses, all allowed by [Q-041](../../prd/03-open-questions-and-risk-register.md#q-041-dependabot-pull-requests-before-the-public-step). The public text on GitHub, such as pull request titles, bodies and comments, holds 0 client terms, 0 paths and 0 email addresses. The real findings are 0.
+- Facts for the phase-branch scan: it covered `main` at `ee6b3c01feb7bfbd8ed2662075baabbf523f3d61`, the same commit as the phase branch, plus the 5 uncommitted files. It had 304 raw `gitleaks` hits and 30 raw path hits, and 0 raw hits in the other checks. The triage shows that each `gitleaks` hit is the same digest value in a `projectKey` field, and each path hit is a made-up placeholder in a test or a doc example. So the real findings are 0. The [scan report](../../assets/maintainer/public-scan/2026-11-02-scan.md) has the details.
+- Limits: the phase commit also adds the scan report, the 2 asset router files and the Stage 2 changes to `02-go-public.md` and `evidence.md`. Before the commit, the coordinating agent scanned all 8 files of the commit with checks 2, 4, 5 and 6 of the scan report, with 0 hits. The t10 scan read them again on the merged `main`.
 
 #### A207 Scanned Commit at the Public Step
 
 - Claim: `git rev-parse main` at the time of the public step equals the commit that the t10 scan names.
-- Result: pending. It waits for the t10 scan and the public step in Stage 3.
+- Result: pass.
+- Facts: just before the public step, `main` on GitHub was `ece63dd59d816fa53d8a49f85ede6a6f6dfb976e`, the same commit that the t10 scan names. No commit landed on `main` between the scan and the public step.
+
+### Stage 3 - Public Step and Rulesets
+
+Tasks t11 to t16 are done.
+
+- t11: the owner said yes in chat on 2026-11-02. Then `gh repo edit brucewaynedecoy/make-kit --visibility public --accept-visibility-change-consequences` exited 0 at 2026-11-03T04:44:46Z.
+- t12: after the owner's yes in chat, the ruleset `main` (ID 26424364) became active.
+- t13: after the owner's yes in chat, the ruleset `release tags` (ID 26424370) became active. A personal repository cannot name a user as a bypass actor, so the repository admin role stands in for the owner. The owner is the only collaborator with the admin role.
+- t14: the read-back commands gave the facts in A208 and A209.
+- t15: [R-004](../../prd/03-open-questions-and-risk-register.md#r-004-exposed-history-in-the-public-repository) is `Closed`, with a resolution that cites A205 to A208. The limitation "The repository is private" is gone from [01 Product Overview, Current Limitations](../../prd/01-product-overview.md#current-limitations), because the repository is public. The change adds no Requirement History entry, because the limitation is not a requirement.
+- t16: A210 records the 3 validation commands.
+
+#### A208 Public Repository
+
+- Claim: `gh api repos/brucewaynedecoy/make-kit --jq .visibility` prints `public`.
+- Result: pass.
+- Commands: `gh repo edit brucewaynedecoy/make-kit --visibility public --accept-visibility-change-consequences` (exit 0 at 2026-11-03T04:44:46Z), then `gh api repos/brucewaynedecoy/make-kit --jq .visibility`.
+- Facts: the read-back printed `public`.
+
+#### A209 Rulesets
+
+- Claim: the `main` ruleset is active and holds a pull request rule with `required_approving_review_count` 0, a non-fast-forward rule and a deletion rule. The tag ruleset is active for the four release tag patterns, holds update and deletion rules and a creation rule, and lists only the owner as a bypass actor.
+- Result: pass. The repository admin role stands in for the owner as the bypass actor.
+- Commands: `gh api repos/brucewaynedecoy/make-kit/rulesets`, then each ruleset by its ID, and `gh api repos/brucewaynedecoy/make-kit/rules/branches/main`.
+- Facts:
+
+| Ruleset | ID | Target | Enforcement | Includes | Rules | Bypass actors |
+| --- | --- | --- | --- | --- | --- | --- |
+| `main` | 26424364 | branch | active | `refs/heads/main` | `deletion`, `non_fast_forward`, `pull_request` with `required_approving_review_count` 0 | none (`current_user_can_bypass` is `never`) |
+| `release tags` | 26424370 | tag | active | `refs/tags/make-docs-v*`, `refs/tags/make-core-v*`, `refs/tags/make-kit-v*`, `refs/tags/make-blueprint-v*` | `creation`, `update`, `deletion` | the repository admin role (`RepositoryRole`, ID 5, mode `always`) |
+
+`gh api repos/brucewaynedecoy/make-kit/rules/branches/main` lists `deletion`, `non_fast_forward` and `pull_request`.
+
+- Limits: a personal repository cannot name a user as a bypass actor. The admin role stands in for the owner, because the owner is the only collaborator with the admin role. If the repository gets another admin, that admin can also bypass the tag rules.
+
+#### A210 Register and Validation
+
+- Claim: R-004 is `Closed` in the root register. `make-docs run prd authority validate --target-root .` exits 0, the link-check script reports 0 broken links, and the backlog snapshot exits 0 with only `BACKLOG-VAL-010`.
+- Result: pass.
+- Commands: `make-docs run prd authority validate --target-root .`. The link-check script for relative links and heading anchors on the 6 changed files ([O-004](../../prd/03-open-questions-and-risk-register.md#o-004-link-checks-cover-links-between-projects)). `GIT_DIR=/dev/null make-docs run work backlog snapshot --target-root .` ([O-005](../../prd/03-open-questions-and-risk-register.md#o-005-backlog-snapshot-works-below-the-git-root)). All run from the repository root on 2026-11-02.
+- Facts: R-004 is `Closed` with a resolution that cites A205 to A208. The PRD validation exited 0 with `status` `passed`, 9 PRD files and 0 diagnostics. The link check of the 6 changed files found 0 broken links and 0 missing anchors in 612 relative links. The backlog snapshot exited 0, and its only diagnostic was `BACKLOG-VAL-010`.
+
+#### Human Experience Review of the Public Repository Page
+
+- Surface: the public repository page `https://github.com/brucewaynedecoy/make-kit`, after the public step.
+- Observations: the page shows the label "Public", the README, the "MIT license" badge (GitHub detects the license as MIT), the root folders `.agents`, `.claude`, `.github`, `.make-docs`, `docs` and `kits`, the root files, and 5 open pull requests from Dependabot. `packages/` is not there yet, because Phase 7 adds `packages/core/`.
+- Finding: the root `README.md` was out of date. It said that Make Docs is built in its own repository and that `kits/make-docs/` arrives in Step 0, but Make Docs is in `kits/make-docs/` since copy day. The owner chose to fix it in the Stage 3 change. The README now says that Make Docs is in `kits/make-docs/` since copy day, copied from the `v2.0.6` tag, that its releases still come from the old `make-docs` repository until the switch point, and that its npm package name and install commands stay the same. Its layout line for `kits/make-docs/` agrees.
+- Conclusion: a visitor to the root finds the README, the MIT license and the folders of the target layout, and the README agrees with the tree.
+- Reviewer and limits: the coordinating agent opened the page in the browser pane. The review reads the page and does not test a visitor. It cannot prove that no copy of the history exists elsewhere. The optional owner handoff covers the signed-out view of the page.
