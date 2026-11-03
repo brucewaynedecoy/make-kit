@@ -1446,7 +1446,7 @@ This item came from R-002 in the Make Blueprint register, `kits/make-blueprint/d
 
 ## Deferred Obligations
 
-Each record below is a temporary workaround for the nested-project weak spots of Make Docs. Each temporary workaround stays visible, numbered and owned until it is removed. The root map in `AGENTS.md` and `CLAUDE.md` lists each one as a short numbered rule, labels it as temporary, names its O-number and links this section. This section holds the full records. Design section 9 is the source of the records ([Make Kit Monorepo, section 9](../designs/2026-10-30-make-kit-monorepo.md#9-temporary-workarounds-as-deferred-obligations)).
+O-001 to O-005 below are temporary workarounds for the nested-project weak spots of Make Docs. Each temporary workaround stays visible, numbered and owned until it is removed. The root map in `AGENTS.md` and `CLAUDE.md` lists each one as a short numbered rule, labels it as temporary, names its O-number and links this section. This section holds the full records. Design section 9 is the source of those records ([Make Kit Monorepo, section 9](../designs/2026-10-30-make-kit-monorepo.md#9-temporary-workarounds-as-deferred-obligations)). O-006 is not a workaround, so the root map does not list it.
 
 The Make Blueprint register has its own O-001, [Confirm Make Docs Links in Project Check](../../kits/make-blueprint/docs/prd/03-open-questions-and-risk-register.md#o-001-confirm-make-docs-links-in-project-check). Docs that cite an O-number name the register path with it.
 
@@ -1534,6 +1534,23 @@ The Make Blueprint register has its own O-001, [Confirm Make Docs Links in Proje
 | Acceptance exit criteria | The fix ships with a nested-project test. The matching item is gone from the root map, from kit setup and from the validation steps. The record is `Fulfilled` with its version and proof command. `make-docs run work backlog snapshot --target-root kits/make-blueprint` exits 0 from the repository root without `GIT_DIR`. |
 | Related requirements and findings | `02-architecture-overview.md` ([Several Docs Roots](02-architecture-overview.md#several-docs-roots)); `05-kit-conventions.md` |
 | History / disposition note | Recorded on 2026-11-01 from design section 9 and the root map. The workaround is temporary and must not become the normal way of working. The fix comes after Make Docs is in `kits/make-docs/`. |
+
+### O-006 Client Data in the Old Make Docs Repository
+
+| Field | Value |
+| --- | --- |
+| ID | O-006 |
+| Title | Client data in the old Make Docs repository |
+| Status | Deferred |
+| Summary | The old public `make-docs` repository holds a client project name in files, in file names, in 3 commit messages and in all 5 tags. It also holds the owner's home-folder path, an external-drive path and a work folder name, and a packed test package holds the owner's paths. The work email is on 452 of the 660 commits on its `main` and in 2 pull request texts. The owner picks a cleanup, and the cleanup runs. Cleanup option A rewrites the history, then deletes and creates the repository again, and removes all of the data. Cleanup option B removes the data from `main` in 1 new commit, and the data stays in the old commits, the tags and the commit records. |
+| Source authority | The owner's decision on 2026-11-02 to postpone the cleanup and record it as this obligation; a read-only scan of the old clone `../make-docs` on 2026-11-02, with its facts in this record; [Q-012](#q-012-old-repository-freeze); [Q-024](#q-024-old-make-docs-history) |
+| Owner | The repository owner, under [08 Build and Release, Old Repository](08-build-and-release.md#old-repository) |
+| Target coordinate | The decision point is Stage 4 of the Step 0 work phase [05 Switch Point](../work/2026-11-01-w1-r0-make-kit-monorepo/05-switch-point.md#stage-4---old-repository-freeze). The audit is Stage 1 of the Step 0 work phase [08 Closeout](../work/2026-11-01-w1-r0-make-kit-monorepo/08-closeout.md#stage-1---register-audit). |
+| Future trigger | Phase 5 freezes the old repository ([Q-012](#q-012-old-repository-freeze)). Right after the freeze, the owner picks cleanup option A or B. |
+| Dependencies | The freeze in Phase 5. The owner's clear yes before each change to the old repository. For option A: the owner changes [Q-024](#q-024-old-make-docs-history) and the rule in [08 Build and Release, Old Repository](08-build-and-release.md#old-repository) that the old history is not rewritten, through the PRD change process, and asks GitHub Support to drop the cached commits that the fork shows. |
+| Acceptance exit criteria | The owner's pick is recorded. For option A: a scan of every commit, tag, file name, commit message and pull request text of the repository that is created again finds none of the data. The 5 tags and the 5 releases exist again. A merged `make-kit` pull request fixes the commit ID of the old `v2.0.6` tag in these 6 files: `docs/plans/2026-11-01-w1-r0-make-kit-monorepo/00-overview.md`, `docs/prd/03-open-questions-and-risk-register.md`, `docs/prd/05-kit-conventions.md`, `docs/work/2026-11-01-w1-r0-make-kit-monorepo/01-copy-day.md`, `docs/work/2026-11-01-w1-r0-make-kit-monorepo/05-switch-point.md` and `docs/work/2026-11-01-w1-r0-make-kit-monorepo/evidence.md`. For option B: a scan of the files on the old `main` finds none of the data. Then the record is `Fulfilled` with the pick and its proof. |
+| Related requirements and findings | [08 Build and Release, Old Repository](08-build-and-release.md#old-repository); [Q-012](#q-012-old-repository-freeze); [Q-024](#q-024-old-make-docs-history); [Q-040](#q-040-client-names-in-the-committed-history), the same cleanup in `make-kit` |
+| History / disposition note | Recorded on 2026-11-02. The owner chose to record the cleanup as this obligation (option A of 2), not only as a note in a side session (option B). The owner leans to cleanup option A but does not want to do it now. Scan facts: the published npm versions `2.0.6` and `1.0.0-rc.1` hold none of the data, and the versions `2.0.2` to `2.0.5` are not checked byte for byte. The old repository has 1 fork, made before the client data came in, and GitHub can show the old commits through the fork. The cost of option A: every commit ID changes, the 5 tags and the 5 releases must be made again, the npm provenance links of `2.0.2` to `2.0.6` point to commits that no longer exist (the packages still install), the 3 stars and the open pull requests are lost, and GitHub Support must drop the cached commits that the fork shows. Option B costs little. |
 
 ## Source Anchors
 

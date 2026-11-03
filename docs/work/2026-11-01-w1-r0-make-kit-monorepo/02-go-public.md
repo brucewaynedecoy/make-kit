@@ -161,7 +161,6 @@ Human Experience Review stays separate. In this phase the agent opens the public
 
 - Stage 2 of this phase.
 - The owner is available for the gates in t11 to t13.
-- The owner's pick for the client-data cleanup of the old `make-docs` repository. If that pick rewrites the old history, the commit ID of the old `v2.0.6` tag changes. In that case, fix the `make-kit` files that cite that ID, and merge the fix before the t10 scan.
 
 ### Closeout Notes
 

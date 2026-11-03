@@ -51,7 +51,7 @@ Each kit has its own PRD index:
 | [00 Make Kit PRD Index](00-index.md) | `core` | `active` | `—` | The PRD set, its reading order and its audience paths |
 | [01 Product Overview](01-product-overview.md) | `core` | `active` | 02, 03 | The Make Kit products, their users, the separate-or-together rule, the Step 0 release scope and the current limitations |
 | [02 Architecture Overview](02-architecture-overview.md) | `core` | `active` | 01, 05, 06, 07, 08 | The repository layout, the npm workspace, the package map, the docs roots, the root map and the routing check |
-| [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md) | `core` | `active` | All | Confirmed drift D-001 to D-041, questions Q-001 to Q-041, rebuild risks R-001 to R-011 and deferred obligations O-001 to O-005 |
+| [03 Open Questions and Risk Register](03-open-questions-and-risk-register.md) | `core` | `active` | All | Confirmed drift D-001 to D-041, questions Q-001 to Q-041, rebuild risks R-001 to R-011 and deferred obligations O-001 to O-006 |
 | [04 Glossary](04-glossary.md) | `core` | `active` | All | The canonical terms of this set |
 | [05 Kit Conventions](05-kit-conventions.md) | `subsystem` | `active` | 02, 03, 06, 07 | The rules that every kit follows, taken from the Make Docs code at `v2.0.6`, with each Make Docs gap |
 | [06 Shared Core](06-shared-core.md) | `subsystem` | `active` | 05, 07, 08 | The eight core areas, kit names as inputs, tool discovery, the slice order, Store schema version 6 and the exact core pin |

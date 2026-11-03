@@ -292,7 +292,7 @@ Code anchors:
 
 ### Old Repository
 
-After `2.0.7` is on `latest`, the old `make-docs` repository is frozen ([Q-012 Old Repository Freeze](03-open-questions-and-risk-register.md#q-012-old-repository-freeze)). It stays readable for its history.
+After `2.0.7` is on `latest`, the old `make-docs` repository is frozen ([Q-012 Old Repository Freeze](03-open-questions-and-risk-register.md#q-012-old-repository-freeze)). It stays readable for its history. The client-data cleanup of the old repository is deferred as [O-006 Client Data in the Old Make Docs Repository](03-open-questions-and-risk-register.md#o-006-client-data-in-the-old-make-docs-repository), and cleanup option A needs a change to the rule below that the old history is not rewritten and to [Q-024 Old Make Docs History](03-open-questions-and-risk-register.md#q-024-old-make-docs-history) first.
 
 Requirements:
 
